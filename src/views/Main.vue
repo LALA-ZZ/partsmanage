@@ -1,10 +1,12 @@
 <template>
   <el-container style="height: 100%">
-    <el-aside width="200px"><common-aside/></el-aside>
+    <el-aside width="auto"><common-aside/></el-aside>
     <el-container>
       <el-header><common-header/></el-header>
       <tab/>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view/>
+      </el-main>
     </el-container>
   </el-container>
 
@@ -41,9 +43,10 @@ export default {
 </script>
 
 <style scoped>
-  /*.el-header{*/
-  /*  background-color: #f6f6f6;*/
-  /*}*/
+  .el-header{
+  background-color: #ffffff;
+  }
+ 
 
 
 </style>

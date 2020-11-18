@@ -1,7 +1,8 @@
 export default {
     state: {
+        isCollapse: false,//是否将左边的菜单折叠
+        currentMenu: null,//当前点击的菜单
         menu: [],
-        currentMenu: null,
         tabsList: [
             {
                 path: '/',
@@ -30,6 +31,10 @@ export default {
             //根据tablist索引来删除标签
             const result = state.tabsList.findIndex(item => item.name === value.name);
             state.tabsList.splice(result,1);
+        },
+        //收缩左边的菜单栏，默认是不展开
+        collapseMenu(state){
+            state.isCollapse = !state.isCollapse;
         }
     },
     actions: {}

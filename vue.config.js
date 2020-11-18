@@ -3,7 +3,7 @@ module.exports = {
     resolve: {
       //路径别名配置
       alias: {
-        '@': '/src',
+        // '@': '/src',
         'assets': '@/assets',
         'common': '@/common',
         'components': '@/components',
@@ -13,3 +13,6 @@ module.exports = {
     }
   }
 }
+
+
+

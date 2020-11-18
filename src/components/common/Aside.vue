@@ -2,16 +2,24 @@
   <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
-      background-color="#545c64"
+      background-color="#304156"
       text-color="#fff"
-      active-text-color="#ffd04b">
+      active-text-color="#ffd04b"
+      :collapse="isCollapse">
     <el-submenu  :index="item.path" v-for="item in asideMenu" :key="item.path" @click="clickMenu(item)">
       <template slot="title">
         <i :class="'el-icon-s-' + item.icon"></i>
         <span>{{item.label}}</span>
       </template>
 
-      <el-submenu  :index="subItem.path" v-for="subItem in item.children" :key="subItem.path" @click="clickMenu(subItem)">
+      <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.path" @click="clickMenu(subItem)" >
+          <template slot="title">
+            <!-- <i :class="'el-icon-s-' + item.icon"></i> -->
+            <span>{{subItem.label}}</span>
+          </template>
+        </el-menu-item>
+
+      <!-- <el-submenu  :index="subItem.path" v-for="subItem in item.children" :key="subItem.path" @click="clickMenu(subItem)">
         <template slot="title">
           <i :class="'el-icon-s-' + subItem.icon"></i>
           <span >{{subItem.label}}</span>
@@ -21,9 +29,8 @@
           <template slot="title">
             <span>{{thirdLevelItem.label}}</span>
           </template>
-          <!--          <el-menu-item index="1-4-1"><span>{{thirdLevelItem.label}}</span></el-menu-item>-->
         </el-menu-item>
-      </el-submenu>
+      </el-submenu> -->
     </el-submenu >
   </el-menu>
 
@@ -48,59 +55,59 @@ export default {
           icon: 'data',
           children:[
             {
-              path: '/enterpriseres',
-              name: 'enterpriseres',
+              path: '/eresourcemanage',
+              name: 'eresourcemanage',
               label: '企业资源',
               icon: 'data',
-              children: [
-                {
-                  path: '/selinfo',
-                  name: 'selinfo',
-                  icon: 'data',
-                  label: '个人信息',
-                },
-                {
-                  path: '/supplierinfo',
-                  name: 'supplierinfo',
-                  icon: 'data',
-                  label: '供应商信息',
-                },
-                {
-                  path: '/logisticsinfo',
-                  name: 'logisticsinfo',
-                  icon: 'data',
-                  label: '物流商信息',
-                },
-                {
-                  path: '/clientinfo',
-                  name: 'clientinfo',
-                  icon: 'data',
-                  label: '客户信息',
-                },
-              ]
+              // children: [
+              //   {
+              //     path: '/selinfo',
+              //     name: 'selinfo',
+              //     icon: 'data',
+              //     label: '个人信息',
+              //   },
+              //   {
+              //     path: '/supplierinfo',
+              //     name: 'supplierinfo',
+              //     icon: 'data',
+              //     label: '供应商信息',
+              //   },
+              //   {
+              //     path: '/logisticsinfo',
+              //     name: 'logisticsinfo',
+              //     icon: 'data',
+              //     label: '物流商信息',
+              //   },
+              //   {
+              //     path: '/clientinfo',
+              //     name: 'clientinfo',
+              //     icon: 'data',
+              //     label: '客户信息',
+              //   },
+              // ]
 
             },
             {
-              path: '/partsinfo',
-              name: 'partsinfo',
+              path: '/partsinfomanage',
+              name: 'partsinfomanage',
               label: '配件信息',
               icon: 'data',
             },
             {
-              path: '/warehouseinfo',
-              name: 'warehouseinfo',
+              path: '/warehouseinfomanage',
+              name: 'warehouseinfomanage',
               label: '仓库信息',
               icon: 'data',
             },
             {
-              path: '/preinfo',
-              name: 'preinfo',
+              path: '/forecastInfomanage',
+              name: 'forecastInfomanage',
               label: '预测信息',
               icon: 'data',
             },
             {
-              path: '/optimizeinfo',
-              name: 'optimizeinfo',
+              path: '/optimizationinfomanage',
+              name: 'optimizationinfomanage',
               label: '优化信息',
               icon: 'data',
             },
@@ -113,14 +120,14 @@ export default {
           icon: 'management',
           children: [
             {
-              path: '/partsapl',
-              name: 'partsapl',
+              path: '/partsapply',
+              name: 'partsapply',
               label: '配件申请',
               icon: 'management',
             },
             {
-              path: '/aplcheck',
-              name: 'aplcheck',
+              path: '/applycheck',
+              name: 'applycheck',
               label: '申请审批',
               icon: 'management',
             },
@@ -139,14 +146,14 @@ export default {
           icon: 'management',
           children: [
             {
-              path: '/takestock',
-              name: 'takestock',
+              path: '/partsamountverification',
+              name: 'partsamountverification',
               label: '库存盘点',
               icon: 'management',
             },
             {
-              path: '/stowarning',
-              name: 'stowarning',
+              path: '/partsamountwarnning',
+              name: 'partsamountwarnning',
               label: '库存预警',
               icon: 'management',
             },
@@ -159,22 +166,34 @@ export default {
           icon: 'management',
           children: [
             {
-              path: '/partsput',
-              name: 'partsput',
+              path: '/outapply',
+              name: 'outapply',
+              label: '出库申请',
+              icon: 'management',
+            },
+            {
+              path: '/outcheck',
+              name: 'outcheck',
+              label: '出库审批',
+              icon: 'management',
+            },
+            {
+              path: '/partsout',
+              name: 'partsout',
               label: '配件出库',
               icon: 'management',
             },
           ]
         },
         {
-          path: '/damandpre',
-          name: 'damandpre',
+          path: '/partsDemandforecast',
+          name: 'partsDemandforecast',
           label: '配件需求预测',
           icon: 'opportunity'
         },
         {
-          path: '/saftystock',
-          name: 'saftystock',
+          path: '/inventoryoptimization',
+          name: 'inventoryoptimization',
           label: '安全库存优化',
           icon: 'opportunity'
         },
@@ -188,12 +207,16 @@ export default {
     },
     hasChildren(){
       return this.asideMenu.filter(item => item.children);
+    },
+    isCollapse(){
+      return this.$store.state.tab.isCollapse;
     }
   },
   methods: {
     //点击左侧菜单，面包屑联动
     clickMenu(item){
-      this.$store.commit('selectMenu',item)
+      this.$router.push({name: item.name});//在选择菜单之前，先路由跳转到对应的组件
+      this.$store.commit('selectMenu',item);
     }
   }
 }
@@ -204,4 +227,8 @@ export default {
   height: 100%;
   border: none;
 }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
 </style>
