@@ -1,19 +1,23 @@
 <!--  -->
 <template>
   <div>
-      企业资源
+    <panel-group/>
   </div>
+  
 </template>
 
 
 <script>
+import PanelGroup from '@/components/common/PanelGroup.vue';
 export default {
   data () {
     return {
     };
   },
 
-  components: {},
+  components: {
+    PanelGroup
+  },
 
   computed: {},
   

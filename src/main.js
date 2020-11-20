@@ -7,8 +7,9 @@ import store from "./store";
 //第三方包
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import http from './api/config'
-import  './mock/index'
+import http from './api/config'//引入网络请求api
+import  './mock/index'//引入mock
+import './icons/index'//引入icon
 
 Vue.prototype.$http = http
 Vue.config.productionTip = false

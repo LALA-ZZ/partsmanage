@@ -1,20 +1,23 @@
 <!--  -->
 <template>
   <el-row  :gutter="20" class="home">
-    <el-col :span="4">
-      <user-card/>
+    <!-- 左边个人中心 -->
+    <el-col :span="6">
+      <!-- <user-card/> -->
     </el-col>
-    <el-col :span="20">
-      
-      <div class="num-list">
-        <el-card shadow="hover" v-for="item in 4" :key="item">
-          <i class="icon"></i>
+
+    <!-- 右边展示中心 -->
+    <el-col :span="24">
+      <!-- <div class="num-list">
+         <el-card shadow="hover" v-for="item in countData" :key="item.name" :body-style="{display: 'flex', padding: '0px'}">
+          <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
           <div class="detail">
-            <p class="num">￥ 1995</p>
-            <P class="text">数据</P>
+            <p class="card-panel-text">{{item.name}}</p>
+            <P class="card-panel-num">{{item.value}}</P>
           </div>
-        </el-card>
-      </div>
+        </el-card> 
+      </div> -->
+      <panel-group/>
 
       <el-card shadow="hover">
         <div style="height: 280px"></div>
@@ -35,11 +38,38 @@
 
 
 <script>
-import UserCard from '../../components/common/UserCard.vue';
+// import UserCard from '../../components/common/UserCard.vue';
+import PanelGroup from '@/components/common/PanelGroup.vue';
 export default {
   name:'Home',
   data () {
     return {
+      countData: [
+        {
+          name : '今日入库单数',
+          icon: 'success',
+          color: '#2ec7c9',
+          value: 1995
+        },
+        {
+          name : '今日出库单数',
+          icon: 'success',
+          color: '#2ec7c9',
+          value: 1995
+        },
+        {
+          name : '今日入库申请单数',
+          icon: 'success',
+          color: '#2ec7c9',
+          value: 1995
+        },
+        {
+          name : '今日出库申请单数',
+          icon: 'success',
+          color: '#2ec7c9',
+          value: 1995
+        },
+      ]
     };
   },
   mounted () {
@@ -48,7 +78,8 @@ export default {
     })
   },
   components: {
-    UserCard
+    // UserCard,
+    PanelGroup,
   },
 
   computed: {},
@@ -59,8 +90,19 @@ export default {
 </script>
 
 
-<style>
-@import '~@/assets/scss/home.css';
-
+<style lang="scss" scoped>
+@import '../../assets/scss/home.css';
+  /* .el-card {
+    display: flex;
+    align-items: center;
+    
+  } */
+  
+  /* .el-card .detail .name {
+    line-height: 18px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 16px;
+    margin-bottom: 12px;
+  } */
 
 </style>
