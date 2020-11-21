@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <el-row  :gutter="20" class="home">
+  <el-row :gutter="20" class="home">
     <!-- 左边个人中心 -->
     <el-col :span="6">
       <!-- <user-card/> -->
@@ -17,21 +17,23 @@
           </div>
         </el-card> 
       </div> -->
-      <panel-group/>
 
+      <panel-group />
+
+      <!-- 大图表部分 -->
       <el-card shadow="hover">
-        <div style="height: 280px"></div>
+        <echart style="height: 350px" :chartData="echartData.order"></echart>
       </el-card>
 
       <div class="graph">
         <el-card shadow="hover">
-           <div style="height: 260px"></div>
+          <echart style="height: 300px" :chartData="echartData.user"></echart>
         </el-card>
         <el-card shadow="hover">
-         <div style="height: 260px"></div>
-        </el-card>  
+          <echart style="height: 300px" :chartData="echartData.parts" :isAxisChart="false"></echart>
+        </el-card>
       </div>
-      
+
     </el-col>
   </el-row>
 </template>
@@ -40,69 +42,124 @@
 <script>
 // import UserCard from '../../components/common/UserCard.vue';
 import PanelGroup from '@/components/common/PanelGroup.vue';
+import Echart from '../../components/common/EChart.vue';
 export default {
-  name:'Home',
+  name: 'Home',
   data () {
     return {
       countData: [
         {
-          name : '今日入库单数',
+          name: '今日入库单数',
           icon: 'success',
           color: '#2ec7c9',
           value: 1995
         },
         {
-          name : '今日出库单数',
+          name: '今日出库单数',
           icon: 'success',
           color: '#2ec7c9',
           value: 1995
         },
         {
-          name : '今日入库申请单数',
+          name: '今日入库申请单数',
           icon: 'success',
           color: '#2ec7c9',
           value: 1995
         },
         {
-          name : '今日出库申请单数',
+          name: '今日出库申请单数',
           icon: 'success',
           color: '#2ec7c9',
           value: 1995
         },
-      ]
+      ],
+      echartData: {//保存首页中三个图表的数据）
+        order: {//订单图表
+          xData: [],
+          series: []
+        },
+        parts: {//配件图表
+          series: []
+        },
+        user: {//用户表
+          xData: [],
+          series: []
+        }
+      },
+
     };
   },
-  mounted () {
-    this.$http.get('/home/getData').then(res => {
-      console.log(res.data)
-    })
-  },
+
   components: {
     // UserCard,
     PanelGroup,
+    Echart
   },
 
   computed: {},
 
+  created () {
+    this.getTableData()
+  },
+  methods: {
+    getTableData () {//获取mock数据
+      this.$http.get('/home/getData').then(res => {
+        res = res.data;
+        console.log(res);//打印mock数据
 
-  methods: {}
+        //订单折线图-----------------------------------------
+        const order = res.data.orderData;
+        // console.log(order) //打印order表数据
+        this.echartData.order.xData = order.date;//x轴的数据
+        //series数据
+        // 1.取出series中的那么name部分 --键名
+        let keyArray = Object.keys(order.data[0])
+        // console.log(keyArray);//打印order.data[0]中的键
+        keyArray.forEach(key => {
+          this.echartData.order.series.push({
+            name: key,
+            type: 'line',
+            data: order.data.map(item => item[key])
+          })
+        })
+
+        // 用户柱状图----------------------------------------
+        this.echartData.user.xData = res.data.userData.map(item => item.date);
+        this.echartData.user.series.push({
+          name: '新增用户',
+          data: res.data.userData.map(item => item.new),
+          type: 'bar'
+        })
+        this.echartData.user.series.push({
+          name: '活跃用户',
+          data: res.data.userData.map(item => item.active),
+          type: 'bar'
+        })
+
+        // 配件饼图------------------------------------------
+        this.echartData.parts.series.push({
+          type: 'pie',
+          data: res.data.partsData
+        })
+      })
+    }
+  }
 }
 </script>
 
 
 <style lang="scss" scoped>
-@import '../../assets/scss/home.css';
-  /* .el-card {
+@import "../../assets/scss/home.css";
+/* .el-card {
     display: flex;
     align-items: center;
     
   } */
-  
-  /* .el-card .detail .name {
+
+/* .el-card .detail .name {
     line-height: 18px;
     color: rgba(0, 0, 0, 0.45);
     font-size: 16px;
     margin-bottom: 12px;
   } */
-
 </style>

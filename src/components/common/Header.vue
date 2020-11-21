@@ -1,6 +1,6 @@
 <template>
   <header class="nav-bar">
-    <div class="left-content" >
+    <div class="left-content">
       <!-- 菜单伸缩按钮 -->
       <el-button icon="el-icon-s-operation" plain size="mini" @click="collapseMenu"></el-button>
       <!-- <div data-v-4e6f274c=""
@@ -16,7 +16,7 @@
       </div> -->
 
       <!-- 面包屑 -->
-      <div >
+      <div>
         <el-breadcrumb separator="/">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="current.path" v-if="current">{{current.label}}</el-breadcrumb-item>
@@ -25,28 +25,28 @@
       </div>
     </div>
 
-    <!-- 用户信息 -->
+    <!-- 用户中心 -->
     <div class="right-menu">
       <el-dropdown trigger="click">
-      <span class="el-dropdown-link">
-        <img :src="userimg"><i class="el-icon-caret-bottom el-icon--right"></i>
-      </span>
+        <span class="el-dropdown-link">
+          <img :src="userimg"><i class="el-icon-caret-bottom el-icon--right"></i>
+        </span>
         <el-dropdown-menu slot="dropdown" class="el-dropdown-menu">
           <el-dropdown-item>个人中心</el-dropdown-item>
           <el-dropdown-item>退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-<!--    <div class="el-scrollbar__bar is-horizontal"><div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div></div>-->
+    <!--    <div class="el-scrollbar__bar is-horizontal"><div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div></div>-->
   </header>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: "CommonHead",
-  data(){
+  data () {
     return {
       userimg: require('../../assets/userimg.gif')
     }
@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     //调用 vuex中的tab.js中collapseMenu的方法
-    collapseMenu(){
+    collapseMenu () {
       this.$store.commit('collapseMenu')
     }
   }
@@ -70,23 +70,22 @@ export default {
 </script>
 
 <style scoped>
-.nav-bar{
+.nav-bar {
   display: flex;
   height: 100%;
   align-items: center;
   justify-content: space-between;
-  
 }
 /* 左边部分 */
-.left-content{
+.left-content {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-.left-content .el-button{   /*面包屑跟 菜单按钮的间距*/
-    margin-right: 20px;
-  }
-
+.left-content .el-button {
+  /*面包屑跟 菜单按钮的间距*/
+  margin-right: 20px;
+}
 
 /* .hamburger-container[data-v-d16d6306] {
   width: 40px;
@@ -105,15 +104,15 @@ export default {
   height: 20px;
 } */
 
-.el-breadcrumb__inner a, .el-breadcrumb__inner.is-link{  /*面包屑当前激活菜单样式优化*/
-    color: #666666;
-    font-weight: normal !important;
-  }
-
-
+.el-breadcrumb__inner a,
+.el-breadcrumb__inner.is-link {
+  /*面包屑当前激活菜单样式优化*/
+  color: #666666;
+  font-weight: normal !important;
+}
 
 /* 右边部分 */
-.right-menu{
+.right-menu {
   display: flex;
   align-items: center;
   float: right;
@@ -134,10 +133,10 @@ export default {
 /*  top: 25px;*/
 /*  font-size: 12px;*/
 /*}*/
-.el-dropdown-menu{
+.el-dropdown-menu {
   top: 56px !important;
 }
-.el-dropdown img{
+.el-dropdown img {
   width: 40px;
   height: 40px;
   border-radius: 10px;
