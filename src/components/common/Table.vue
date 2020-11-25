@@ -9,13 +9,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-for="item in tableLabel" :key="item.prop" :label="item.label" show-overflow-tooltip>
+      <el-table-column v-for="item in tableLabel" :key="item.prop" :label="item.label" show-overflow-tooltip
+        width=" auto">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row[item.prop] }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="150px">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
@@ -23,7 +24,7 @@
       </el-table-column>
     </el-table>
     <el-pagination class="pager" background layout="prev, pager, next" :total="config.total"
-      :current-page.sync="config.page" @click="changPage">
+      :current-page.sync="config.page" @current-change="changPage">
     </el-pagination>
   </div>
 </template>
@@ -46,9 +47,15 @@ export default {
   computed: {},
 
   methods: {
-    handleEdit () { },
-    handleDelete () { },
-    changPage () { }
+    handleEdit (row) {//编辑
+      this.$emit('edit', row)//触发父组件的自定义事件（edit事件)
+    },
+    handleDelete (row) {//删除
+      this.$emit('deleted', row)//触发父组件的自定义事件（deleted事件)
+    },
+    changPage (page) {
+      this.$emit('changePage', page)//触发父组件的自定义事件（changePage事件)
+    }
   }
 }
 </script>

@@ -1,14 +1,22 @@
 <!--  -->
 <template>
   <div class="manage">
+    <el-dialog :title="operateType === 'add' ? '添加企业信息' : '编辑企业信息'" :visible.sync="dialogFormVisible" width='30%'>
+      <Form :formLabel="operateFormLabel" :form="operateForm" />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
+      </div>
+    </el-dialog>
     <div class="manage-header">
-      <Form inline :formLabel="formLabel" :form="searchForm" />
+      <Form inline :formLabel="searchFormLabel" :form="searchForm" />
       <el-button type="primary" icon="el-icon-search" size='small'>搜索</el-button>
       <el-button type="primary" icon="el-icon-plus" size='small'>新增</el-button>
 
     </div>
 
-    <Table :tableData="tableData" :tableLabel="tableLabel" :config="config" />
+    <Table :tableData="tableData" :tableLabel="tableLabel" :config="config" @changePage="getList"
+      @edit="editEnterprises" @deleted="deletedEnterprises" />
 
   </div>
 
@@ -22,15 +30,62 @@ import Table from "@/components/common/Table"
 export default {
   data () {
     return {
+      //dialog
+      operateType: 'add',//操作类型，添加操作或者更新操作
+      dialogFormVisible: false,//对话框是否显示
+
       // 表单传入的数据
-      searchForm: {
+      operateForm: {//操作表单
+        name: '',
+        addr: '',
+        age: '',
+        birth: '',
+        sex: ''
+      },
+      operateFormLabel: [
+        {
+          model: 'name',
+          label: '姓名'
+        },
+        {
+          model: 'age',
+          label: '年龄'
+        },
+        {
+          model: 'birth',
+          label: '生日',
+          type: 'date'
+
+        },
+        {
+          model: 'sex',
+          label: '性别',
+          type: 'select',
+          opts: [
+            {
+              label: '男',
+              value: 1
+            },
+            {
+              label: '女',
+              value: 0
+            },
+          ]
+        },
+        {
+          model: 'addr',
+          label: '地址'
+        },
+      ],
+      searchForm: {//搜索表单
         keyword: ''
       },
-      formLabel: [//表单参数
+
+      searchFormLabel: [//表单参数
         {
           model: 'keyword',//表单的类型（输入框、选择框。。。）
           label: '',  //label是输入框左边的说明（姓名，密码。。。）
-          options: ['快乐', '吃饱', '保暖']
+
         }
       ],
 
@@ -52,11 +107,13 @@ export default {
         },
         {
           prop: 'birth',
-          label: '生日'
+          label: '生日',
+          width: 200
         },
         {
           prop: 'addr',
-          label: '地址'
+          label: '地址',
+          width: 320
         }
       ],
       config: {
@@ -91,9 +148,55 @@ export default {
         this.config.total = res.data.count;
         this.config.loading = false;
       })
+    },
+    editEnterprises (row) {//编辑企业信息
+      this.operateType = 'edit';
+      this.dialogFormVisible = true;
+      this.operateForm = row
+    },
+    confirm () {//点击确定按钮时，向后台传入参数
+      if (this.operateType == 'edit') {
+        this.$http.post('/user/edit', this.operateForm).then(res => {
+          console.log(res);
+          this.dialogFormVisible = false
+
+        })
+      }
+
+    },
+    deletedEnterprises (row) {//删除企业信息
+      this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let id = row.id
+        this.$http.get('/user/del', {
+          params: {
+            id
+          }
+        }).then(res => {
+          console.log(res.data);
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
+
   }
+  // changePage (value) {
+  //   console.log(value);
+  // }
+
 }
+
 </script>
 
 
