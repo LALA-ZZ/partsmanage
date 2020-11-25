@@ -12,11 +12,11 @@ module.exports = {
       //路径别名配置
       alias: {
         '@': resolve('src'),
-        'assets': resolve('@/assets'),
-        'common': resolve('@/common'),
-        'components': resolve('@/components'),
-        'network': resolve('@/network'),
-        'views': resolve('@/views'),
+        // 'assets': resolve('@/assets'),
+        // 'common': resolve('@/common'),
+        // 'components': resolve('@/components'),
+        // 'network': resolve('@/network'),
+        // 'views': resolve('@/views'),
       }
     }
   },

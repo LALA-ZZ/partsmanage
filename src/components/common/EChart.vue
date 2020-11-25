@@ -30,10 +30,13 @@ export default {
       echart: null,//echart容器，是否是一个图表
       axisOption: {//包含坐标轴的图表配置
         grid: {
+          top: '10%',
 
-          left: "5%",
+          left: "3%",
 
-          right: "auto",
+          right: "3%",
+
+          bottom: '10%',
 
           backgroundColor: '#fff',
 
@@ -83,7 +86,8 @@ export default {
           },
           bottom: '0px'
         },
-      }
+      },
+
     };
   },
   watch: {
@@ -92,6 +96,11 @@ export default {
         this.initChart();
       },
       deep: true
+    },
+    isCollapse () {
+      setTimeout(() => {
+        this.resizeCharts()
+      }, 300)
     }
   },
 
@@ -99,6 +108,9 @@ export default {
   computed: {
     options () {//通过计算属性来判断是不是有坐标
       return this.isAxisChart ? this.axisOption : this.normalOption;
+    },
+    isCollapse () {//获取菜单栏是否折叠
+      return this.$store.state.tab.isCollapse;
     }
   },
 
@@ -119,7 +131,16 @@ export default {
       } else {
         this.normalOption.series = this.chartData.series;
       }
+    },
+    resizeCharts () {//在网页发生形状变化时,图表自动改变形状
+      this.echart ? this.echart.resize() : '';
     }
+  },
+  mounted () {
+    window.addEventListener('resize', this.resizeCharts);//监听网页的resize事件,然后调用resizeCharts方法,自动改变图表形状
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.resizeCharts);//在组件销毁时销毁事件,防止内存泄漏
   }
 }
 </script>

@@ -1,14 +1,15 @@
 <!--  -->
 <template>
-  <el-row :gutter="20" class="home">
-    <!-- 左边个人中心 -->
-    <el-col :span="6">
-      <!-- <user-card/> -->
-    </el-col>
+  <div style="background-color: #f0f2f5">
+    <el-row :gutter="20" class="home">
+      <!-- 左边个人中心 -->
+      <el-col :span="6">
+        <!-- <user-card/> -->
+      </el-col>
 
-    <!-- 右边展示中心 -->
-    <el-col :span="24">
-      <!-- <div class="num-list">
+      <!-- 右边展示中心 -->
+      <el-col :span="24">
+        <!-- <div class="num-list">
          <el-card shadow="hover" v-for="item in countData" :key="item.name" :body-style="{display: 'flex', padding: '0px'}">
           <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
           <div class="detail">
@@ -18,24 +19,26 @@
         </el-card> 
       </div> -->
 
-      <panel-group />
+        <panel-group />
 
-      <!-- 大图表部分 -->
-      <el-card shadow="hover">
-        <echart style="height: 350px" :chartData="echartData.order"></echart>
-      </el-card>
-
-      <div class="graph">
+        <!-- 大图表部分 -->
         <el-card shadow="hover">
-          <echart style="height: 300px" :chartData="echartData.user"></echart>
+          <echart style="height: 350px" :chartData="echartData.order"></echart>
         </el-card>
-        <el-card shadow="hover">
-          <echart style="height: 300px" :chartData="echartData.parts" :isAxisChart="false"></echart>
-        </el-card>
-      </div>
 
-    </el-col>
-  </el-row>
+        <div class="graph">
+          <el-card shadow="hover">
+            <echart style="height: 300px" :chartData="echartData.user"></echart>
+          </el-card>
+          <el-card shadow="hover">
+            <echart style="height: 300px" :chartData="echartData.parts" :isAxisChart="false"></echart>
+          </el-card>
+        </div>
+
+      </el-col>
+    </el-row>
+  </div>
+
 </template>
 
 
@@ -128,12 +131,13 @@ export default {
         this.echartData.user.series.push({
           name: '新增用户',
           data: res.data.userData.map(item => item.new),
-          type: 'bar'
+          type: 'bar',
         })
         this.echartData.user.series.push({
           name: '活跃用户',
           data: res.data.userData.map(item => item.active),
-          type: 'bar'
+          type: 'bar',
+          barGap: '0'//将新增用户和活跃用户的条形图之间的间隔为0
         })
 
         // 配件饼图------------------------------------------
@@ -150,6 +154,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/scss/home.css";
+
 /* .el-card {
     display: flex;
     align-items: center;
