@@ -3,6 +3,8 @@
   <div class="common-table">
     <el-table :data="tableData" height="100%" border fit highlight-current-row style="width: 100%;"
       v-loading="config.loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+      <el-table-column type="selection" width="55">
+      </el-table-column>
       <el-table-column label="序号" width="85px">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ (config.page -1) * 10 + scope.$index + 1 }}</span>
@@ -23,8 +25,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="pager" background layout="prev, pager, next" :total="config.total"
-      :current-page.sync="config.page" @current-change="changPage">
+    <el-pagination class="pager" background layout="total, sizes, prev, pager, next, jumper" :total="config.total"
+      :current-page.sync="config.page" @current-change="changeCurrentPage" :page-size="10" :page-sizes="[ 8, 10, 20]">
     </el-pagination>
   </div>
 </template>
@@ -53,9 +55,12 @@ export default {
     handleDelete (row) {//删除
       this.$emit('deleted', row)//触发父组件的自定义事件（deleted事件)
     },
-    changPage (page) {
+    changeCurrentPage (page) {
       this.$emit('changePage', page)//触发父组件的自定义事件（changePage事件)
-    }
+    },
+    // handleSizeChange (page) {
+    //   this.$emit('handleSizeChange', page)
+    // }
   }
 }
 </script>

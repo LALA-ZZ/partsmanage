@@ -1,7 +1,7 @@
 <template>
   <div class="tags-view-container">
     <div class="tags">
-      <el-tag :key="tag.name" size="small" v-for="tag in tags" :closable="tag.name !== 'home'"
+      <el-tag :key="tag.name" size="small" hit v-for="tag in tags" :closable="tag.name !== 'home'"
         :disable-transitions="false" @close="handleClose(tag)" @click="linkMain(tag)" style="margin-left: 5px;"
         :effect="$route.name ===tag.name ? 'dark' : 'plain'">
         <!--根据effect来判断标签的主题-->
@@ -18,9 +18,6 @@ export default {
   name: "tab",
   data () {
     return {
-      dynamicTags: ['标签一', '标签二', '标签三'],
-      inputVisible: false,
-      inputValue: ''
     };
   },
   methods: {
@@ -56,7 +53,7 @@ export default {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #ecf5ff;
+  /* background: #ecf5ff; */
   border-bottom: 1px solid #d8dce5;
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
     0 0 3px 0 rgba(0, 0, 0, 0.04);

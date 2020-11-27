@@ -2,9 +2,10 @@
 
   <el-menu default-active="2" class="el-menu-vertical-demo" background-color="#304156" text-color="#fff"
     active-text-color="#ffd04b" :collapse="isCollapse">
-    <!-- <h3 v-show="!isCollapse">售后配件多级仓库管理系统</h3>
+    <!-- <h3 v-show="!isCollapse">售后配件多级仓库协同管理系统</h3>
     <h3 v-show="isCollapse">配件</h3> -->
-    <el-submenu :index="item.path" v-for="item in asideMenu" :key="item.path" @click="clickMenu(item)">
+    <!-- <el-submenu :index="item.path" v-for="item in asideMenu" :key="item.path" @click="clickMenu(item)"> -->
+    <el-submenu :index="item.path" v-for="item in menu" :key="item.path" @click="clickMenu(item)">
       <template slot="title">
         <i :class="'el-icon-s-' + item.icon"></i>
         <span>{{item.label}}</span>
@@ -18,18 +19,6 @@
         </template>
       </el-menu-item>
 
-      <!-- <el-submenu  :index="subItem.path" v-for="subItem in item.children" :key="subItem.path" @click="clickMenu(subItem)">
-        <template slot="title">
-          <i :class="'el-icon-s-' + subItem.icon"></i>
-          <span >{{subItem.label}}</span>
-        </template>
-
-        <el-menu-item :index="thirdLevelItem.path" v-for="thirdLevelItem in subItem.children" :key="thirdLevelItem.path" @click="clickMenu(thirdLevelItem)">
-          <template slot="title">
-            <span>{{thirdLevelItem.label}}</span>
-          </template>
-        </el-menu-item>
-      </el-submenu> -->
     </el-submenu>
   </el-menu>
 
@@ -40,7 +29,7 @@ export default {
   name: "CommonAside",
   data () {
     return {
-      asideMenu: [
+      asideMenu: [//静态的菜单目录
         {
           path: '/',
           name: 'home',
@@ -58,33 +47,6 @@ export default {
               name: 'eresourcemanage',
               label: '企业资源',
               icon: 'data',
-              // children: [
-              //   {
-              //     path: '/selinfo',
-              //     name: 'selinfo',
-              //     icon: 'data',
-              //     label: '个人信息',
-              //   },
-              //   {
-              //     path: '/supplierinfo',
-              //     name: 'supplierinfo',
-              //     icon: 'data',
-              //     label: '供应商信息',
-              //   },
-              //   {
-              //     path: '/logisticsinfo',
-              //     name: 'logisticsinfo',
-              //     icon: 'data',
-              //     label: '物流商信息',
-              //   },
-              //   {
-              //     path: '/clientinfo',
-              //     name: 'clientinfo',
-              //     icon: 'data',
-              //     label: '客户信息',
-              //   },
-              // ]
-
             },
             {
               path: '/partsinfomanage',
@@ -201,14 +163,23 @@ export default {
   },
   computed: {//计算属性
     //判断菜单是否有子菜单
+    // noChildren () {
+    //   return this.asideMenu.filter(item => !item.children);
+    // },
+    // hasChildren () {
+    //   return this.asideMenu.filter(item => item.children);
+    // },
     noChildren () {
-      return this.asideMenu.filter(item => !item.children);
+      return this.menu.filter(item => !item.children);
     },
     hasChildren () {
-      return this.asideMenu.filter(item => item.children);
+      return this.menu.filter(item => item.children);
     },
     isCollapse () {
       return this.$store.state.tab.isCollapse;
+    },
+    menu () {//动态菜单
+      return this.$store.state.tab.menu
     }
   },
   methods: {

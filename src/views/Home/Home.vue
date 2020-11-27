@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div style="background-color: #f0f2f5">
+  <div style="background-color: #f0f2f5;padding: 32px;">
     <el-row :gutter="20" class="home">
       <!-- 左边个人中心 -->
       <el-col :span="6">

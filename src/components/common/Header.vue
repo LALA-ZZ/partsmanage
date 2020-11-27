@@ -75,6 +75,8 @@ export default {
   height: 100%;
   align-items: center;
   justify-content: space-between;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
 /* 左边部分 */
 .left-content {

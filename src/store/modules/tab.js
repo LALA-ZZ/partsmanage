@@ -1,8 +1,10 @@
+import Cookie from 'vue-cookies'
+
 export default {
     state: {
         isCollapse: false,//是否将左边的菜单折叠
         currentMenu: null,//当前点击的菜单
-        menu: [],
+        menu: [],//存储动态菜单
         tabsList: [
             {
                 path: '/',
@@ -13,6 +15,44 @@ export default {
         ]
     },
     mutations: {
+        setMenu(state,val){//设置动态菜单（根据权限）
+          state.menu = val;
+          Cookie.set('menu',JSON.stringify(val));//JSON.stringify() 方法用于将 JavaScript 值转换为 JSON 字符串。
+          console.log(val,'vuex')
+        },
+
+        clearMenu(state){//登录人员退出之后需要清除cookie
+          state.menu = [];
+          Cookie.remove('menu')
+        },
+        addMenu(state , router){//添加动态的路由
+          let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
+          if(!menu){
+            return
+          }
+          state.menu = menu
+          let currentMenu = [
+            {
+              path: '/', 
+              component: () => import(`@/views/Main`),
+              children: [] 
+            }
+          ];
+          menu.forEach(item =>{
+            if(item.children){
+              item.children =item.children.map(item => {
+                item.component = () => import(`@/views/${item.url}`)//url表示是组件的位置 
+                return item
+              });
+              currentMenu[0].children.push(...item.children)//3个点表示children 子路由需要展开
+            }else{
+              item.component = () => import(`@/views/${item.url}`);
+              currentMenu[0].children.push(item);
+            }
+          })
+          console.log(currentMenu,'cur')
+          router.addRoutes(currentMenu)//添加动态路由
+        },
         //获取菜单
         selectMenu(state, value) {
             if (value.name !== 'home'){

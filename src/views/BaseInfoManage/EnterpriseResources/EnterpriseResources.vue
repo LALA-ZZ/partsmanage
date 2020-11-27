@@ -10,8 +10,10 @@
     </el-dialog>
     <div class="manage-header">
       <Form inline :formLabel="searchFormLabel" :form="searchForm" />
-      <el-button type="primary" icon="el-icon-search" size='small'>搜索</el-button>
-      <el-button type="primary" icon="el-icon-plus" size='small'>新增</el-button>
+      <el-button type="primary" icon="el-icon-search" size='mini' @click="selectEnterprises">搜索
+      </el-button>
+      <el-button type="primary" icon="el-icon-plus" size='mini' @click="addEnterprises">新增</el-button>
+      <el-button type="danger" icon="el-icon-plus" size='mini' @click="addEnterprises">批量删除</el-button>
 
     </div>
 
@@ -80,14 +82,17 @@ export default {
       searchForm: {//搜索表单
         keyword: ''
       },
-
       searchFormLabel: [//表单参数
         {
-          model: 'keyword',//表单的类型（输入框、选择框。。。）
+          model: 'keyword',//v-model类型
           label: '',  //label是输入框左边的说明（姓名，密码。。。）
 
         }
       ],
+      // selectForm:{
+
+      // },
+
 
 
       // 表格传入的数据
@@ -141,7 +146,9 @@ export default {
           page: this.config.page
         }
       }).then(res => {
+        // console.log(res.data)
         this.tableData = res.data.list.map(item => {//获取数据
+          // console.log(item.name)
           item.sexLabel = item.sex === 0 ? '女' : '男';
           return item
         });
@@ -149,22 +156,30 @@ export default {
         this.config.loading = false;
       })
     },
+
     editEnterprises (row) {//编辑企业信息
       this.operateType = 'edit';
       this.dialogFormVisible = true;
       this.operateForm = row
     },
-    confirm () {//点击确定按钮时，向后台传入参数
+    confirm () {//编辑企业信息,点击确定按钮时，向后台传入参数
       if (this.operateType == 'edit') {
         this.$http.post('/user/edit', this.operateForm).then(res => {
           console.log(res);
           this.dialogFormVisible = false
 
         })
+      } else {//添加企业信息,点击确定按钮时，向后台传入参数
+        this.$http.post('/user/add', this.operateForm).then(res => {
+          console.log(res)
+          this.dialogFormVisible = false
+          this.getList()
+        })
       }
 
     },
     deletedEnterprises (row) {//删除企业信息
+      console.log(row.id)
       this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -181,6 +196,7 @@ export default {
             type: 'success',
             message: '删除成功!'
           });
+          this.getList()
         })
       }).catch(() => {
         this.$message({
@@ -188,7 +204,45 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+
+    selectEnterprises () {//根据关键字查询企业信息
+      console.log(this.searchForm.keyword)
+      if (this.searchForm.keyword == "") {
+        this.getList()
+      } else {
+        this.config.loading = true;//获取数据前，先定为加载状态
+        console.log('当前页面' + this.config.page)
+        this.$http.get('/user/getUser', {
+          params: {
+            name: this.searchForm.keyword,
+          }
+        }).then(res => {
+          // console.log(res.data.list)
+          this.tableData = res.data.list.map(item => {//获取数据
+            item.sexLabel = item.sex === 0 ? '女' : '男';
+            // console.log(item)
+            // console.log(item.name)
+            // console.log(this.searchForm.keyword)
+            // console.log(item.name.search(this.searchForm.keyword) != -1)
+
+            return item
+          });
+          this.config.total = res.data.count;
+          this.config.loading = false;
+        })
+      }
+
+    },
+    addEnterprises () {
+      this.operateType = 'add';
+      this.dialogFormVisible = true;
+
+      // this.$refs['operateForm'].resetFields();
+
     }
+
+
 
   }
   // changePage (value) {
