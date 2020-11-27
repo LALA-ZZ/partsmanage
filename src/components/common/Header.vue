@@ -33,7 +33,7 @@
         </span>
         <el-dropdown-menu slot="dropdown" class="el-dropdown-menu">
           <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click.native="loginOut">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -64,6 +64,13 @@ export default {
     //调用 vuex中的tab.js中collapseMenu的方法
     collapseMenu () {
       this.$store.commit('collapseMenu')
+    },
+
+    loginOut () {
+      this.$store.commit('clearToken');
+      this.$store.commit('clearMenu')
+      location.reload()
+
     }
   }
 }

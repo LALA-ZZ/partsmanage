@@ -186,34 +186,7 @@ export default {
                     icon: 'data',
                     url: 'BaseInfoManage/EnterpriseResources/EnterpriseResources'
                   },
-                  {
-                    path: '/partsinfomanage',
-                    name: 'partsinfomanage',
-                    label: '配件信息',
-                    icon: 'data',
-                    url: ''
-                  },
-                  {
-                    path: '/warehouseinfomanage',
-                    name: 'warehouseinfomanage',
-                    label: '仓库信息',
-                    icon: 'data',
-                    url: ''
-                  },
-                  {
-                    path: '/forecastInfomanage',
-                    name: 'forecastInfomanage',
-                    label: '预测信息',
-                    icon: 'data',
-                    url: ''
-                  },
-                  {
-                    path: '/optimizationinfomanage',
-                    name: 'optimizationinfomanage',
-                    label: '优化信息',
-                    icon: 'data',
-                    url: ''
-                  },
+                  
                 ]
               },
             ],

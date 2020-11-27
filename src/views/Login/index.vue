@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 登录页面 -->
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" class="login-form" label-position="left">
@@ -55,15 +55,17 @@ export default {
     handleLogin () {
       this.$http.post('/permission/getMenu', this.loginForm).then(res => {
         res = res.data;
-        if (res.code === 200000) {
+        if (res.code === 200000) {//登录成功
+          this.$store.commit('setToken', res.data.token)//创建token
+
           this.$store.commit('clearMenu')
           this.$store.commit('setMenu', res.data.menu)
-
           this.$store.commit('addMenu', this.$router)
           this.$router.push({ name: 'home' })
 
-        } else {
+        } else {//登录失败
           this.$message.warning(res.data.message)
+          this.$store.commit()
         }
       })
     },
