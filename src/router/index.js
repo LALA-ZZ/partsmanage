@@ -112,6 +112,11 @@ const routes = [
     //         },
     //     ]
     // },
+
+     {
+      path: '/', //监听'/'路径，自动重定向要login路径
+      redirect: '/login' 
+     },
     {
       path: '/login',
       name: 'login',

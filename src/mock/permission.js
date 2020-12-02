@@ -7,7 +7,7 @@ export default {
      // 先判断用户是否存在 ，两个用户
     if( username === 'admin' || username ==='wp'){
       // 判断账号和密码是否对应
-      if(username === 'admin' && password === '111'){
+      if(username === 'admin' && password === '111111'){
         return{
           code: 200000,
           data: {
@@ -161,7 +161,7 @@ export default {
             message: '获取成功',
           }
         }
-      }else if(username === 'wp' && password === '111' ){
+      }else if(username === 'wp' && password === '111111' ){
         return{
           code: 200000,
           data: {

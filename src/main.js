@@ -19,15 +19,31 @@ Vue.use(VueCookie)
 //添加到原型中，使其变成全局变量
 Vue.prototype.$http = http
 
+
+// 全局路由守卫控制访问权限
 router.beforeEach((to, from, next) => {
-  // to and from are Route Object,next() must be called to resolve the hook}
-  store.commit('getToken')
-  let token = store.state.user.token
-  if(!token && to.name !== 'login') {
-    next({name: 'login'})
-  } else{
-    next()
+  // to 跳转到要去的路径
+  // from 从某个路径跳转过来的
+  // next 是一个函数，表示放行，有两种方式
+  //      1.next()  放行    2.next('/login')，放行到某一路径
+
+  // 如果用户访问的是登录页，直接放行
+  if(to.name === 'login') return next();
+  // 从sessionStorage中获取保存的token值
+  const tokenStr = window.sessionStorage.getItem('token')
+  //如果没有token，直接跳转到登录页面
+  if(!tokenStr && to.name !== 'login'){
+    return next({name: 'login'})
   }
+  next()
+
+  // store.commit('getToken')
+  // let token = store.state.user.token
+  // if(!token && to.name !== 'login') {
+  //   next({name: 'login'})
+  // } else{
+  //   next()
+  // }
   
 })
 

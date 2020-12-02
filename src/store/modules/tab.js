@@ -26,10 +26,14 @@ export default {
           Cookie.remove('menu')
         },
         addMenu(state , router){//添加动态的路由
-          let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
-          if(!menu){
+          if(!Cookie.get('menu')){
             return
           }
+          // let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
+          // if(!menu){
+          //   return
+          // }
+          let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
           state.menu = menu
           let currentMenu = [
             {
