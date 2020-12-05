@@ -10,14 +10,15 @@
       <!-- 右边展示中心 -->
       <el-col :span="24">
         <!-- <div class="num-list">
-         <el-card shadow="hover" v-for="item in countData" :key="item.name" :body-style="{display: 'flex', padding: '0px'}">
-          <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
-          <div class="detail">
-            <p class="card-panel-text">{{item.name}}</p>
-            <P class="card-panel-num">{{item.value}}</P>
-          </div>
-        </el-card> 
-      </div> -->
+          <el-card shadow="hover" v-for="item in countData" :key="item.name"
+            :body-style="{display: 'flex', padding: '0px'}">
+            <i class="icon" :class="`el-icon-${item.icon}`" :style="{background: item.color}"></i>
+            <div class="detail">
+              <p class="card-panel-text">{{item.name}}</p>
+              <P class="card-panel-num">{{item.value}}</P>
+            </div>
+          </el-card>
+        </div> -->
 
         <panel-group />
 

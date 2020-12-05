@@ -13,7 +13,7 @@ export default {
           data: {
             menu: [
                 {
-                  path: '/',
+                  path: '/home',
                   name: 'home',
                   label: '首页',
                   icon: 'home',
@@ -37,7 +37,7 @@ export default {
                       name: 'partsinfomanage',
                       label: '配件信息',
                       icon: 'data',
-                      url: ''
+                      url: 'BaseInfoManage/PartsInfo/PartsInfo'
                     },
                     {
                       path: '/warehouseinfomanage',

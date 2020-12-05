@@ -80,7 +80,8 @@ export default {
           // // 1.登录成功之后的token保存在客户端的sessionStorage中
           // //    1.1项目中除了登录之外的其他api接口，必须在登录之后才能访问
           // //    1.2token只应在当前网站打开期间生效，所以将token保存在sessionStorage中
-          // window.sessionStorage.setItem("token", res.data.token)
+
+          window.sessionStorage.setItem("token", res.data.token)
           // // 2.通过变成式导航跳转到后台主页路由地址是/home
           this.$store.commit('setToken', res.data.token)//创建token
           this.$store.commit('clearMenu')
@@ -90,7 +91,6 @@ export default {
 
         } else {//登录失败
           this.$message.warning(res.data.message)
-          this.$store.commit()
 
         }
       })

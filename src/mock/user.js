@@ -40,7 +40,7 @@ export default {
    * @return {{code: number, count: number, data: *[]}}
    */
   getUserList: config => {
-    const { name, page = 1, limit = 20 } = param2Obj(config.url)
+    const { name, page = 1 , limit = 8  } = param2Obj(config.url)
     console.log('name:' + name, 'page:' + page, '分页大小limit:' + limit)
     const mockList = List.filter(user => {
       if (name && user.name.indexOf(name) === -1) return false
@@ -72,7 +72,7 @@ export default {
     return {
       code: 20000,
       data: {
-        message: '添加成功'
+        message: '添加成功！'
       }
     }
   },

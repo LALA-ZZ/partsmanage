@@ -18,7 +18,7 @@ export default {
         setMenu(state,val){//设置动态菜单（根据权限）
           state.menu = val;
           Cookie.set('menu',JSON.stringify(val));//JSON.stringify() 方法用于将 JavaScript 值转换为 JSON 字符串。
-          console.log(val,'vuex')
+          // console.log(val,'vuex')
         },
 
         clearMenu(state){//登录人员退出之后需要清除cookie

@@ -3,7 +3,8 @@
 
   <el-form ref="form" :model="form" label-width="80px" :inline="inline">
     <el-form-item v-for="item in formLabel" :key="item.model" :label="item.label" style="margin-right: 0px;">
-      <el-input v-model="form[item.model]" :placeholder="'请输入' + item.label" v-if="!item.type"></el-input>
+      <el-input v-model="form[item.model]" :placeholder="'请输入' + item.label" v-if="!item.type" clearable
+        @clear="clearInput"></el-input>
 
       <el-select v-model="form[item.model]" placeholder="请选择" v-if="item.type === 'select'" style="width: 90px;">
         <el-option v-for="item in item.opts" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -43,10 +44,17 @@ export default {
 
   computed: {},
 
-  methods: {}
+  methods: {
+    clearInput () {
+      this.$emit('clearInput')
+    }
+  }
 }
 </script>
 
 
 <style lang="scss" scoped>
+// .el-input {
+//   width: 200px;
+// }
 </style>

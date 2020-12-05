@@ -68,14 +68,15 @@ export default {
 
     //登录退出
     loginOut () {
-      // //清除sessionStorage中的token 2020/12/1
-      // window.sessionStorage.clear('token')
-      // //路由挑战到登录页面
-      // this.$router.push({ name: 'login' })
+      //清除sessionStorage中的token 2020/12/1全家桶
+      window.sessionStorage.clear()
 
-      this.$store.commit('clearToken');
-      this.$store.commit('clearMenu')
-      location.reload()
+      //路由挑战到登录页面
+      this.$router.push({ name: 'login' })
+
+      // this.$store.commit('clearToken');
+      // this.$store.commit('clearMenu')
+      // location.reload()
 
     }
   }

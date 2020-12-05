@@ -32,7 +32,7 @@ router.beforeEach((to, from, next) => {
   // 从sessionStorage中获取保存的token值
   const tokenStr = window.sessionStorage.getItem('token')
   //如果没有token，直接跳转到登录页面
-  if(!tokenStr && to.name !== 'login'){
+  if(!tokenStr){
     return next({name: 'login'})
   }
   next()
@@ -52,4 +52,7 @@ new Vue({
   router,
   store,
   render: h => h(App),
+  created () {
+    store.commit('addMenu',router) //初始化的时候，需要把菜单进来
+  }
 }).$mount('#app')
