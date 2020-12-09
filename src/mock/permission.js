@@ -20,6 +20,41 @@ export default {
                   url: 'Home/Home'//Home组件的地址
                 },
                 {
+                  path: '/usermanage',
+                  name: 'usermanage',
+                  label: '用户管理',
+                  icon: 'custom',
+                  children: [
+                    {
+                      path: '/user',
+                      name: 'user',
+                      label: '用户列表',
+                      url: 'UserManage/User'
+                    }
+                   
+                  ]
+                },
+                {
+                  path: '/permissionmanage',
+                  name: 'permissionmanage',
+                  label: '权限管理',
+                  icon: 'flag',
+                  children: [
+                    {
+                      path: '/role',
+                      name: 'role',
+                      label: '角色列表',
+                      url: 'Permission/Roler'
+                    },
+                    {
+                      path: '/permission',
+                      name: 'permission',
+                      label: '权限列表',
+                      url: 'Permission/Permission'
+                    },
+                  ]
+                },
+                {
                   path: '/baseinfomation',
                   name: 'baseinfomation',
                   label: '基础信息管理',
