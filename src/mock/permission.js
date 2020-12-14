@@ -37,7 +37,7 @@ export default {
                       name: 'partsinfomanage',
                       label: '配件信息',
                       icon: 'data',
-                      url: ''
+                      url: 'BaseInfoManage/PartsInfo/PartsInfo'
                     },
                     {
                       path: '/warehouseinfomanage',
