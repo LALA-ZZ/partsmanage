@@ -1,7 +1,7 @@
 <template>
 
-  <el-menu default-active="2" class="el-menu-vertical-demo" background-color="#304156" text-color="#fff"
-    active-text-color="#ffd04b" :collapse="isCollapse">
+  <el-menu class="el-menu-vertical-demo" background-color="#304156" text-color="#fff" active-text-color="#ffd04b"
+    :collapse="isCollapse" :unique-opened="true" :collapse-transition="false" :default-active="activePath">
     <!-- <h3 v-show="!isCollapse">售后配件多级仓库协同管理系统</h3>
     <h3 v-show="isCollapse">配件</h3> -->
     <!-- <el-submenu :index="item.path" v-for="item in asideMenu" :key="item.path" @click="clickMenu(item)"> -->
@@ -14,7 +14,7 @@
       <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.path"
         @click="clickMenu(subItem)">
         <template slot="title">
-          <!-- <i :class="'el-icon-s-' + item.icon"></i> -->
+          <i class="el-icon-menu"></i>
           <span>{{subItem.label}}</span>
         </template>
       </el-menu-item>
@@ -30,6 +30,7 @@ export default {
   data () {
     return {
       asideMenu: [//静态的菜单目录
+
         {
           path: '/',
           name: 'home',
@@ -158,8 +159,12 @@ export default {
           label: '安全库存优化',
           icon: 'opportunity'
         },
-      ]
+      ],
+      activePath: ''
     }
+  },
+  created () {
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   computed: {//计算属性
     //判断菜单是否有子菜单
@@ -187,6 +192,10 @@ export default {
     clickMenu (item) {
       this.$router.push({ name: item.name });//在选择菜单之前，先路由跳转到对应的组件
       this.$store.commit('selectMenu', item);
+      //保存链接的激活状态
+      window.sessionStorage.setItem('activePath', item.path)
+      this.activePath = item.path
+
     }
   }
 }

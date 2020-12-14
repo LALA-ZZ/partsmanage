@@ -1,7 +1,7 @@
 <!-- 登录页面 -->
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" class="login-form" label-position="left">
+    <el-form ref="loginFormRef" :model="loginForm" class="login-form" :rules="loginFormRules" label-position="left">
 
       <div class="title-container">
         <h3 class="title">售后配件多级仓库协同管理系统</h3>
@@ -28,7 +28,7 @@
       </el-form-item>
       <!-- </el-tooltip> -->
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" @click="handleLogin">Login
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" @click="handleLogin">登录
       </el-button>
     </el-form>
   </div>
@@ -39,11 +39,25 @@
 export default {
   data () {
     return {
+      //登录表单的数据绑定对象
       loginForm: {
         username: '',
         password: ''
       },
       passwordType: 'password',
+      //表单验证规则对象
+      loginFormRules: {
+        //验证用户名
+        username: [
+          { required: true, message: '请输入登录名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10个字符', trigger: 'blur' }
+        ],
+        //验证密码
+        password: [
+          { required: true, message: '请输入登录名称', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ]
+      }
     };
   },
 
@@ -53,11 +67,23 @@ export default {
 
   methods: {
     handleLogin () {
+      //登录前表单数据预验证
+      this.$refs.loginFormRef.validate(validate => {
+        console.log(validate)
+      })
+
+      //将数据发送后台
       this.$http.post('/permission/getMenu', this.loginForm).then(res => {
         res = res.data;
         if (res.code === 200000) {//登录成功
-          this.$store.commit('setToken', res.data.token)//创建token
+          // this.$message.success('登录成功！')
+          // // 1.登录成功之后的token保存在客户端的sessionStorage中
+          // //    1.1项目中除了登录之外的其他api接口，必须在登录之后才能访问
+          // //    1.2token只应在当前网站打开期间生效，所以将token保存在sessionStorage中
 
+          window.sessionStorage.setItem("token", res.data.token)
+          // // 2.通过变成式导航跳转到后台主页路由地址是/home
+          this.$store.commit('setToken', res.data.token)//创建token
           this.$store.commit('clearMenu')
           this.$store.commit('setMenu', res.data.menu)
           this.$store.commit('addMenu', this.$router)
@@ -65,7 +91,7 @@ export default {
 
         } else {//登录失败
           this.$message.warning(res.data.message)
-          this.$store.commit()
+
         }
       })
     },
@@ -76,6 +102,7 @@ export default {
       } else {
         this.passwordType = 'password'
       }
+      // console.log(this)
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
@@ -87,7 +114,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+ <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
@@ -153,6 +180,11 @@ $light_gray: #eee;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+
+    // position: absolute;
+    // left: 50%;
+    // top: 40%;
+    // transform: translate(-50%, -50%);
   }
 
   .svg-container {
@@ -186,3 +218,6 @@ $light_gray: #eee;
   }
 }
 </style>
+
+
+

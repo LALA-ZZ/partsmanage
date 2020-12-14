@@ -1,8 +1,8 @@
 <!--  -->
 <template>
   <div class="common-table">
-    <el-table :data="tableData" height="100%" border fit highlight-current-row style="width: 100%;"
-      v-loading="config.loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+    <el-table :data="tableData" border stripe highlight-current-row v-loading="config.loading"
+      element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column label="序号" width="85px">
@@ -25,8 +25,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页区域-->
     <el-pagination class="pager" background layout="total, sizes, prev, pager, next, jumper" :total="config.total"
-      :current-page.sync="config.page" @current-change="changeCurrentPage" :page-size="10" :page-sizes="[ 8, 10, 20]">
+      :current-page.sync="config.page" @current-change="changeCurrentPage" :page-size="config.limit"
+      :page-sizes="[ 8, 10, 20]">
     </el-pagination>
   </div>
 </template>
@@ -67,12 +69,12 @@ export default {
 
 
 <style lang="scss" scoped>
-.common-table {
-  height: calc(100% - 100px); //calc() 函数用于动态计算长度值。
-  background-color: #fff;
-  position: relative;
-}
+// .common-table {
+//   height: calc(100% - 100px); //calc() 函数用于动态计算长度值。
+//   background-color: #fff;
+//   position: relative;
+// }
 .common-table .pager {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 </style>

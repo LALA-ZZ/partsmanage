@@ -7,17 +7,52 @@ export default {
      // 先判断用户是否存在 ，两个用户
     if( username === 'admin' || username ==='wp'){
       // 判断账号和密码是否对应
-      if(username === 'admin' && password === '111'){
+      if(username === 'admin' && password === '111111'){
         return{
           code: 200000,
           data: {
             menu: [
                 {
-                  path: '/',
+                  path: '/home',
                   name: 'home',
                   label: '首页',
                   icon: 'home',
                   url: 'Home/Home'//Home组件的地址
+                },
+                {
+                  path: '/usermanage',
+                  name: 'usermanage',
+                  label: '用户管理',
+                  icon: 'custom',
+                  children: [
+                    {
+                      path: '/user',
+                      name: 'user',
+                      label: '用户列表',
+                      url: 'UserManage/User'
+                    }
+                   
+                  ]
+                },
+                {
+                  path: '/permissionmanage',
+                  name: 'permissionmanage',
+                  label: '权限管理',
+                  icon: 'flag',
+                  children: [
+                    {
+                      path: '/role',
+                      name: 'role',
+                      label: '角色列表',
+                      url: 'Permission/Roler'
+                    },
+                    {
+                      path: '/permission',
+                      name: 'permission',
+                      label: '权限列表',
+                      url: 'Permission/Permission'
+                    },
+                  ]
                 },
                 {
                   path: '/baseinfomation',
@@ -161,7 +196,7 @@ export default {
             message: '获取成功',
           }
         }
-      }else if(username === 'wp' && password === '111' ){
+      }else if(username === 'wp' && password === '111111' ){
         return{
           code: 200000,
           data: {

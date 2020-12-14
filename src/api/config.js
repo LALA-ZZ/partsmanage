@@ -9,7 +9,11 @@ const instance = axios.create({
 })
 // 2.请求拦截(比如发发送请求之前，给它的请求头加入一个token值传给后端，这样就不用给每个加token值了)
 instance.interceptors.request.use(config =>{
-    return config
+  
+  // console.log(config)
+  //为请求头对象添加token验证的Authorization字段
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
 },err =>{
     console.log(err)
 })

@@ -1,6 +1,8 @@
 <!--  -->
 <template>
+
   <div class="manage">
+    <!-- 对话提示框 -->
     <el-dialog :title="operateType === 'add' ? '添加企业信息' : '编辑企业信息'" :visible.sync="dialogFormVisible" width='30%'>
       <Form :formLabel="operateFormLabel" :form="operateForm" />
       <div slot="footer" class="dialog-footer">
@@ -8,17 +10,20 @@
         <el-button type="primary" @click="confirm">确 定</el-button>
       </div>
     </el-dialog>
-    <div class="manage-header">
-      <Form inline :formLabel="searchFormLabel" :form="searchForm" />
-      <el-button type="primary" icon="el-icon-search" size='mini' @click="selectEnterprises">搜索
-      </el-button>
-      <el-button type="primary" icon="el-icon-plus" size='mini' @click="addEnterprises">新增</el-button>
-      <el-button type="danger" icon="el-icon-plus" size='mini' @click="addEnterprises">批量删除</el-button>
 
-    </div>
-
-    <Table :tableData="tableData" :tableLabel="tableLabel" :config="config" @changePage="getList"
-      @edit="editEnterprises" @deleted="deletedEnterprises" />
+    <el-card shadow="hover">
+      <div class="manage-header">
+        <!-- 表单 -->
+        <Form inline :formLabel="searchFormLabel" :form="searchForm" @clearInput="getList" />
+        <el-button type="primary" icon="el-icon-search" size='mini' @click="selectEnterprises">搜索
+        </el-button>
+        <el-button type="primary" icon="el-icon-plus" size='mini' @click="addEnterprises">新增</el-button>
+        <el-button type="danger" icon="el-icon-plus" size='mini' @click="addEnterprises">批量删除</el-button>
+      </div>
+      <!-- 表格 -->
+      <Table :tableData="tableData" :tableLabel="tableLabel" :config="config" @changePage="getList"
+        @edit="editEnterprises" @deleted="deletedEnterprises" height="" />
+    </el-card>
 
   </div>
 
@@ -79,6 +84,7 @@ export default {
           label: '地址'
         },
       ],
+
       searchForm: {//搜索表单
         keyword: ''
       },
@@ -141,13 +147,15 @@ export default {
   methods: {
     getList () {//从mock中获取表格所需的数据
       this.config.loading = true;//获取数据前，先定为加载状态
-      this.$http.get('/api/user/getUser', {
-        params: {
-          page: this.config.page
+      this.$http.get('/api/user/getUser',
+        {
+          params: this.config
+
         }
-      }).then(res => {
+
+      ).then(res => {
         // console.log(res.data)
-        this.tableData = res.data.list.map(item => {//获取数据
+        this.tableData = res.data.list.map(item => {//改写性别数据，并存放数据
           // console.log(item.name)
           item.sexLabel = item.sex === 0 ? '女' : '男';
           return item

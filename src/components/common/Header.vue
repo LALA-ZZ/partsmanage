@@ -66,10 +66,17 @@ export default {
       this.$store.commit('collapseMenu')
     },
 
+    //登录退出
     loginOut () {
-      this.$store.commit('clearToken');
-      this.$store.commit('clearMenu')
-      location.reload()
+      //清除sessionStorage中的token 2020/12/1全家桶
+      window.sessionStorage.clear()
+
+      //路由挑战到登录页面
+      this.$router.push({ name: 'login' })
+
+      // this.$store.commit('clearToken');
+      // this.$store.commit('clearMenu')
+      // location.reload()
 
     }
   }
@@ -90,6 +97,7 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-left: 20px;
 }
 .left-content .el-button {
   /*面包屑跟 菜单按钮的间距*/
@@ -127,6 +135,7 @@ export default {
   float: right;
   height: 100%;
   cursor: pointer;
+  margin-right: 20px;
 }
 .el-dropdown-link {
   color: #f6f6f6;

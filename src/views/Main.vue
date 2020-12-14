@@ -49,9 +49,12 @@ export default {
 <style scoped>
 .el-header {
   background-color: #ffffff;
+  padding: 0px;
 }
 
 .el-main {
   padding: 0;
+  /* background-color: #eaedf1; */
+  background-color: #f0f2f5;
 }
 </style>
