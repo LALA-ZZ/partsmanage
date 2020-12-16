@@ -41,10 +41,11 @@ export default {
 }
 </script>
 
-<style scoped>
-.tags {
+<style lang='scss' scoped>
+/* .tags {
+  height: 33px;
   margin-left: 15px;
-}
+} */
 /*.tags .el-tag{*/
 /*  margin-right: 1px;*/
 /*  padding: 0px;*/
@@ -58,14 +59,17 @@ export default {
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
     0 0 3px 0 rgba(0, 0, 0, 0.04);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
-}
-.tags-view-container .el-tag {
-  margin-right: 2px;
-  cursor: pointer;
-}
-.tags {
-  display: flex;
-  height: 100%;
-  align-items: center;
+
+  .tags {
+    margin-left: 15px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+
+    .el-tag {
+      margin-right: 2px;
+      cursor: pointer;
+    }
+  }
 }
 </style>

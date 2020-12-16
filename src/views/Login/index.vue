@@ -83,8 +83,9 @@ export default {
 
           window.sessionStorage.setItem("token", res.data.token)
           // // 2.通过变成式导航跳转到后台主页路由地址是/home
-          this.$store.commit('setToken', res.data.token)//创建token
           this.$store.commit('clearMenu')
+          this.$store.commit('setToken', res.data.token)//创建token
+          
           this.$store.commit('setMenu', res.data.menu)
           this.$store.commit('addMenu', this.$router)
           this.$router.push({ name: 'home' })

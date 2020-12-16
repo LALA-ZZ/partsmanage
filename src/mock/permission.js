@@ -20,8 +20,8 @@ export default {
                   url: 'Home/Home'//Home组件的地址
                 },
                 {
-                  path: '/usermanage',
-                  name: 'usermanage',
+                  path: '/userma',
+                  name: 'userma',
                   label: '用户管理',
                   icon: 'custom',
                   children: [
@@ -29,9 +29,9 @@ export default {
                       path: '/user',
                       name: 'user',
                       label: '用户列表',
+                      
                       url: 'UserManage/User'
                     }
-                   
                   ]
                 },
                 {
@@ -41,15 +41,17 @@ export default {
                   icon: 'flag',
                   children: [
                     {
-                      path: '/role',
-                      name: 'role',
+                      path: '/roler',
+                      name: 'roler',
                       label: '角色列表',
+                      
                       url: 'Permission/Roler'
                     },
                     {
                       path: '/permission',
                       name: 'permission',
                       label: '权限列表',
+                      
                       url: 'Permission/Permission'
                     },
                   ]
@@ -64,35 +66,35 @@ export default {
                       path: '/eresourcemanage',
                       name: 'eresourcemanage',
                       label: '企业资源',
-                      icon: 'data',
+                      
                       url: 'BaseInfoManage/EnterpriseResources/EnterpriseResources'
                     },
                     {
                       path: '/partsinfomanage',
                       name: 'partsinfomanage',
                       label: '配件信息',
-                      icon: 'data',
+                      
                       url: 'BaseInfoManage/PartsInfo/PartsInfo'
                     },
                     {
                       path: '/warehouseinfomanage',
                       name: 'warehouseinfomanage',
                       label: '仓库信息',
-                      icon: 'data',
-                      url: ''
+                      
+                      url: 'BaseInfoManage/WarehouseInfo/WarehouseInfo'
                     },
                     {
                       path: '/forecastInfomanage',
                       name: 'forecastInfomanage',
                       label: '预测信息',
-                      icon: 'data',
+                      
                       url: ''
                     },
                     {
                       path: '/optimizationinfomanage',
                       name: 'optimizationinfomanage',
                       label: '优化信息',
-                      icon: 'data',
+                      
                       url: ''
                     },
                   ]
@@ -101,27 +103,24 @@ export default {
                   path: '/storage',
                   name: 'storage',
                   label: '入库管理',
-                  icon: 'management',
+                  icon: 'shop',
                   children: [
                     {
                       path: '/partsapply',
                       name: 'partsapply',
                       label: '配件申请',
-                      icon: 'management',
                       url: ''
                     },
                     {
                       path: '/applycheck',
                       name: 'applycheck',
                       label: '申请审批',
-                      icon: 'management',
                       url: ''
                     },
                     {
                       path: '/partsentry',
                       name: 'partsentry',
                       label: '配件入库',
-                      icon: 'management',
                       url: ''
                     },
                   ]
@@ -130,20 +129,18 @@ export default {
                   path: '/instock',
                   name: 'instock',
                   label: '在库管理',
-                  icon: 'management',
+                  icon: 'check',
                   children: [
                     {
                       path: '/partsamountverification',
                       name: 'partsamountverification',
                       label: '库存盘点',
-                      icon: 'management',
                       url: ''
                     },
                     {
                       path: '/partsamountwarnning',
                       name: 'partsamountwarnning',
                       label: '库存预警',
-                      icon: 'management',
                       url: ''
                     },
                   ]
@@ -158,21 +155,18 @@ export default {
                       path: '/outapply',
                       name: 'outapply',
                       label: '出库申请',
-                      icon: 'management',
                       url: ''
                     },
                     {
                       path: '/outcheck',
                       name: 'outcheck',
                       label: '出库审批',
-                      icon: 'management',
                       url: ''
                     },
                     {
                       path: '/partsout',
                       name: 'partsout',
                       label: '配件出库',
-                      icon: 'management',
                       url: ''
                     },
                   ]
@@ -181,7 +175,7 @@ export default {
                   path: '/partsDemandforecast',
                   name: 'partsDemandforecast',
                   label: '配件需求预测',
-                  icon: 'opportunity',
+                  icon: 'marketing',
                   url: ''
                 },
                 {
@@ -212,13 +206,13 @@ export default {
                 path: '/baseinfomation',
                 name: 'baseinfomation',
                 label: '基础信息管理',
-                icon: 'data',
+                
                 children: [
                   {
                     path: '/eresourcemanage',
                     name: 'eresourcemanage',
                     label: '企业资源',
-                    icon: 'data',
+                    
                     url: 'BaseInfoManage/EnterpriseResources/EnterpriseResources'
                   },
                   

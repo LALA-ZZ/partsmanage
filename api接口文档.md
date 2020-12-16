@@ -346,7 +346,7 @@
 
 ### 1.4.1. 所有权限列表
 
-- 请求路径：rights/:type
+- 请求路径：permission /:type
 - 请求方法：get
 - 请求参数
 
@@ -630,7 +630,7 @@ type=tree
 
 ### 1.5.6. 角色授权
 
-- 请求路径：roles/:roleId/rights
+- 请求路径：roles/:roleId/permisssion
 - 请求方法：post
 - 请求参数：通过 `请求体` 发送给后端
 
@@ -653,7 +653,7 @@ type=tree
 
 ### 1.5.7. 删除角色指定权限
 
-- 请求路径：roles/:roleId/rights/:rightId
+- 请求路径：roles/:roleId/permission/:permissionId
 
 - 请求方法：delete
 

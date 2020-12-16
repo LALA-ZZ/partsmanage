@@ -18,7 +18,7 @@
       <!-- 面包屑 -->
       <div>
         <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="current.path" v-if="current">{{current.label}}</el-breadcrumb-item>
 
         </el-breadcrumb>
