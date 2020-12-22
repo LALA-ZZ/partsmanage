@@ -83,20 +83,7 @@ export default {
                       
                       url: 'BaseInfoManage/WarehouseInfo/WarehouseInfo'
                     },
-                    {
-                      path: '/forecastInfomanage',
-                      name: 'forecastInfomanage',
-                      label: '预测信息',
-                      
-                      url: ''
-                    },
-                    {
-                      path: '/optimizationinfomanage',
-                      name: 'optimizationinfomanage',
-                      label: '优化信息',
-                      
-                      url: ''
-                    },
+                    
                   ]
                 },
                 {
@@ -109,6 +96,12 @@ export default {
                       path: '/partsapply',
                       name: 'partsapply',
                       label: '配件申请',
+                      url: ''
+                    },
+                    {
+                      path: '/applylist',
+                      name: 'applylist',
+                      label: '申请单列表',
                       url: ''
                     },
                     {
@@ -141,6 +134,12 @@ export default {
                       path: '/partsamountwarnning',
                       name: 'partsamountwarnning',
                       label: '库存预警',
+                      url: ''
+                    },
+                    {
+                      path: '/inventoryList',
+                      name: 'inventoryList',
+                      label: '库存列表',
                       url: ''
                     },
                   ]
@@ -176,14 +175,44 @@ export default {
                   name: 'partsDemandforecast',
                   label: '配件需求预测',
                   icon: 'marketing',
-                  url: ''
+                  url: '',
+                  children: [
+                    {
+                      path: '/forecastInfo',
+                      name: 'forecastInfo',
+                      label: '预测信息列表',
+                      url: ''
+                    },
+                    {
+                      path: '/forecast',
+                      name: 'forecast',
+                      label: '需求预测',
+                      url: ''
+                    },
+                    
+                  ]
                 },
                 {
                   path: '/inventoryoptimization',
                   name: 'inventoryoptimization',
                   label: '安全库存优化',
                   icon: 'opportunity',
-                  url: ''
+                  url: '',
+                  children: [
+                    {
+                      path: '/optimizationinfo',
+                      name: 'optimizationinfo',
+                      label: '优化信息列表',
+                      url: ''
+                    },
+                    {
+                      path: '/optimization',
+                      name: 'optimization',
+                      label: '库存优化',
+                      url: ''
+                    },
+                  ]
+                  
                 },
             ],
             token: Mock.Random.guid(),
