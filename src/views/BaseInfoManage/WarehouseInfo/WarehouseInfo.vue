@@ -28,6 +28,10 @@
       <!-- 仓库列表 -->
       <el-table :data="warehouseList" border stripe highlight-current-row v-loading="loading"
         element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+        <div slot="empty" class="emptyBg">
+          <img src="@/assets/box.jpg" alt="">
+          <p style="margin: 0px;">没有记录哦~</p>
+        </div>
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="序号" width="60px"></el-table-column>
         <el-table-column label="仓库编号" prop="warehouse_id"></el-table-column>
@@ -54,13 +58,13 @@
 
       <!-- 分页功能 -->
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryinfo.currentpage" :page-sizes="[5, 8, 10, 20]" :page-size="100"
+        :current-page="queryinfo.currentpage" :page-sizes="[5, 8, 10, 20]" :page-size="queryinfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper" :total="total" background>
       </el-pagination>
     </el-card>
 
     <!-- 新增仓库对话框 -->
-    <el-dialog title="新增仓库" :visible.sync="addDialogVisible" width="50%">
+    <el-dialog title="新增仓库" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="150px">
         <el-form-item label="仓库名称" prop="warename">
           <el-input v-model="addForm.warename"></el-input>
@@ -133,10 +137,10 @@ export default {
       warehouseList: [],
       queryinfo: {
         query: '',
-        currentpage: '',
-        pageSize: ''
+        currentpage: 1,
+        pageSize: 10
       },
-      total: '',
+      total: 0,
       loading: false,
       addDialogVisible: false,
       // 添加表单
@@ -238,6 +242,10 @@ export default {
 
         })
       })
+    },
+    // 监听添加对话框的关闭事件
+    addDialogClosed () {
+      this.$refs.addFormRef.resetFields()
     },
     // 监听编辑对话框的显示
     showEditDialog (id) {

@@ -2,7 +2,6 @@
 <template>
   <div class="userinfo">
     <el-card shadow="hover">
-
       <!-- 搜索与添加区域 -->
       <el-row :gutter="10">
         <el-col :span="3">
@@ -14,18 +13,60 @@
           <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">新增</el-button>
           <el-button type="danger" icon="el-icon-delete">批量删除</el-button>
         </el-col>
+        <!-- 下载区域 -->
+        <book-type-option v-model="bookType">> </book-type-option>
+        <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
+          下载数据
+        </el-button>
       </el-row>
 
       <!-- 用户列表区域 -->
       <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading">
+        element-loading-spinner="el-icon-loading" @cell-dblclick='cellDblclick' :cell-class-name='getRowColumn'
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="序号" width="60px"></el-table-column>
         <el-table-column label="姓名" prop="name"></el-table-column>
-        <el-table-column label="年龄" prop="age"></el-table-column>
+        <el-table-column label="年龄" prop="age">
+          <!-- 行内编辑 -->
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-row>
+                <el-col :span="10">
+                  <el-input size="mini" v-model="scope.row.age" @blur="loseInputBlur"></el-input>
+                </el-col>
+                <!-- <el-col :span="10">
+                  <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
+                    取消
+                  </el-button>
+                </el-col> -->
+              </el-row>
+            </template>
+            <span v-else>{{scope.row.age}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="生日" prop="birth"></el-table-column>
         <el-table-column label="性别" prop="sex"></el-table-column>
-        <el-table-column label="地址" prop="addr"></el-table-column>
+        <el-table-column label="地址" prop="addr" width="500px">
+
+          <!-- 行内编辑 -->
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-row>
+                <el-col :span="10">
+                  <el-input size="mini" v-model="scope.row.addr"></el-input>
+                </el-col>
+                <!-- <el-col :span=" 10">
+                    <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
+                      取消
+                    </el-button>
+                </el-col> -->
+              </el-row>
+            </template>
+            <span v-else>{{scope.row.addr}}</span>
+          </template>
+
+        </el-table-column>
         <el-table-column label="状态" prop="state">
           <template slot-scope="scope">
             <!-- {{scope.row}} 打印一行记录的数据 -->
@@ -34,9 +75,13 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
+            <el-button v-show="scope.row.edit" type="info" size="mini" @click="cancelEdit(scope.row)">取消
+            </el-button>
+            <el-button v-show="scope.row.edit" type="success" size="mini" @click="confirmEdit(scope.row)">确认</el-button>
+            <el-button v-show='!scope.row.edit' size="mini" @click="editInline(scope.row)">编辑</el-button>
+            <!-- <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button> -->
             <el-button size="mini" type="danger" @click="deleteUserById(scope.row)">删除</el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
               <el-button size="mini" type="warning" @click="setRole(scope.row)">设置</el-button>
@@ -55,29 +100,114 @@
     </el-card>
 
     <!-- 添加用户对话框 -->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="30%" @closed="addDialogClose">
+    <!-- <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="30%" @closed="addDialogClose">
+     
+    <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
+      <el-form-item label="用户名称" prop="name">
+        <el-input v-model="addForm.name"></el-input>
+      </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-select v-model="addForm.sex" placeholder="请选择性别">
+          <el-option label="男" value="shanghai"></el-option>
+          <el-option label="女" value="beijing"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="年龄" prop="age">
+        <el-input v-model="addForm.age"></el-input>
+      </el-form-item>
+      <el-form-item label="出生年月" prop="birth">
+        <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth" style="width: 100%;"
+          value-format="yyyy-MM-dd"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="地址" prop="addr">
+        <el-input v-model="addForm.addr"></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="addDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="addUser">确 定</el-button>
+    </span>
+    </el-dialog> -->
+
+    <!-- 添加用户对话框 -->
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="70%" @closed="addDialogClose">
+      <el-input v-model="addForm" placeholder="qingshuru " style="width=200px;"></el-input>
       <!-- 主体部分 -->
-      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
-        <el-form-item label="用户名称" prop="name">
-          <el-input v-model="addForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-select v-model="addForm.sex" placeholder="请选择性别">
-            <el-option label="男" value="shanghai"></el-option>
-            <el-option label="女" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input v-model="addForm.age"></el-input>
-        </el-form-item>
-        <el-form-item label="出生年月" prop="birth">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth" style="width: 100%;"
-            value-format="yyyy-MM-dd"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input v-model="addForm.addr"></el-input>
-        </el-form-item>
-      </el-form>
+      <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading" @cell-dblclick='cellDblclick' :cell-class-name='getRowColumn'
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column label="姓名" prop="name"></el-table-column>
+        <el-table-column label="年龄" prop="age">
+          <!-- 行内编辑 -->
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-row>
+                <el-col :span="10">
+                  <el-input size="mini" v-model="scope.row.age" @blur="loseInputBlur"></el-input>
+                </el-col>
+                <!-- <el-col :span="10">
+                  <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
+                    取消
+                  </el-button>
+                </el-col> -->
+              </el-row>
+            </template>
+            <span v-else>{{scope.row.age}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="生日" prop="birth"></el-table-column>
+        <el-table-column label="性别" prop="sex"></el-table-column>
+        <el-table-column label="地址" prop="addr" width="500px">
+
+          <!-- 行内编辑 -->
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-row>
+                <el-col :span="10">
+                  <el-input size="mini" v-model="scope.row.addr"></el-input>
+                </el-col>
+                <!-- <el-col :span=" 10">
+                    <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
+                      取消
+                    </el-button>
+                </el-col> -->
+              </el-row>
+            </template>
+            <span v-else>{{scope.row.addr}}</span>
+          </template>
+
+        </el-table-column>
+        <el-table-column label="状态" prop="state">
+          <template slot-scope="scope">
+            <!-- {{scope.row}} 打印一行记录的数据 -->
+            <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"
+              @change="changeUserState(scope.row)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="300px">
+          <template slot-scope="scope">
+            <el-button v-show="scope.row.edit" type="info" size="mini" @click="cancelEdit(scope.row)">取消
+            </el-button>
+            <el-button v-show="scope.row.edit" type="success" size="mini" @click="confirmEdit(scope.row)">确认</el-button>
+            <el-button v-show='!scope.row.edit' size="mini" @click="editInline(scope.row)">编辑</el-button>
+            <!-- <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button> -->
+            <el-button size="mini" type="danger" @click="deleteUserById(scope.row)">删除</el-button>
+            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+              <el-button size="mini" type="warning" @click="setRole(scope.row)">设置</el-button>
+            </el-tooltip>
+
+          </template>
+
+        </el-table-column>
+      </el-table>
+      <!-- 分页功能 -->
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="queryInfo.page" :page-sizes="[5, 8, 10, 20]" :page-size="queryInfo.limit"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
       <!-- 底部按钮部分 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
@@ -125,6 +255,7 @@
 
 
 <script>
+import BookTypeOption from '../InStockManage/components/BookTypeOption.vue';
 export default {
   data () {
     return {
@@ -176,9 +307,12 @@ export default {
       editDialogVisible: false,
       // 编辑对话框的数据表单
       editForm: {
-        name: '',
-        addr: '',
-        birth: '',
+        warename: '',
+        wareaddres: '',
+        warehead: '',
+        warephone: '',
+        warelevel: '',
+        waredirec: ''
       },
       editFormRules: {
         addr: [
@@ -192,13 +326,24 @@ export default {
       // 所有角色列表
       roleList: [],
       // 已选择的角色id值
-      selectedRoleId: ''
+      selectedRoleId: '',
+      // 单元格横坐标
+      tableRowIndex: null,
+      // 单元格纵坐标
+      tableColumnIndex: null,
+
+      downloadLoading: false,
+      filename: 'excel', //非必填
+      // 导出的文件是否自动宽度
+      autoWidth: true, //非必填
+      // 导出的文本类型
+      bookType: 'xlsx' //非必填
     };
   },
   created () {
     this.getUserList()
   },
-  components: {},
+  components: { BookTypeOption },
 
   computed: {},
 
@@ -215,10 +360,18 @@ export default {
         if (res.code !== 20000) {
           this.$message.error(); ('获取用户数据失败！')
         }
+
+        // 行内编辑
         this.userList = res.list.map(item => {//改写男女性别数据，并存放在userList数组中
           item.sex = item.sex === 0 ? '女' : '男';
+          this.$set(item, 'edit', false)
+          // this.$set(item, 'originalAddr', '')  // https://vuejs.org/v2/guide/reactivity.html
+          item.originalAddr = item.addr //  will be used when user click the cancel botton
+          item.originAge = item.age
           return item
         });
+
+
         this.total = res.count
         this.loading = false
       })
@@ -263,6 +416,8 @@ export default {
         })
       })
     },
+
+
     // 显示编辑对话框
     showEditDialog (row) {
       this.editDialogVisible = true
@@ -357,11 +512,85 @@ export default {
     setRoleDialogClosed () {
       this.selectedRoleId = ''
       this.userinfo = {}
+    },
+
+    // 行内编辑，取消编辑
+    editInline (row) {
+      row.edit = !row.edit
+    },
+    // 取消编辑
+    cancelEdit (row) {
+      row.age = row.originAge
+      row.addr = row.originalAddr
+      row.edit = false
+    },
+    // 确认
+    confirmEdit (row) {
+      row.edit = false
+      row.originalAddr = row.addr
+      row.originAge = row.age
+
+    },
+    // // 对话框拖拽
+    // handleDrag () {
+    //   this.$refs.select.blur()
+    // },
+    // 表格双击编辑事件
+    cellDblclick (row, column) {
+      console.log(row);
+      console.log(column);
+      // console.log(cell);
+      // console.log(event);
+      console.log(row[column.property])
+      // if (row[column.property]) {
+      //   row[column.property].edit = true;
+      //   setTimeout(() => {
+      //     this.$refs[column.property].focus();
+      //   }, 20);
+      // }
+      // 获取单元格横纵坐标
+      this.tableRowIndex = row.index
+      this.tableColumnIndex = column.index
+    },
+    // 数据中没有横纵坐标需要加上进一步判断
+    getRowColumn ({ row, column, rowIndex, columnIndex }) {
+      row.index = rowIndex
+      column.index = columnIndex
+    },
+    // 失去焦点事件，清空坐标
+    loseInputBlur () {
+      this.tableColumnIndex = ''
+      this.tableRowIndex = ''
+    },
+
+    // 下载部分
+    handleDownload () {
+      this.downloadLoading = true
+      // 采用懒加载的方式
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['姓名', '年龄', '生日', '性别', '地址',]
+        const filterVal = ['name', 'age', 'birth', 'sex', 'addr',]
+        const list = this.userList
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader, //表头 必填
+          data, //具体数据 必填
+          filename: this.filename, //非必填
+          autoWidth: this.autoWidth, //非必填
+          bookType: this.bookType //非必填
+        })
+      })
+      this.downloadLoading = false
+    },
+    formatJson (filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
     }
+
   }
-
-
 }
+
+
+
 </script>
 
 

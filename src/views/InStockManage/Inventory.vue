@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div>
-      库存盘点
+    库存列表
   </div>
 </template>
 
@@ -17,12 +17,10 @@ export default {
 
   computed: {},
 
-
   methods: {}
 }
 </script>
 
 
-<style>
-
+<style lang="scss" scoped>
 </style>

@@ -17,6 +17,7 @@ export default {
                   name: 'home',
                   label: '首页',
                   icon: 'home',
+                  alwaysShow: true,
                   url: 'Home/Home'//Home组件的地址
                 },
                 {
@@ -96,19 +97,19 @@ export default {
                       path: '/partsapply',
                       name: 'partsapply',
                       label: '配件申请',
-                      url: ''
+                      url: 'EntryManage/AddApply'
                     },
                     {
                       path: '/applylist',
                       name: 'applylist',
-                      label: '申请单列表',
-                      url: ''
+                      label: '申请列表',
+                      url: 'EntryManage/Apply'
                     },
                     {
                       path: '/applycheck',
                       name: 'applycheck',
                       label: '申请审批',
-                      url: ''
+                      url: 'EntryManage/ApplyApproval'
                     },
                     {
                       path: '/partsentry',
@@ -125,22 +126,22 @@ export default {
                   icon: 'check',
                   children: [
                     {
-                      path: '/partsamountverification',
-                      name: 'partsamountverification',
+                      path: '/verification',
+                      name: 'verification',
                       label: '库存盘点',
-                      url: ''
+                      url: 'InStockManage/StockCheck'
                     },
                     {
                       path: '/partsamountwarnning',
                       name: 'partsamountwarnning',
                       label: '库存预警',
-                      url: ''
+                      url: 'InStockManage/Warnning'
                     },
                     {
                       path: '/inventoryList',
                       name: 'inventoryList',
                       label: '库存列表',
-                      url: ''
+                      url: 'InStockManage/Inventory'
                     },
                   ]
                 },
