@@ -18,12 +18,13 @@
         <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
           下载数据
         </el-button>
+        <el-button size='mini' plain type='success' icon="el-icon-check" @click="confirmSave()">保存</el-button>
       </el-row>
 
       <!-- 用户列表区域 -->
       <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading" @cell-dblclick='cellDblclick' :cell-class-name='getRowColumn'
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}" class="tb-edit">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="序号" width="60px"></el-table-column>
         <el-table-column label="姓名" prop="name"></el-table-column>
@@ -160,7 +161,6 @@
         <el-table-column label="生日" prop="birth"></el-table-column>
         <el-table-column label="性别" prop="sex"></el-table-column>
         <el-table-column label="地址" prop="addr" width="500px">
-
           <!-- 行内编辑 -->
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
@@ -177,7 +177,6 @@
             </template>
             <span v-else>{{scope.row.addr}}</span>
           </template>
-
         </el-table-column>
         <el-table-column label="状态" prop="state">
           <template slot-scope="scope">
@@ -584,7 +583,16 @@ export default {
     },
     formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
-    }
+    },
+
+
+    // 单击保存，保存表格数据
+    confirmSave () {
+      console.log(JSON.stringify(this.userList))
+    },
+
+
+
 
   }
 }
@@ -607,4 +615,15 @@ export default {
 .el-pagination {
   margin-top: 20px;
 }
+
+// // 测试：行内可编辑
+// .tb-edit .el-input {
+//   display: none;
+// }
+// .tb-edit .current-row .el-input {
+//   display: block;
+// }
+// .tb-edit .current-row .el-input + span {
+//   display: none;
+// }
 </style>

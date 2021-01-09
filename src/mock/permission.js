@@ -32,7 +32,14 @@ export default {
                       label: '用户列表',
                       
                       url: 'UserManage/User'
-                    }
+                    },
+                    {
+                      path: '/xiaoniu',
+                      name: 'xiaoniu',
+                      label: '小妞',
+                      
+                      url: 'XiaoNiu/XiaoNiu'
+                    },
                   ]
                 },
                 {

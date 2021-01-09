@@ -12,6 +12,9 @@ import 'nprogress/nprogress.css'
 const instance = axios.create({
     timeout: 3000
 })
+
+
+
 // 2.请求拦截(比如发发送请求之前，给它的请求头加入一个token值传给后端，这样就不用给每个加token值了)
 instance.interceptors.request.use(config =>{
   // 在reques拦截器中，展示进度条 NProgress.start()

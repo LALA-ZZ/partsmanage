@@ -17,7 +17,7 @@
       <el-date-picker v-model="checkForm.dateInterval" type="daterange" align="left" unlink-panels range-separator="至"
         start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
       </el-date-picker>
-      <el-button type="primary" icon="el-icon-search" @click="getApplyList">快速搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="getcheckList">快速搜索</el-button>
     </el-card>
 
     <!-- 盘点列表区域 -->
@@ -121,7 +121,44 @@ export default {
       total: 0,
       // 盘点列表数据
       checkList: [],
-      // 加载状态
+      options: [
+        {
+          label: '已盘点',
+          value: 1
+        },
+        {
+          label: '未盘点',
+          value: 0
+        }
+      ],
+      // 时间选择期属性对象
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
       loading: false,
       multipleSelection: [],//被选中的记录数据-----对应“批量删除”传的参数值
       ids: [],//批量删除id
@@ -171,7 +208,7 @@ export default {
     },
     // 新盘点
     newCheck () {
-      this.$router.push('/newCheck')
+      this.$router.push('/addcheck')
     },
     // 批量删除
     batchDelete (rows) {
@@ -259,6 +296,14 @@ export default {
     // 详情对话框的关闭事件
     detailDialogClosed () {
       this.checkId = ''
+    },
+    handleDetailSizeChange (newsize) {
+      this.queryInfo.size = newsize
+      this.getDetaiPartsList()
+    },
+    handleDetailCurrentChange (newpage) {
+      this.queryInfo.page = newpage
+      this.getDetaiPartsList()
     },
     // 下载数据
     handleDownload () {

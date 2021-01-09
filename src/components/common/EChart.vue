@@ -2,7 +2,7 @@
 <template>
   <div style="height: 100%" ref="echart">
     <!--ref添加属性元素，通过vm.$ref获取dom元素-->
-    echart
+
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import Echarts from 'echarts' //导入的是echarts,不是组件
 export default {
   props: {//定义从父组件传过来的值
+
     chartData: {//指定图表的数据，包含x轴数据和series数据
       type: Object,
       default () {
@@ -20,6 +21,8 @@ export default {
         }
       }
     },
+
+
     isAxisChart: {//判断图表是否包含坐标轴，默认包含坐标轴
       type: Boolean,
       default: true
