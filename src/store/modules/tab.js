@@ -17,8 +17,12 @@ export default {
     mutations: {
         setMenu(state,val){//设置动态菜单（根据权限）
           state.menu = val;
+          console.log(val + 'ahhahahah ')
+          sessionStorage.setItem('menu',JSON.stringify(val))
           Cookie.set('menu',JSON.stringify(val));//JSON.stringify() 方法用于将 JavaScript 值转换为 JSON 字符串。
           // console.log(val,'vuex')
+          console.log(sessionStorage.getItem('menu'))
+          console.log(Cookie.get('menu') + ' setMenu')
         },
 
         clearMenu(state){//登录人员退出之后需要清除cookie
@@ -26,14 +30,21 @@ export default {
           Cookie.remove('menu')
         },
         addMenu(state , router){//添加动态的路由
-          if(!Cookie.get('menu')){
+          console.log(Cookie.get('menu')+' addMenu')
+          // if(!Cookie.get('menu')){
+          //   return
+          // }
+          if(!sessionStorage.getItem('menu')){
             return
           }
+          
           // let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
           // if(!menu){
           //   return
           // }
-          let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
+
+          // let menu =JSON.parse(Cookie.get('menu')) ;//首先获取cookie中菜单
+          let menu =JSON.parse( sessionStorage.getItem('menu'))
           state.menu = menu
           let currentMenu = [
             {

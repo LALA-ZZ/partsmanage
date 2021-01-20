@@ -7,6 +7,12 @@ import Router from 'vue-router'
 // const Home =() => import('../views/Home/Home.vue')
 // const EnterpriseResources =() => import('../views/BaseInfoManage/EnterpriseResources/EnterpriseResources.vue')
 const Login =() => import('@/views/Login')
+const AddCheck =() => import('../views/InStockManage/AddCheck.vue')
+const Main =() => import('../views/Main.vue')
+
+
+
+
 //解决vue中重复点击相同的路由报错问题
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -122,7 +128,18 @@ const routes = [
       path: '/login',
       name: 'login',
       component:  Login//登录组件
-    }
+    },
+    {
+      path: '/',
+      component: Main,
+      children: [
+        { path: '/addcheck',
+        name: 'addcheck',
+        component: AddCheck 
+      }
+      ]
+    },
+    
 ]
 
 export default new Router({

@@ -17,3 +17,22 @@
     }
   }
 }
+
+.common-content {
+  padding: 20px;
+  padding-bottom: 20px;
+
+  .secondcard {
+    margin-top: 3px;
+  }
+
+  .el-table {
+    margin-top: 20px;
+  }
+
+  .el-pagination {
+    margin: 20px;
+    float: right;
+  }
+
+}

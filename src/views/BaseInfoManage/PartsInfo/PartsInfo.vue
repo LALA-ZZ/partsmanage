@@ -19,6 +19,10 @@
       <!-- 用户列表区域 -->
       <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading">
+        <div slot="empty" class="emptyBg">
+          <img src="@/assets/box.jpg" alt="">
+          <p style="margin: 0px;">没有记录哦~</p>
+        </div>
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="index" label="序号" width="60px"></el-table-column>
         <el-table-column label="姓名" prop="name"></el-table-column>

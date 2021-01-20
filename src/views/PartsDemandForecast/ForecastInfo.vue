@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div>
-      配件入库
+    需求预测列表
   </div>
 </template>
 
@@ -24,5 +24,4 @@ export default {
 
 
 <style>
-
 </style>

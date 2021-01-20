@@ -114,7 +114,8 @@ export default {
         //订单折线图-----------------------------------------
         const order = res.data.orderData;
         // console.log(order) //打印order表数据
-        this.echartData.order.xData = order.date;//x轴的数据
+        //x轴的数据
+        this.echartData.order.xData = order.date;
         //series数据
         // 1.取出series中的那么name部分 --键名
         let keyArray = Object.keys(order.data[0])
@@ -142,10 +143,13 @@ export default {
         })
 
         // 配件饼图------------------------------------------
+        console.log('// 配件饼图------------------------------------------')
+
         this.echartData.parts.series.push({
           type: 'pie',
           data: res.data.partsData
         })
+        console.log(this.echartData.parts.series)
       })
     }
   }

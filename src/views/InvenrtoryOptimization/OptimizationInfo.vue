@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div>
-      库存优化
+    库存优化
   </div>
 </template>
 
@@ -24,5 +24,4 @@ export default {
 
 
 <style>
-
 </style>

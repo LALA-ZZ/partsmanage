@@ -7,10 +7,11 @@ import VueCookie from 'vue-cookies'
 //第三方包
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import http from './api/config'//引入网络请求api
+import http from './api/request'//引入网络请求api
 import  './mock/index'//引入mock
 import './icons/index'//引入icon
 // import home from './mock/home';
+
 
 Vue.prototype.$http = http
 Vue.config.productionTip = false
