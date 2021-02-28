@@ -45,8 +45,11 @@ export default {
           name: {
             // 文本样式
             textStyle: {
-              color: '#fff',
-              backgroundColor: '#999',
+              // color: '#fff',
+              color: 'rgb(0,0,0)',
+              // backgroundColor: '#999',
+              fontSize: 22,
+              fontFamily : '宋体',
               borderRadius: 3,
               padding: [3, 5]
             }
@@ -57,7 +60,7 @@ export default {
           // 指示器
           indicator: [
             {
-              name: '创新思维',
+              name: '想象思维',
               max: 5,
               // 坐标轴刻度标签的相关设置
               // 若将此属性放在radar下，则每条indicator都会显示圈上的数值，放在这儿，只在通信这条indicator上显示
@@ -70,7 +73,7 @@ export default {
               },
             },
             {
-              name: '创新人格',
+              name: '创新动机',
               max: 5,
             },
             {
@@ -82,7 +85,7 @@ export default {
               max: 5,
             },
             {
-              name: '创新行为',
+              name: '学习悟性',
               max: 5,
             },
           ],
@@ -139,7 +142,7 @@ export default {
             },
             data: [
               {
-                value: [3, 3, 3, 3, 3],
+                value: [4, 4, 4, 4, 3],
                 // name: '团队协作',
                 symbol: 'rect', // 拐点的样式，还可以取值'rect','angle'等
                 label: {

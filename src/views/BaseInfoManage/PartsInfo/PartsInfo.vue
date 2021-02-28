@@ -5,45 +5,79 @@
 
       <!-- 搜索与添加区域 -->
       <el-row :gutter="10">
-        <el-col :span="3">
-          <el-input v-model="queryInfo.name" placeholder="请搜索输入内容" clearable @clear="getUserList" style="width: 200px;">
+        <el-col :span="5">
+          <el-input v-model="queryInfo.name"
+                    placeholder="请搜索输入内容"
+                    clearable
+                    @clear="getUserList">
           </el-input>
         </el-col>
         <el-col :span="10">
-          <el-button type="primary" icon="el-icon-search" @click="getUserList">搜索</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">新增</el-button>
-          <el-button type="danger" icon="el-icon-delete">批量删除</el-button>
+          <el-button type="primary"
+                     icon="el-icon-search"
+                     @click="getUserList">搜索</el-button>
+          <el-button type="primary"
+                     icon="el-icon-plus"
+                     @click="addDialogVisible = true">新增</el-button>
+          <el-button type="danger"
+                     icon="el-icon-delete">批量删除</el-button>
         </el-col>
       </el-row>
 
       <!-- 用户列表区域 -->
-      <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading">
-        <div slot="empty" class="emptyBg">
-          <img src="@/assets/box.jpg" alt="">
+      <el-table :data="userList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" label="序号" width="60px"></el-table-column>
-        <el-table-column label="姓名" prop="name"></el-table-column>
-        <el-table-column label="年龄" prop="age"></el-table-column>
-        <el-table-column label="生日" prop="birth"></el-table-column>
-        <el-table-column label="性别" prop="sex"></el-table-column>
-        <el-table-column label="地址" prop="addr"></el-table-column>
-        <el-table-column label="状态" prop="state">
+        <el-table-column type="selection"
+                         width="55"></el-table-column>
+        <el-table-column type="index"
+                         label="序号"
+                         width="60px"></el-table-column>
+        <el-table-column label="姓名"
+                         prop="name"></el-table-column>
+        <el-table-column label="年龄"
+                         prop="age"></el-table-column>
+        <el-table-column label="生日"
+                         prop="birth"></el-table-column>
+        <el-table-column label="性别"
+                         prop="sex"></el-table-column>
+        <el-table-column label="地址"
+                         prop="addr"></el-table-column>
+        <el-table-column label="状态"
+                         prop="state">
           <template slot-scope="scope">
             <!-- {{scope.row}} 打印一行记录的数据 -->
-            <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"
-              @change="changeUserState(scope.row)">
+            <el-switch v-model="value"
+                       active-color="#13ce66"
+                       inactive-color="#ff4949"
+                       @change="changeUserState(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="auto">
+        <el-table-column label="操作"
+                         width="auto">
           <template slot-scope="scope">
-            <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="deleteUserById(scope.row)">删除</el-button>
-            <el-tooltip effect="dark" content="分配状态" placement="top" :enterable="false">
-              <el-button size="mini" type="warning">设置</el-button>
+            <el-button size="mini"
+                       @click="showEditDialog(scope.row)">编辑</el-button>
+            <el-button size="mini"
+                       type="danger"
+                       @click="deleteUserById(scope.row)">删除</el-button>
+            <el-tooltip effect="dark"
+                        content="分配状态"
+                        placement="top"
+                        :enterable="false">
+              <el-button size="mini"
+                         type="warning">设置</el-button>
             </el-tooltip>
 
           </template>
@@ -52,59 +86,93 @@
       </el-table>
 
       <!-- 分页功能 -->
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryInfo.page" :page-sizes="[5, 8, 10, 20]" :page-size="queryInfo.limit"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination background
+                     @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="queryInfo.page"
+                     :page-sizes="[5, 8, 10, 20]"
+                     :page-size="queryInfo.limit"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total">
       </el-pagination>
     </el-card>
 
     <!-- 添加用户对话框 -->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="30%" @closed="addDialogClose">
+    <el-dialog title="添加用户"
+               :visible.sync="addDialogVisible"
+               width="30%"
+               @closed="addDialogClose">
       <!-- 主体部分 -->
-      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="100px">
-        <el-form-item label="用户名称" prop="name">
+      <el-form :model="addForm"
+               :rules="addFormRules"
+               ref="addFormRef"
+               label-width="100px">
+        <el-form-item label="用户名称"
+                      prop="name">
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-select v-model="addForm.sex" placeholder="请选择性别">
-            <el-option label="男" value="shanghai"></el-option>
-            <el-option label="女" value="beijing"></el-option>
+        <el-form-item label="性别"
+                      prop="sex">
+          <el-select v-model="addForm.sex"
+                     placeholder="请选择性别">
+            <el-option label="男"
+                       value="shanghai"></el-option>
+            <el-option label="女"
+                       value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="年龄" prop="age">
+        <el-form-item label="年龄"
+                      prop="age">
           <el-input v-model="addForm.age"></el-input>
         </el-form-item>
-        <el-form-item label="出生年月" prop="birth">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth" style="width: 100%;"
-            value-format="yyyy-MM-dd"></el-date-picker>
+        <el-form-item label="出生年月"
+                      prop="birth">
+          <el-date-picker type="date"
+                          placeholder="选择日期"
+                          v-model="addForm.birth"
+                          style="width: 100%;"
+                          value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
-        <el-form-item label="地址" prop="addr">
+        <el-form-item label="地址"
+                      prop="addr">
           <el-input v-model="addForm.addr"></el-input>
         </el-form-item>
       </el-form>
       <!-- 底部按钮部分 -->
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer"
+            class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUser">确 定</el-button>
+        <el-button type="primary"
+                   @click="addUser">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 编辑用户的对话框 -->
-    <el-dialog title="编辑用户" :visible.sync="editDialogVisible" width="30%">
-      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
+    <el-dialog title="编辑用户"
+               :visible.sync="editDialogVisible"
+               width="30%">
+      <el-form :model="editForm"
+               :rules="editFormRules"
+               ref="editFormRef"
+               label-width="100px">
         <el-form-item label="姓名">
-          <el-input v-model="editForm.name" :disabled="true"></el-input>
+          <el-input v-model="editForm.name"
+                    :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="出生年月">
-          <el-input v-model="editForm.birth" :disabled="true"></el-input>
+          <el-input v-model="editForm.birth"
+                    :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="地址" prop="addr">
+        <el-form-item label="地址"
+                      prop="addr">
           <el-input v-model="editForm.addr"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer"
+            class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUserById">确 定</el-button>
+        <el-button type="primary"
+                   @click="editUserById">确 定</el-button>
       </span>
     </el-dialog>
   </div>

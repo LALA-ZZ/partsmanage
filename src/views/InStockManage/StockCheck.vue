@@ -6,99 +6,222 @@
       <div slot="header">
         <span>查询条件</span>
       </div>
-      <el-input v-model="checkForm.staff" placeholder="盘点人" style="width: 200px;" clearable></el-input>
-      <el-input v-model="checkForm.staff" placeholder="仓库选择" style="width: 200px;" clearable></el-input>
+      <el-input v-model="checkForm.staff"
+                placeholder="盘点人"
+                style="width: 100px;"
+                clearable></el-input>
+      <el-input v-model="checkForm.staff"
+                placeholder="仓库选择"
+                style="width: 100px;"
+                clearable></el-input>
 
-      <el-select v-model="checkForm.status" placeholder="盘点状态">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+      <el-select v-model="checkForm.status"
+                 placeholder="盘点状态"
+                 style="width: 100px;">
+        <el-option v-for="item in options"
+                   :key="item.value"
+                   :label="item.label"
+                   :value="item.value">
         </el-option>
       </el-select>
-      <el-input v-model="checkForm.staff" placeholder="盘点编号" style="width: 200px;" clearable></el-input>
-      <el-date-picker v-model="checkForm.dateInterval" type="daterange" align="left" unlink-panels range-separator="至"
-        start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+      <el-input v-model="checkForm.staff"
+                placeholder="盘点编号"
+                style="width: 100px;"
+                clearable></el-input>
+      <el-date-picker v-model="checkForm.dateInterval"
+                      type="daterange"
+                      align="left"
+                      unlink-panels
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期"
+                      :picker-options="pickerOptions">
       </el-date-picker>
-      <el-button type="primary" icon="el-icon-search" @click="getcheckList">快速搜索</el-button>
+      <el-button type="primary"
+                 icon="el-icon-search"
+                 @click="getcheckList">搜索</el-button>
+
     </el-card>
 
     <!-- 盘点列表区域 -->
-    <el-card shadow="hover" class="secondcard">
-      <el-button size='mini' type='primary' plain icon="el-icon-plus" @click="newCheck">开始新盘点</el-button>
+    <el-card shadow="hover"
+             class="secondcard">
+      <el-button size='mini'
+                 type='primary'
+                 plain
+                 icon="el-icon-plus"
+                 @click="newCheck">开始新盘点</el-button>
       <!-- <el-button size='mini' type='primary' plain @click="newCheck">Excel导入</el-button> -->
       <!-- <el-button size='mini' type='primary' plain @click="newCheck">Excel导出</el-button> -->
-      <el-button size='mini' type='danger' plain icon="el-icon-delete" @click="batchDelete(multipleSelection)">批量删除
+      <el-button size='mini'
+                 type='danger'
+                 plain
+                 icon="el-icon-delete"
+                 @click="batchDelete(multipleSelection)">批量删除
       </el-button>
-      <el-button size='mini' type='info' plain icon="el-icon-bell" @click="toggleSelection(multipleSelection)">取消选择
+      <el-button size='mini'
+                 type='info'
+                 plain
+                 icon="el-icon-bell"
+                 @click="toggleSelection(multipleSelection)">取消选择
       </el-button>
-      <el-button size='mini' type='success' plain icon="el-icon-check" @click="confirmSave()">保存</el-button>
-      <el-table :data="checkList" ref="checkListRef" border stripe highlight-current-row v-loading="loading"
-        element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-        <div slot="empty" class="emptyBg">
-          <img src="@/assets/box.jpg" alt="">
+      <el-button size='mini'
+                 type='success'
+                 plain
+                 icon="el-icon-check"
+                 @click="confirmSave()">保存</el-button>
+      <el-table :data="checkList"
+                ref="checkListRef"
+                border
+                stripe
+                highlight-current-row
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
-        <el-table-column type="selection" align="center" width="55" @selection-change="handleSelectionChange">
+        <el-table-column type="selection"
+                         align="center"
+                         width="55"
+                         @selection-change="handleSelectionChange">
         </el-table-column>
-        <el-table-column type="index" label="序号" align="center" width="60"> </el-table-column>
-        <el-table-column label="仓库编号" prop="" align="center"></el-table-column>
-        <el-table-column label="仓库名称" prop="" align="center"></el-table-column>
-        <el-table-column label="盘点编号" prop="id" align="center"></el-table-column>
-        <el-table-column label="盘点状态" prop="" align="center">
+        <el-table-column type="index"
+                         label="序号"
+                         align="center"
+                         width="60"> </el-table-column>
+        <el-table-column label="仓库编号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="仓库名称"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="盘点编号"
+                         prop="id"
+                         align="center"></el-table-column>
+        <el-table-column label="盘点状态"
+                         prop=""
+                         align="center">
           <template slot-scope="scope">
-            <el-tag type="success" size="mini" v-if="scope.checkstatus == 1">已盘点</el-tag>
-            <el-tag type="info" size="mini" v-if="scope.checkstatus == 0">未盘点</el-tag>
+            <el-tag type="success"
+                    size="mini"
+                    v-if="scope.checkstatus == 1">已盘点</el-tag>
+            <el-tag type="info"
+                    size="mini"
+                    v-if="scope.checkstatus == 0">未盘点</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="盘点时间" prop="" align="center" sortable min-width="100"></el-table-column>
-        <el-table-column label="盘点人" prop="" align="center"></el-table-column>
-        <el-table-column label="备注" prop="" align="center"></el-table-column>
-        <el-table-column label="操作" align="center" min-width="150">
+        <el-table-column label="盘点时间"
+                         prop=""
+                         align="center"
+                         sortable
+                         min-width="100"></el-table-column>
+        <el-table-column label="盘点人"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="备注"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="操作"
+                         align="center"
+                         min-width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="showDetailsDialog(scope.row.id)">详情</el-button>
+            <el-button size="mini"
+                       @click="showDetailsDialog(scope.row.id)">详情</el-button>
             <!-- <el-button size="mini" type="warning" @click="showEditDialog(scope.row.id)">审核</el-button> -->
-            <el-button size="mini" type="warning" @click="setCheckState(scope.row)">完成盘点</el-button>
+            <el-button size="mini"
+                       type="warning"
+                       @click="setCheckState(scope.row)">完成盘点</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 分页 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="checkForm.currentpage" :page-sizes="[5, 10, 15, 20]" :page-size="checkForm.pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total" background>
+      <el-pagination @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="checkForm.currentpage"
+                     :page-sizes="[5, 10, 15, 20]"
+                     :page-size="checkForm.pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total"
+                     background>
       </el-pagination>
     </el-card>
 
     <!-- 详情对话框 -->
 
-    <el-dialog title="详情" :visible.sync="detailDialogVisible" width="70%" @close="detailDialogClosed">
+    <el-dialog title="详情"
+               :visible.sync="detailDialogVisible"
+               width="70%"
+               @close="detailDialogClosed">
       <!-- 搜索区域 -->
-      <el-input v-model="queryInfo.checkperson" placeholder="盘点人" style="width: 200px;" clearable
-        @clear="getDetaiPartsList"></el-input>
-      <el-button type="primary" icon="el-icon-search" @click="getDetaiPartsList">快速搜索</el-button>
+      <el-input v-model="queryInfo.checkperson"
+                placeholder="盘点人"
+                style="width: 200px;"
+                clearable
+                @clear="getDetaiPartsList"></el-input>
+      <el-button type="primary"
+                 icon="el-icon-search"
+                 @click="getDetaiPartsList">快速搜索</el-button>
       <!-- 下载区域 -->
       <book-type-option v-model="bookType"></book-type-option>
-      <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
+      <el-button :loading="downloadLoading"
+                 type="success"
+                 icon="el-icon-document"
+                 @click="handleDownload">
         下载数据
       </el-button>
 
-      <el-table :data="detailList" border stripe highlight-current-row v-loading="detailloading"
-        element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-        <el-table-column type="index" label="序号" align="center"></el-table-column>
-        <el-table-column label="配件编号" prop="" align="center"></el-table-column>
-        <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-        <el-table-column label="库存数量" prop="" align="center"></el-table-column>
-        <el-table-column label="盘点数量" prop="" align="center"></el-table-column>
-        <el-table-column label="盘点损溢差" prop="" align="center"></el-table-column>
-        <el-table-column label="规格" prop="" align="center"></el-table-column>
-        <el-table-column label="型号" prop="" align="center"></el-table-column>
-        <el-table-column label="单位" prop="" align="center"></el-table-column>
+      <el-table :data="detailList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="detailloading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        <el-table-column type="index"
+                         label="序号"
+                         align="center"></el-table-column>
+        <el-table-column label="配件编号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="配件名称"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="库存数量"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="盘点数量"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="盘点损溢差"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="规格"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="型号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="单位"
+                         prop=""
+                         align="center"></el-table-column>
       </el-table>
 
       <!-- 分页 -->
-      <el-pagination @size-change="handleDetailSizeChange" @current-change="handleDetailCurrentChange"
-        :current-page="queryInfo.page" :page-sizes="[5, 10, 15, 20]" :page-size="queryInfo.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="detailTotal" background>
+      <el-pagination @size-change="handleDetailSizeChange"
+                     @current-change="handleDetailCurrentChange"
+                     :current-page="queryInfo.page"
+                     :page-sizes="[5, 10, 15, 20]"
+                     :page-size="queryInfo.size"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="detailTotal"
+                     background>
       </el-pagination>
     </el-dialog>
   </div>

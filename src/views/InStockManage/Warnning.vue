@@ -7,85 +7,158 @@
       <div slot="header">
         查找条件
       </div>
-      <el-autocomplete v-model="queryinfo.warehouse" :fetch-suggestions="querySearchAsync" placeholder="请输入选择的仓库"
-        @select="handleSelect">
+      <el-autocomplete v-model="queryinfo.warehouse"
+                       :fetch-suggestions="querySearchAsync"
+                       placeholder="请输入选择的仓库"
+                       @select="handleSelect">
       </el-autocomplete>
-      <el-autocomplete v-model="queryinfo.part" :fetch-suggestions="querySearchAsync" placeholder="请输入配件名称"
-        @select="handleSelect">
+      <el-autocomplete v-model="queryinfo.part"
+                       :fetch-suggestions="querySearchAsync"
+                       placeholder="请输入配件名称"
+                       @select="handleSelect">
       </el-autocomplete>
-      <el-select v-model="queryinfo.warningtype" placeholder="请选择" style="width:120px">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+      <el-select v-model="queryinfo.warningtype"
+                 placeholder="请选择"
+                 style="width:120px">
+        <el-option v-for="item in options"
+                   :key="item.value"
+                   :label="item.label"
+                   :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" icon="el-icon-search" @click="getcheckList">快速搜索</el-button>
+      <el-button type="primary"
+                 icon="el-icon-search"
+                 @click="getcheckList">快速搜索</el-button>
     </el-card>
 
-    <el-row :gutter="30">
-      <el-col :span="12">
-        <el-card shadow="hover" class="secondcard">
-          <el-table :data="amountList" border stripe highlight-current-row v-loading="loading"
-            element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-            :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-            <div slot="empty" class="emptyBg">
-              <img src="@/assets/box.jpg" alt="">
-              <p style="margin: 0px;">没有记录哦~</p>
-            </div>
-            <el-table-column type="index" label="序号" align="center" width="60px"></el-table-column>
-            <el-table-column label="配件类型编号" prop="" align="center"></el-table-column>
-            <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-            <el-table-column label="规格" prop="" align="center"></el-table-column>
-            <el-table-column label="型号" prop="" align="center"></el-table-column>
-            <el-table-column label="单位" prop="" align="center"></el-table-column>
-            <el-table-column label="库存数量" prop="" align="center"></el-table-column>
-            <el-table-column label="库存下限" prop="" align="center"></el-table-column>
-            <el-table-column label="库存上限" prop="" align="center"></el-table-column>
-            <el-table-column label="所在仓库" prop="" align="center"></el-table-column>
-            <el-table-column label="预警信息" prop="" align="center">
-              <template slot-scope="scope">
-                <el-tag type="warning" v-if="scope.row.state === 0">库存不足</el-tag>
-                <el-tag type="danger" v-else>库存过量</el-tag>
-              </template>
-            </el-table-column>
-          </el-table>
-          <!-- pagination region -->
-          <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
+    <el-card shadow="hover"
+             class="secondcard">
+      <el-table v-if="queryinfo.warningtype === 2"
+                :data="overtimeList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
+          <p style="margin: 0px;">没有记录哦~</p>
+        </div>
+        <el-table-column type="index"
+                         label="序号"
+                         align="center"
+                         width="60px"></el-table-column>
+        <el-table-column label="配件编号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="配件名称"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="规格"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="型号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="单位"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="有效期"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="入库时间"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="超时时长"
+                         prop=""
+                         align="center"
+                         sortable></el-table-column>
+        <el-table-column label="所在仓库"
+                         prop=""
+                         align="center">
+        </el-table-column>
+
+      </el-table>
+
+      <el-table v-else
+                :data="amountList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
+          <p style="margin: 0px;">没有记录哦~</p>
+        </div>
+        <el-table-column type="index"
+                         label="序号"
+                         align="center"
+                         width="60px"></el-table-column>
+        <el-table-column label="配件类型编号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="配件名称"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="规格"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="型号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="单位"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="有效期"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="库存数量"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="库存下限"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="库存上限"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="所在仓库"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="预警信息"
+                         prop=""
+                         align="center">
+          <template slot-scope="scope">
+            <el-tag type="warning"
+                    v-if="scope.row.state === 0">库存不足</el-tag>
+            <el-tag type="danger"
+                    v-else>库存过量</el-tag>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="操作"
+                         align="center">
+          <template slot-scope="scope">
+            <el-button size="mini"
+                       type="warning"
+                       icon="el-icon-setting"
+                       @click="setWarning(scope.row)">设置预警</el-button>
+          </template>
+        </el-table-column> -->
+      </el-table>
+      <!-- pagination region -->
+      <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
         :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper"
         :total="400">
       </el-pagination> -->
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <!-- list region -->
-        <el-card shadow="hover" class="secondcard">
-          <el-table :data="overtimeList" border stripe highlight-current-row v-loading="loading"
-            element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-            :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-            <div slot="empty" class="emptyBg">
-              <img src="@/assets/box.jpg" alt="">
-              <p style="margin: 0px;">没有记录哦~</p>
-            </div>
-            <el-table-column type="index" label="序号" align="center" width="60px"></el-table-column>
-            <el-table-column label="配件编号" prop="" align="center"></el-table-column>
-            <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-            <el-table-column label="规格" prop="" align="center"></el-table-column>
-            <el-table-column label="型号" prop="" align="center"></el-table-column>
-            <el-table-column label="单位" prop="" align="center"></el-table-column>
-            <el-table-column label="有效期" prop="" align="center"></el-table-column>
-            <el-table-column label="存储时长" prop="" align="center" sortable></el-table-column>
-            <el-table-column label="所在仓库" prop="" align="center"></el-table-column>
-            <el-table-column label="预警信息" prop="" align="center">
-
-            </el-table-column>
-          </el-table>
-          <!-- pagination region -->
-          <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
-      </el-pagination> -->
-        </el-card>
-
-      </el-col>
-    </el-row>
+    </el-card>
 
   </div>
 </template>

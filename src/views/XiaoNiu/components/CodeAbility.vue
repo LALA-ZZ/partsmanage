@@ -28,7 +28,7 @@ export default {
       var chart = Echarts.init(document.getElementById('codeability'))
       var option = {
         title: {
-          text: '编程能力',
+          text: '编程实践',
           subtext: this.qqid,
         },
         // 悬浮提示
@@ -45,8 +45,11 @@ export default {
           name: {
             // 文本样式
             textStyle: {
-              color: '#fff',
-              backgroundColor: '#999',
+              // color: '#fff',
+              color: 'rgb(0,0,0)',
+              // backgroundColor: '#999',
+              fontSize: 22,
+              fontFamily : '宋体',
               borderRadius: 3,
               padding: [3, 5]
             }
@@ -57,7 +60,7 @@ export default {
           // 指示器
           indicator: [
             {
-              name: '编程实操能力',
+              name: '编程知识实践',
               max: 5,
               // 坐标轴刻度标签的相关设置
               // 若将此属性放在radar下，则每条indicator都会显示圈上的数值，放在这儿，只在通信这条indicator上显示
@@ -70,11 +73,11 @@ export default {
               },
             },
             {
-              name: '编程学习能力',
+              name: '编程知识学习',
               max: 5,
             },
             {
-              name: '编程应用科研活动',
+              name: '科研活动',
               max: 5,
             },
           ],
@@ -131,7 +134,7 @@ export default {
             },
             data: [
               {
-                value: [3, 3, 3],
+                value: [3, 3, 4],
                 // name: '团队协作',
                 symbol: 'rect', // 拐点的样式，还可以取值'rect','angle'等
                 label: {

@@ -4,25 +4,39 @@
     <!-- 申请单区域 -->
     <el-card shadow="hover">
       <div slot="header">
-        <span>配件申请</span>
+        <span>创建出库单</span>
       </div>
-      <el-form ref="applyFormRef" :rules="applyFormRules" :model="applyForm" :label-position="labelPosition"
-        label-width="80px">
+      <el-form ref="stockOutFormRef"
+               :rules="stockOutFormRules"
+               :model="stockOutForm"
+               :label-position="labelPosition"
+               label-width="80px">
         <el-row :gutter="40">
           <el-col :span="8">
-            <el-form-item label="申请仓库" prop="appluware">
-              <el-input v-model="applyForm.appluware" placeholder="申请仓库" clearable></el-input>
+            <el-form-item label="出库人"
+                          prop="documentMaker">
+              <el-input v-model="stockOutForm.documentMaker"
+                        placeholder="出库人"
+                        clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="申请人" prop="applyperson">
-              <el-input v-model="applyForm.applyperson" placeholder="申请人" clearable></el-input>
+            <el-form-item label="领用人"
+                          prop="documentMaker">
+              <el-input v-model="stockOutForm.documentMaker"
+                        placeholder="领用人"
+                        clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="申请方式" prop="applystyle">
-              <el-select v-model="applyForm.applystyle" placeholder="请选择">
-                <el-option v-for="item in applyStyles" :key="item.value" :label="item.label" :value="item.value">
+            <el-form-item label="出库方式"
+                          prop="applystyle">
+              <el-select v-model="stockOutForm.applystyle"
+                         placeholder="请选择">
+                <el-option v-for="item in applyStyles"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -35,73 +49,150 @@
     </el-card>
 
     <!-- 申请配件列表区域 -->
-    <el-card shadow="hover" class="secondcard">
+    <el-card shadow="hover"
+             class="secondcard">
       <!-- 添加按钮 -->
-      <el-button size='mini' plain type='primary' icon="el-icon-plus" @click="addLine">新增</el-button>
-      <el-button size='mini' plain type='danger' icon="el-icon-delete" @click="batchDelete">批量删除</el-button>
-      <el-button size='mini' plain type='info' icon="el-icon-bell" @click="toggleSelection(multipleSelection )">取消选择
+      <el-button size='mini'
+                 plain
+                 type='primary'
+                 icon="el-icon-plus"
+                 @click="addLine">新增</el-button>
+      <el-button size='mini'
+                 plain
+                 type='danger'
+                 icon="el-icon-delete"
+                 @click="batchDelete">批量删除</el-button>
+      <el-button size='mini'
+                 plain
+                 type='info'
+                 icon="el-icon-bell"
+                 @click="toggleSelection(multipleSelection )">取消选择
       </el-button>
-      <el-button size='mini' plain type='success' icon="el-icon-check" @click="confirmSave()">保存</el-button>
-      <el-table :data="applyList" ref="applyListRef" border stripe highlight-current-row
-        @selection-change='handleSelectChange'>
-        <div slot="empty" class="emptyBg">
-          <img src="@/assets/box.jpg" alt="">
+      <el-button size='mini'
+                 plain
+                 type='success'
+                 icon="el-icon-check"
+                 @click="confirmSave()">保存</el-button>
+      <el-table :data="applyList"
+                ref="applyListRef"
+                border
+                stripe
+                highlight-current-row
+                @selection-change='handleSelectChange'>
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
-        <el-table-column type="selection" width="55" align="center">
+        <el-table-column type="selection"
+                         width="55"
+                         align="center">
         </el-table-column>
-        <el-table-column type="index" label="序号" width="60"></el-table-column>
-        <el-table-column label="配件编号" prop="partsid" align="center">
+        <el-table-column type="index"
+                         label="序号"
+                         width="60"></el-table-column>
+        <el-table-column label="配件类别编号"
+                         prop="partsid"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" v-model="scope.row.partsid"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partsid"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partsid}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="配件名称" prop="partsname" align="center">
+        <el-table-column label="配件编号"
+                         prop="partsid"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" v-model="scope.row.partsname"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partsid"></el-input>
+            <span v-show='!scope.row.edit'>{{scope.row.partsid}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="配件名称"
+                         prop="partsname"
+                         align="center">
+          <template slot-scope="scope">
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partsname"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partsname}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="申请数量" prop="partsamount" align="center">
+        <el-table-column label="出库数量"
+                         prop="partsamount"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" v-model="scope.row.partsamount"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partsamount"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partsamount}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="型号" prop="partstyle" align="center">
+        <el-table-column label="型号"
+                         prop="partstyle"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" v-model="scope.row.partstyle"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partstyle"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partstyle}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="规格" prop="partsguige" align="center">
+        <el-table-column label="规格"
+                         prop="partsguige"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" v-model="scope.row.partsguige"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partsguige"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partsguige}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="计量单位" prop="partsunit" align="center">
+        <el-table-column label="计量单位"
+                         prop="partsunit"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" v-model="scope.row.partsunit"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      v-model="scope.row.partsunit"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partsunit}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="配件描述" prop="partsdesc" align="center">
+        <el-table-column label="配件描述"
+                         prop="partsdesc"
+                         align="center">
           <template slot-scope="scope">
-            <el-input v-show='scope.row.edit' size="mini" type="textarea" v-model="scope.row.partsdesc"
-              :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+            <el-input v-show='scope.row.edit'
+                      size="mini"
+                      type="textarea"
+                      v-model="scope.row.partsdesc"
+                      :autosize="{ minRows: 2, maxRows: 4}"></el-input>
             <span v-show='!scope.row.edit'>{{scope.row.partsdesc}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="100px" align="center">
+        <el-table-column label="操作"
+                         min-width="170px"
+                         align="center">
           <template slot-scope="scope">
-            <el-button v-show="!scope.row.edit" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button v-show="scope.row.edit" type="success" size="mini"
-              @click="handleCancle(scope.$index, scope.row)">取消</el-button>
-            <el-button v-show="scope.row.edit" type="warning" size="mini" @click="save(scope.$index,scope.row)">确定
+            <el-button v-show="!scope.row.edit"
+                       size="mini"
+                       @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button v-show="scope.row.edit"
+                       type="success"
+                       size="mini"
+                       @click="handleCancle(scope.$index, scope.row)">取消</el-button>
+            <el-button v-show="scope.row.edit"
+                       type="warning"
+                       size="mini"
+                       @click="save(scope.$index,scope.row)">确定
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
+            <el-button size="mini"
+                       type="danger"
+                       @click="handleDelete(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
 
@@ -116,19 +207,19 @@ export default {
   data () {
     return {
       // 申请表单对象
-      applyForm: {
-        appluware: '',
-        applyperson: '',
-        applystyle: ''
+      stockOutForm: {
+        documentMaker: '',
+        applystyle: '',
+        recipient: ''
 
 
       },
       // 表单验证
-      applyFormRules: {
-        appluware: [
-          { required: true, message: '请输入申请仓库', trigger: 'blur' },
+      stockOutFormRules: {
+        documentMaker: [
+          { required: true, message: '请输入申请人', trigger: 'blur' },
         ],
-        applyperson: [
+        recipient: [
           { required: true, message: '请输入申请人', trigger: 'blur' },
         ],
         applystyle: [
@@ -140,46 +231,36 @@ export default {
       applyList: [],
       applyStyles: [
         {
-          label: '未审核',
-          value: '2'
+          label: '领用出库',
+          value: '领用出库'
         },
         {
-          label: '审核通过',
+          label: '销售出库',
+          value: '0'
+        },
+        {
+          label: '调拨出库',
           value: '1'
         },
         {
-          label: '审核未通过',
-          value: '0'
-        }
+          label: '报废出库',
+          value: '2'
+        },
+        {
+          label: '退货出库',
+          value: '3'
+        },
+        {
+          label: '以旧换新出库',
+          value: '4'
+        },
+        {
+          label: '合作伙伴商品出库',
+          value: '5'
+        },
+
+
       ],
-      // 时间选择期属性对象
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick (picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick (picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick (picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
       // 先前值
       preValue: {},
       // 被选中的记录数据-----对应“批量删除”传的参数值

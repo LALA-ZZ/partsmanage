@@ -33,13 +33,12 @@ export default {
                       
                       url: 'UserManage/User'
                     },
-                    {
-                      path: '/xiaoniu',
-                      name: 'xiaoniu',
-                      label: '小妞',
-                      
-                      url: 'XiaoNiu/XiaoNiu'
-                    },
+                    // {
+                    //   path: '/xiaoniu',
+                    //   name: 'xiaoniu',
+                    //   label: '小妞',
+                    //   url: 'XiaoNiu/XiaoNiu'
+                    // },
                   ]
                 },
                 {
@@ -103,27 +102,27 @@ export default {
                     {
                       path: '/partsapply',
                       name: 'partsapply',
-                      label: '配件申请',
-                      url: 'EntryManage/AddApply'
+                      label: '创建入库单',
+                      url: 'EntryManage/CreateStockIn'
                     },
                     {
                       path: '/applylist',
                       name: 'applylist',
-                      label: '申请列表',
-                      url: 'EntryManage/Apply'
+                      label: '入库单列表',
+                      url: 'EntryManage/StockInList'
                     },
                     {
                       path: '/applycheck',
                       name: 'applycheck',
-                      label: '申请审批',
-                      url: 'EntryManage/ApplyApproval'
+                      label: '入库审批',
+                      url: 'EntryManage/StockInApproval'
                     },
-                    {
-                      path: '/partsentry',
-                      name: 'partsentry',
-                      label: '配件入库',
-                      url: ''
-                    },
+                    // {
+                    //   path: '/partsentry',
+                    //   name: 'partsentry',
+                    //   label: '配件入库',
+                    //   url: ''
+                    // },
                   ]
                 },
                 {
@@ -159,23 +158,36 @@ export default {
                   icon: 'management',
                   children: [
                     {
+                      path: '/creatStockOut',
+                      name: 'creatStockOut',
+                      label: '创建出库单',
+                      url: 'OutManage/CreatStockOut'
+                    },
+                    {
                       path: '/outapply',
                       name: 'outapply',
                       label: '出库申请',
-                      url: ''
+                      url: 'OutManage/OutApply'
+                    },
+                    {
+                      path: '/outapplylist',
+                      name: 'outapplylist',
+                      label: '申请列表',
+                      url: 'OutManage/OutApplyList'
                     },
                     {
                       path: '/outcheck',
                       name: 'outcheck',
                       label: '出库审批',
-                      url: ''
+                      url: 'OutManage/OutCheck'
                     },
                     {
                       path: '/partsout',
                       name: 'partsout',
                       label: '配件出库',
-                      url: ''
+                      url: ' '
                     },
+                    
                   ]
                 },
                 {
@@ -183,19 +195,18 @@ export default {
                   name: 'partsDemandforecast',
                   label: '配件需求预测',
                   icon: 'marketing',
-                  url: '',
                   children: [
-                    {
-                      path: '/forecastInfo',
-                      name: 'forecastInfo',
-                      label: '预测信息列表',
-                      url: ''
-                    },
+                    // {
+                    //   path: '/forecastInfo',
+                    //   name: 'forecastInfo',
+                    //   label: '预测信息列表',
+                    //   url: ''
+                    // },
                     {
                       path: '/forecast',
                       name: 'forecast',
                       label: '需求预测',
-                      url: ''
+                      url: 'PartsDemandForecast/PartsDemandForecast',
                     },
                     
                   ]
@@ -205,19 +216,18 @@ export default {
                   name: 'inventoryoptimization',
                   label: '安全库存优化',
                   icon: 'opportunity',
-                  url: '',
                   children: [
-                    {
-                      path: '/optimizationinfo',
-                      name: 'optimizationinfo',
-                      label: '优化信息列表',
-                      url: ''
-                    },
+                    // {
+                    //   path: '/optimizationinfo',
+                    //   name: 'optimizationinfo',
+                    //   label: '优化信息列表',
+                    //   url: ''
+                    // },
                     {
                       path: '/optimization',
                       name: 'optimization',
                       label: '库存优化',
-                      url: ''
+                      url: 'InventoryOptimization/InventoryOptimization'
                     },
                   ]
                   

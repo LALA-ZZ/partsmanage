@@ -9,30 +9,34 @@
 
       <el-button type="primary" icon="el-icon-search" @click="getList">快速搜索</el-button>
     </el-card>
+
+    
     <!-- 雷达图 -->
-    <el-row :gutter="20" style="margin-top: 10px">
-      <el-col :span="11">
+    <el-row :gutter="10" style="margin-top: 10px">
+      <el-col :span="24">
         <el-card shadow="hover">
-          <div id="echart" style="width: 100%;height:600px;"></div>
+          <div id="echart" style="width: 100%;height:550px;"></div>
         </el-card>
       </el-col>
-      <el-col :span="13">
-        <el-row>
+    </el-row>
+    <el-row style="margin-top: 20px">
+      <el-col :span="24">
+        <el-row >
+          <el-col :span="12">
+            <el-card shadow="hover" style="height:310px">
+               <innovate></innovate>
+            </el-card>
+          </el-col>
           <el-col :span="12">
             <el-card shadow="hover" style="height:310px">
               <team-work></team-work>
             </el-card>
           </el-col>
-          <el-col :span="12">
-            <el-card shadow="hover" style="height:310px">
-              <learning></learning>
-            </el-card>
-          </el-col>
         </el-row>
-        <el-row style="margin-top: 20px">
+        <el-row  >
           <el-col :span="12">
             <el-card shadow="hover" style="height:310px">
-              <innovate></innovate>
+             <learning></learning>
             </el-card>
           </el-col>
           <el-col :span="12">
@@ -59,7 +63,7 @@ import CodeAbility from './components/CodeAbility.vue';
 export default {
   data () {
     return {
-      qqid: '',
+      qqid: null,
       qqdata: null,
       chart: null,
       echartsData: {
@@ -174,8 +178,10 @@ export default {
           name: {
             // 文本样式
             textStyle: {
-              color: '#fff',
-              backgroundColor: '#999',
+              color: 'rgb(0,0,0)',
+              // backgroundColor: '#999',
+              fontSize: 18,
+              fontFamily : '宋体',
               borderRadius: 3,
               padding: [3, 5]
             }
@@ -188,7 +194,7 @@ export default {
             [
               // --------------------------------------6
               {
-                name: '团队协作能力', max: 5,
+                name: '合作意识', max: 5,
                 // 坐标轴刻度标签的相关设置
                 // 若将此属性放在radar下，则每条indicator都会显示圈上的数值，放在这儿，只在通信这条indicator上显示
                 axisLabel: {
@@ -200,19 +206,19 @@ export default {
                 },
               },
               {
-                name: '信息共享能力',
+                name: '信息共享',
                 max: 5,
               },
               {
-                name: '受挫和经验吸收能力',
+                name: '自我调节能力',
                 max: 5,
               },
               {
-                name: '与导师沟通探讨能力',
+                name: '沟通交流能力',
                 max: 5,
               },
               {
-                name: '研究构思能力',
+                name: '语言表达能力',
                 max: 5,
               },
               {
@@ -222,11 +228,11 @@ export default {
 
               // --------------------------------------7
               {
-                name: '学术会议知识学习',
+                name: '学术会议',
                 max: 5,
               },
               {
-                name: '学习执行能力',
+                name: '实施执行',
                 max: 5,
               },
               {
@@ -238,7 +244,7 @@ export default {
                 max: 5,
               },
               {
-                name: '专业前沿性知识',
+                name: '前沿性知识',
                 max: 5,
               },
               {
@@ -246,18 +252,18 @@ export default {
                 max: 5,
               },
               {
-                name: '专业融合性知识',
+                name: '融合性知识',
                 max: 5,
               },
               // --------------------------------------5
 
 
               {
-                name: '创新思维',
+                name: '想象思维',
                 max: 5,
               },
               {
-                name: '创新人格',
+                name: '创新动机',
                 max: 5,
               },
               {
@@ -269,20 +275,20 @@ export default {
                 max: 5,
               },
               {
-                name: '创新行为',
+                name: '学习悟性',
                 max: 5,
               },
               // --------------------------------------3
               {
-                name: '编程实操能力',
+                name: '编程知识实践',
                 max: 5,
               },
               {
-                name: '编程学习能力',
+                name: '编程知识学习',
                 max: 5,
               },
               {
-                name: '编程应用科研活动',
+                name: '科研活动',
                 max: 5,
               },
 
@@ -324,7 +330,8 @@ export default {
         },
         // 图例
         legend: {
-          data: ['当前学生能力值', '各能力平均值']
+          data: ['当前学生能力值', '各能力平均值'],
+          bottom: '20'
         },
         series:
           [
@@ -352,7 +359,7 @@ export default {
               data:
                 [
                   {
-                    value: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+                    value: [4,4,5,5,4,4,3,3,3,3,3,4,3,4,4,4,4,3,3,3,4],
                     name: '当前学生能力值',
                     symbol: 'rect', // 拐点的样式，还可以取值'rect','angle'等
                     label: {
@@ -372,7 +379,7 @@ export default {
                     },
                   },
                   {
-                    value: [2.4, 2.4, 2.5, 2.7, 2.7, 2.5, 3.4, 2.9, 3.2, 3.2, 3.1, 3.0, 2.9, 2.7, 2.8, 2.7, 2.8, 2.8, 2.9, 2.8, 2.7],
+                    value: [2.4, 2.4, 2.5, 2.7, 2.7, 2.5, 3.4, 2.9, 3.2, 3.2, 3.1, 3.0,2.9, 2.7, 2.8, 2.7, 2.8, 2.8, 2.9, 2.8, 2.7],
                     name: '各能力平均值',
                     symbol: 'rect',
                     lineStyle: {

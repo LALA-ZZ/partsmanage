@@ -29,7 +29,6 @@ export default {
       var option = {
         title: {
           text: '团队协作',
-          subtext: this.qqid,
         },
         // 悬浮提示
         tooltip: {
@@ -40,14 +39,16 @@ export default {
         radar: {
           // shape: 'circle',
           splitNumber: 5,
-          nameGap: 5,
           radius: '66%',
           // 雷达图每个指示器名称的配置项。
           name: {
             // 文本样式
             textStyle: {
-              color: '#fff',
-              backgroundColor: '#999',
+              // color: '#fff',
+              color: 'rgb(0,0,0)',
+              // backgroundColor: '#999',
+              fontSize: 22,
+              fontFamily : '宋体',
               borderRadius: 3,
               padding: [3, 5]
             }
@@ -60,7 +61,7 @@ export default {
             [
               // --------------------------------------6
               {
-                name: '团队协作能力', max: 5,
+                name: '合作意识', max: 5,
                 // 坐标轴刻度标签的相关设置
                 // 若将此属性放在radar下，则每条indicator都会显示圈上的数值，放在这儿，只在通信这条indicator上显示
                 axisLabel: {
@@ -73,19 +74,19 @@ export default {
                 },
               },
               {
-                name: '信息共享能力',
+                name: '信息共享',
                 max: 5,
               },
               {
-                name: '受挫和经验吸收能力',
+                name: '自我调节能力',
                 max: 5,
               },
               {
-                name: '与导师沟通探讨能力',
+                name: '沟通交流能力',
                 max: 5,
               },
               {
-                name: '研究构思能力',
+                name: '语言表达能力',
                 max: 5,
               },
               {
@@ -99,7 +100,7 @@ export default {
             lineStyle: {
               // color: '##409EFF',
               type: 'solid',
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
+              shadowColor: 'rgba(0, 0, 0)',
               shadowBlur: 10
             },
           },
@@ -126,10 +127,6 @@ export default {
             },
           },
         },
-        // 图例
-        // legend: {
-        //   data: ['团队协作']
-        // },
         series: [
           {
             name: '雷达图',
@@ -144,8 +141,8 @@ export default {
             },
             data: [
               {
-                value: [3, 3, 3, 3, 3, 3],
-                // name: '团队协作',
+                value: [4, 4, 5, 5, 4, 4],
+                name: '团队协作',
                 symbol: 'rect', // 拐点的样式，还可以取值'rect','angle'等
                 label: {
                   show: true

@@ -6,23 +6,43 @@
       <div slot="header">
         <span>查询条件</span>
       </div>
-      <el-form :inline="true" ref="seachFormRef" :model="seachForm" :label-position="labelPosition" label-width="80px">
+      <el-form :inline="true"
+               ref="seachFormRef"
+               :model="seachForm"
+               :label-position="labelPosition"
+               label-width="80px">
         <el-form-item label="申请人">
-          <el-input v-model="seachForm.staff" placeholder="申请人" clearable></el-input>
+          <el-input v-model="seachForm.staff"
+                    placeholder="申请人"
+                    clearable></el-input>
         </el-form-item>
         <el-form-item label="申请时间">
-          <el-date-picker v-model="seachForm.dateInterval" type="daterange" align="left" unlink-panels
-            range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+          <el-date-picker v-model="seachForm.dateInterval"
+                          type="daterange"
+                          align="left"
+                          unlink-panels
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"
+                          :picker-options="pickerOptions">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="申请状态">
-          <el-select v-model="seachForm.status" placeholder="状态">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="seachForm.status"
+                     placeholder="状态">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="getApplyList">搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="goAddApply">配件申请</el-button>
+        <el-button type="primary"
+                   icon="el-icon-search"
+                   @click="getApplyList">搜索</el-button>
+        <!-- <el-button type="primary"
+                   icon="el-icon-plus"
+                   @click="goAddApply">配件申请</el-button> -->
 
         <!-- <el-row :gutter="20">
           <el-col :span="5">
@@ -55,87 +75,171 @@
     </el-card>
 
     <!-- 申请列表区域 -->
-    <el-card shadow="hover" class="secondcard">
+    <el-card shadow="hover"
+             class="secondcard">
       <!-- 申请列表区域 -->
-      <el-table :data="applyList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading" :row-class-name="tableRowClassName">
-        <div slot="empty" class="emptyBg">
-          <img src="@/assets/box.jpg" alt="">
+      <el-table :data="applyList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                :row-class-name="tableRowClassName">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" label="序号" width="60" align="center"></el-table-column>
-        <el-table-column label="申请单编号" prop="" align="center"></el-table-column>
-        <el-table-column label="需求位置" prop="" align="center"></el-table-column>
-        <el-table-column label="申请描述" prop="" align="center"> </el-table-column>
-        <el-table-column label="申请类型" prop="" align="center"> </el-table-column>
-        <el-table-column label="申请时间" prop="" align="center" sortable></el-table-column>
-        <el-table-column label="申请人" prop="" align="center"></el-table-column>
-        <el-table-column label="申请单状态" prop="status" align="center">
+        <el-table-column type="selection"
+                         width="55"></el-table-column>
+        <el-table-column type="index"
+                         label="序号"
+                         width="60"
+                         align="center"></el-table-column>
+        <el-table-column label="申请单编号"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="需求位置"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="申请描述"
+                         prop=""
+                         align="center"> </el-table-column>
+        <el-table-column label="申请类型"
+                         prop=""
+                         align="center"> </el-table-column>
+        <el-table-column label="申请时间"
+                         prop=""
+                         align="center"
+                         sortable></el-table-column>
+        <el-table-column label="申请人"
+                         prop=""
+                         align="center"></el-table-column>
+        <el-table-column label="申请单状态"
+                         prop="status"
+                         align="center">
           <template slot-scope="scope">
-            <el-tag size="mini" v-if="scope.row.status === 2">未审核</el-tag>
-            <el-tag type="success" size="mini" v-else-if="scope.row.status === 1">审核通过</el-tag>
-            <el-tag type="danger" size="mini" v-else>审核不通过</el-tag>
+            <el-tag size="mini"
+                    v-if="scope.row.status === 2">未审核</el-tag>
+            <el-tag type="success"
+                    size="mini"
+                    v-else-if="scope.row.status === 1">审核通过</el-tag>
+            <el-tag type="danger"
+                    size="mini"
+                    v-else>审核不通过</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="300px">
+        <el-table-column label="操作"
+                         align="center"
+                         width="300px">
           <template slot-scope="scope">
-            <el-button size="mini" @click="showDetailsDialog(scope.row.id)">详情</el-button>
+            <el-button size="mini"
+                       @click="showDetailsDialog(scope.row.id)">详情</el-button>
             <!-- <el-button size="mini" type="warning" @click="showEditDialog(scope.row.id)">审核</el-button> -->
-            <el-button size="mini" type="danger" @click="deleteWareById(scope.row)">删除</el-button>
+            <el-button size="mini"
+                       type="danger"
+                       @click="deleteWareById(scope.row)">删除</el-button>
           </template>
         </el-table-column>
 
       </el-table>
       <!-- 分页区域 -->
-      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="seachForm.currentpage" :page-sizes="[5, 8, 10, 20]" :page-size="seachForm.pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination background
+                     @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="seachForm.currentpage"
+                     :page-sizes="[5, 8, 10, 20]"
+                     :page-size="seachForm.pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total">
       </el-pagination>
     </el-card>
 
     <!-- 详情对话框 -->
-    <el-dialog title="申请单详情" :visible.sync="detialDialogVisible" width="50%" @close="detailDialogClose">
+    <el-dialog title="申请单详情"
+               :visible.sync="detialDialogVisible"
+               width="50%"
+               @close="detailDialogClose">
       <el-card shadow="hover">
-        <el-form :model="detailForm" :inline="true" ref="detailFormRef">
-          <el-form-item label="申请单编号" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+        <el-form :model="detailForm"
+                 :inline="true"
+                 ref="detailFormRef">
+          <el-form-item label="申请单编号"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="需求位置" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+          <el-form-item label="需求位置"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="申请类型" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+          <el-form-item label="申请类型"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="申请时间" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+          <el-form-item label="申请时间"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="申请人" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+          <el-form-item label="申请人"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="申请状态" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+          <el-form-item label="申请状态"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="申请描述" :label-width="formLabelWidth" :disabled="true">
-            <el-input v-model="detailForm.id" autocomplete="off"></el-input>
+          <el-form-item label="申请描述"
+                        :label-width="formLabelWidth"
+                        :disabled="true">
+            <el-input v-model="detailForm.id"
+                      autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
       </el-card>
 
       <!-- 表格区域 -->
-      <el-card shadow="hover" style="margin-top: 3px;">
-        <el-table ref="detailListRef" :data="detailList" border stripe highlight-current-row
-          @cell-dblclick='cellDblclick' v-loading="loading" element-loading-text="拼命加载中"
-          element-loading-spinner="el-icon-loading">
-          <el-table-column label="序号" type="index" width="60" align="center"></el-table-column>
-          <el-table-column label="配件类型编号" property="date" align="center"></el-table-column>
-          <el-table-column label="配件名称" property="date" align="center">
+      <el-card shadow="hover"
+               style="margin-top: 3px;">
+        <el-table ref="detailListRef"
+                  :data="detailList"
+                  border
+                  stripe
+                  highlight-current-row
+                  @cell-dblclick='cellDblclick'
+                  v-loading="loading"
+                  element-loading-text="拼命加载中"
+                  element-loading-spinner="el-icon-loading">
+          <el-table-column label="序号"
+                           type="index"
+                           width="60"
+                           align="center"></el-table-column>
+          <el-table-column label="配件类型编号"
+                           property="date"
+                           align="center"></el-table-column>
+          <el-table-column label="配件名称"
+                           property="date"
+                           align="center">
             <!-- 行内编辑 -->
             <template slot-scope="scope">
               <template v-if="scope.row.edit">
                 <el-row>
                   <el-col :span="10">
-                    <el-input size="mini" v-model="scope.row.date"></el-input>
+                    <el-input size="mini"
+                              v-model="scope.row.date"></el-input>
                   </el-col>
                   <!-- <el-col :span="10">
                     <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
@@ -146,13 +250,16 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column label="申请数量" property="date" align="center">
+          <el-table-column label="申请数量"
+                           property="date"
+                           align="center">
             <!-- 行内编辑 -->
             <template slot-scope="scope">
               <template v-if="scope.row.edit">
                 <el-row>
                   <el-col :span="10">
-                    <el-input size="mini" v-model="scope.row.date"></el-input>
+                    <el-input size="mini"
+                              v-model="scope.row.date"></el-input>
                   </el-col>
                   <!-- <el-col :span="10">
                     <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
@@ -163,27 +270,49 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column label="型号" property="date" align="center"> </el-table-column>
-          <el-table-column label="规格" property="date" align="center"></el-table-column>
-          <el-table-column label="计量单位" property="date" align="center"></el-table-column>
-          <el-table-column label="配件描述" property="date" align="center"></el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column label="型号"
+                           property="date"
+                           align="center"> </el-table-column>
+          <el-table-column label="规格"
+                           property="date"
+                           align="center"></el-table-column>
+          <el-table-column label="计量单位"
+                           property="date"
+                           align="center"></el-table-column>
+          <el-table-column label="配件描述"
+                           property="date"
+                           align="center"></el-table-column>
+          <el-table-column label="操作"
+                           align="center">
             <template slot-scope="scope">
               <!-- 行内编辑 -->
-              <el-button v-show='scope.row.edit' type="info" size="mini" @click="cancelEdit(scope.row)">取消
+              <el-button v-show='scope.row.edit'
+                         type="info"
+                         size="mini"
+                         @click="cancelEdit(scope.row)">取消
               </el-button>
-              <el-button v-show='scope.row.edit' type="success" size="mini" @click="confirmEdit(scope.row.id)">确认
+              <el-button v-show='scope.row.edit'
+                         type="success"
+                         size="mini"
+                         @click="confirmEdit(scope.row.id)">确认
               </el-button>
-              <el-button v-show='!scope.row.edit' size="mini" @click="scope.row.edit = !scope.row.edit">编辑</el-button>
-              <el-button v-show='!scope.row.edit' size="mini" type="danger" @click="deleteDetailById(scope.row)">删除
+              <el-button v-show='!scope.row.edit'
+                         size="mini"
+                         @click="scope.row.edit = !scope.row.edit">编辑</el-button>
+              <el-button v-show='!scope.row.edit'
+                         size="mini"
+                         type="danger"
+                         @click="deleteDetailById(scope.row)">删除
               </el-button>
             </template>
           </el-table-column>
         </el-table>
         <!-- 底部区域 -->
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer"
+              class="dialog-footer">
           <el-button @click="detialDialogVisible = false">关 闭</el-button>
-          <el-button type="primary" @click="detialDialogVisible = false">确 定</el-button>
+          <el-button type="primary"
+                     @click="detialDialogVisible = false">确 定</el-button>
         </span>
       </el-card>
 

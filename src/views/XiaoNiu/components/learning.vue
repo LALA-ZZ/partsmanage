@@ -45,8 +45,11 @@ export default {
           name: {
             // 文本样式
             textStyle: {
-              color: '#fff',
-              backgroundColor: '#999',
+              // color: '#fff',
+              color: 'rgb(0,0,0)',
+              // backgroundColor: '#999',
+              fontSize: 22,
+              fontFamily : '宋体',
               borderRadius: 3,
               padding: [3, 5]
             }
@@ -57,7 +60,7 @@ export default {
           // 指示器
           indicator: [
             {
-              name: '学术会议知识学习',
+              name: '学术会议',
               max: 5,
               axisLabel: {
                 show: true,
@@ -68,7 +71,7 @@ export default {
               },
             },
             {
-              name: '学习执行能力',
+              name: '实施执行',
               max: 5,
             },
             {
@@ -80,7 +83,7 @@ export default {
               max: 5,
             },
             {
-              name: '专业前沿性知识',
+              name: '前沿性知识',
               max: 5,
             },
             {
@@ -88,7 +91,7 @@ export default {
               max: 5,
             },
             {
-              name: '专业融合性知识',
+              name: '融合性知识',
               max: 5,
             },
           ],
@@ -145,7 +148,7 @@ export default {
             },
             data: [
               {
-                value: [3, 3, 3, 3, 3, 3, 3],
+                value: [3, 3, 3, 3, 3, 4, 3],
                 // name: '团队协作',
                 symbol: 'rect', // 拐点的样式，还可以取值'rect','angle'等
                 label: {

@@ -4,126 +4,204 @@
     <el-card shadow="hover">
 
       <!-- 搜索与添加部分 -->
-      <p>仓库分布图</p>
+      <!-- <p>仓库分布图</p> -->
       <el-row :gutter="1">
-        <el-col :span="7">
-          <el-input placeholder="请搜索输入内容" clearable @clear="getWareList" style="width: 250px;">
+        <el-col :span="11">
+          <el-input placeholder="请搜索输入内容"
+                    clearable
+                    @clear="getWareList"
+                    style="width: 250px;">
           </el-input>
-          <el-select placeholder="省份" style="width: 110px;">
+          <el-select placeholder="省份"
+                     style="width: 110px;">
             <el-option></el-option>
           </el-select>
-          <el-select placeholder="仓库等级" style="width: 110px;">
-            <el-option label="中心库" value="0"></el-option>
-            <el-option label="区域库" value="1"></el-option>
-            <el-option label="网点库" value="2"></el-option>
+          <el-select placeholder="仓库等级"
+                     style="width: 110px;">
+            <el-option label="中心库"
+                       value="0"></el-option>
+            <el-option label="区域库"
+                       value="1"></el-option>
+            <el-option label="网点库"
+                       value="2"></el-option>
           </el-select>
         </el-col>
         <el-col :span="10">
-          <el-button type="primary" icon="el-icon-search" @click="getWareList">搜索</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">新增</el-button>
-          <el-button type="danger" icon="el-icon-delete">批量删除</el-button>
+          <el-button type="primary"
+                     icon="el-icon-search"
+                     @click="getWareList">搜索</el-button>
+          <el-button type="primary"
+                     icon="el-icon-plus"
+                     @click="addDialogVisible = true">新增</el-button>
+          <el-button type="danger"
+                     icon="el-icon-delete">批量删除</el-button>
         </el-col>
       </el-row>
 
       <!-- 仓库列表 -->
-      <el-table :data="warehouseList" border stripe highlight-current-row v-loading="loading"
-        element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
-        <div slot="empty" class="emptyBg">
-          <img src="@/assets/box.jpg" alt="">
+      <el-table :data="warehouseList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="loading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" label="序号" width="60px"></el-table-column>
-        <el-table-column label="仓库编号" prop="warehouse_id"></el-table-column>
-        <el-table-column label="仓库名称" prop="warehouse_name"></el-table-column>
-        <el-table-column label="仓库地址" prop="warehouse_address"></el-table-column>
-        <el-table-column label="仓库负责人" prop="warehouse_head"></el-table-column>
-        <el-table-column label="负责人联系方式" prop="warehouse_phone"></el-table-column>
-        <el-table-column label="仓库等级" prop="warehouse_level">
+        <el-table-column type="selection"
+                         width="55"></el-table-column>
+        <el-table-column type="index"
+                         label="序号"
+                         width="60px"></el-table-column>
+        <el-table-column label="仓库编号"
+                         prop="warehouse_id"></el-table-column>
+        <el-table-column label="仓库名称"
+                         prop="warehouse_name"></el-table-column>
+        <el-table-column label="仓库地址"
+                         prop="warehouse_address"></el-table-column>
+        <el-table-column label="仓库负责人"
+                         prop="warehouse_head"></el-table-column>
+        <el-table-column label="负责人联系方式"
+                         prop="warehouse_phone"></el-table-column>
+        <el-table-column label="仓库等级"
+                         prop="warehouse_level">
           <template slot-scope="scope">
-            <el-tag type="success" v-if="scope.row.warehouse_level === 0">一级</el-tag>
-            <el-tag type="info" v-else-if="scope.row.warehouse_level === 1">二级</el-tag>
-            <el-tag type="danger" v-else>三级</el-tag>
+            <el-tag type="success"
+                    v-if="scope.row.warehouse_level === 0">一级</el-tag>
+            <el-tag type="info"
+                    v-else-if="scope.row.warehouse_level === 1">二级</el-tag>
+            <el-tag type="danger"
+                    v-else>三级</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="描述" prop=""></el-table-column>
+        <el-table-column label="描述"
+                         prop=""></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="showEditDialog(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="deleteWareById(scope.row.id)">删除</el-button>
+            <el-button size="mini"
+                       @click="showEditDialog(scope.row.id)">编辑</el-button>
+            <el-button size="mini"
+                       type="danger"
+                       @click="deleteWareById(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
 
       </el-table>
 
       <!-- 分页功能 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryinfo.currentpage" :page-sizes="[5, 8, 10, 20]" :page-size="queryinfo.pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total" background>
+      <el-pagination @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="queryinfo.currentpage"
+                     :page-sizes="[5, 8, 10, 20]"
+                     :page-size="queryinfo.pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total"
+                     background>
       </el-pagination>
     </el-card>
 
     <!-- 新增仓库对话框 -->
-    <el-dialog title="新增仓库" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
-      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="150px">
-        <el-form-item label="仓库名称" prop="warename">
+    <el-dialog title="新增仓库"
+               :visible.sync="addDialogVisible"
+               width="50%"
+               @close="addDialogClosed">
+      <el-form :model="addForm"
+               :rules="addFormRules"
+               ref="addFormRef"
+               label-width="150px">
+        <el-form-item label="仓库名称"
+                      prop="warename">
           <el-input v-model="addForm.warename"></el-input>
         </el-form-item>
-        <el-form-item label="仓库地址" prop="wareaddres">
+        <el-form-item label="仓库地址"
+                      prop="wareaddres">
           <el-input v-model="addForm.wareaddres"></el-input>
         </el-form-item>
-        <el-form-item label="仓库负责人" prop="warehead">
+        <el-form-item label="仓库负责人"
+                      prop="warehead">
           <el-input v-model="addForm.warehead"></el-input>
         </el-form-item>
-        <el-form-item label="负责人联系方式" prop="warephone">
+        <el-form-item label="负责人联系方式"
+                      prop="warephone">
           <el-input v-model="addForm.warephone"></el-input>
         </el-form-item>
-        <el-form-item label="仓库等级" prop="warelevel">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option label="中心库" value="0"></el-option>
-            <el-option label="区域库" value="1"></el-option>
-            <el-option label="网点库" value="2"></el-option>
+        <el-form-item label="仓库等级"
+                      prop="warelevel">
+          <el-select v-model="value"
+                     placeholder="请选择">
+            <el-option label="中心库"
+                       value="0"></el-option>
+            <el-option label="区域库"
+                       value="1"></el-option>
+            <el-option label="网点库"
+                       value="2"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="描述" prop="waredirec">
-          <el-input type="textarea" v-model="addForm.waredirec"></el-input>
+        <el-form-item label="描述"
+                      prop="waredirec">
+          <el-input type="textarea"
+                    v-model="addForm.waredirec"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer"
+            class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addWare">确 定</el-button>
+        <el-button type="primary"
+                   @click="addWare">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 编辑仓库对话框 -->
-    <el-dialog title="编辑仓库信息" :visible.sync="editDialogVisible" width="50%" @close="editDialogClosed">
-      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
-        <el-form-item label="仓库名称" prop="warename">
+    <el-dialog title="编辑仓库信息"
+               :visible.sync="editDialogVisible"
+               width="50%"
+               @close="editDialogClosed">
+      <el-form :model="editForm"
+               :rules="editFormRules"
+               ref="editFormRef"
+               label-width="100px">
+        <el-form-item label="仓库名称"
+                      prop="warename">
           <el-input v-model="editForm.warename"></el-input>
         </el-form-item>
-        <el-form-item label="仓库地址" prop="wareaddres">
+        <el-form-item label="仓库地址"
+                      prop="wareaddres">
           <el-input v-model="editForm.wareaddres"></el-input>
         </el-form-item>
-        <el-form-item label="仓库负责人" prop="warehead">
+        <el-form-item label="仓库负责人"
+                      prop="warehead">
           <el-input v-model="editForm.warehead"></el-input>
         </el-form-item>
-        <el-form-item label="负责人联系方式" prop="warephone">
+        <el-form-item label="负责人联系方式"
+                      prop="warephone">
           <el-input v-model="editForm.warephone"></el-input>
         </el-form-item>
-        <el-form-item label="仓库等级" prop="warelevel">
-          <el-select v-model="editForm.warelevel" placeholder="请选择">
-            <el-option label="中心库" value="0"></el-option>
-            <el-option label="区域库" value="1"></el-option>
-            <el-option label="网点库" value="2"></el-option>
+        <el-form-item label="仓库等级"
+                      prop="warelevel">
+          <el-select v-model="editForm.warelevel"
+                     placeholder="请选择">
+            <el-option label="中心库"
+                       value="0"></el-option>
+            <el-option label="区域库"
+                       value="1"></el-option>
+            <el-option label="网点库"
+                       value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input type="textarea" v-model="editForm.waredirec"></el-input>
+          <el-input type="textarea"
+                    v-model="editForm.waredirec"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer"
+            class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editWare">确 定</el-button>
+        <el-button type="primary"
+                   @click="editWare">确 定</el-button>
       </span>
     </el-dialog>
   </div>
