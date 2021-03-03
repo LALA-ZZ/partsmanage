@@ -5,68 +5,38 @@
       <!-- 搜索与添加区域 -->
       <el-row :gutter="10">
         <el-col :span="5">
-          <el-input v-model="queryInfo.name"
-                    placeholder="请搜索输入内容"
-                    clearable
-                    @clear="getUserList">
+          <el-input v-model="queryInfo.name" placeholder="请搜索输入内容" clearable @clear="getUserList">
           </el-input>
         </el-col>
         <el-col :span="10">
-          <el-button type="primary"
-                     icon="el-icon-search"
-                     @click="getUserList">搜索</el-button>
-          <el-button type="primary"
-                     icon="el-icon-plus"
-                     @click="addDialogVisible = true">新增</el-button>
-          <el-button type="danger"
-                     icon="el-icon-delete">批量删除</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getUserList">搜索</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">新增</el-button>
+          <el-button type="danger" icon="el-icon-delete">批量删除</el-button>
         </el-col>
 
       </el-row>
 
       <!-- 下载区域 -->
-      <!-- <book-type-option v-model="bookType">> </book-type-option>
-      <el-button :loading="downloadLoading"
-                 type="success"
-                 icon="el-icon-document"
-                 @click="handleDownload">
-        下载数据
+      <book-type-option v-model="bookType"> </book-type-option>
+      <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
+        下载数据模板
       </el-button>
-      <el-button size='mini'
-                 plain
-                 type='success'
-                 icon="el-icon-check"
-                 @click="confirmSave()">保存</el-button> -->
+      <el-button size='mini' plain type='success' icon="el-icon-check" @click="confirmSave()">保存</el-button>
 
       <!-- 用户列表区域 -->
-      <el-table :data="userList"
-                border
-                stripe
-                highlight-current-row
-                v-loading="loading"
-                element-loading-text="拼命加载中"
-                element-loading-spinner="el-icon-loading"
-                @cell-dblclick='cellDblclick'
-                :cell-class-name='getRowColumn'
-                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-                class="tb-edit">
-        <el-table-column type="selection"
-                         width="55"></el-table-column>
-        <el-table-column type="index"
-                         label="序号"
-                         width="60px"></el-table-column>
-        <el-table-column label="姓名"
-                         prop="name"></el-table-column>
-        <el-table-column label="年龄"
-                         prop="age">
+      <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading" @cell-dblclick='cellDblclick' :cell-class-name='getRowColumn'
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}" class="tb-edit">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column label="姓名" prop="name"></el-table-column>
+        <el-table-column label="年龄" prop="age">
           <!-- 行内编辑 -->
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-row>
                 <el-col :span="10">
-                  <el-input size="mini"
-                            v-model="scope.row.age"
-                            @blur="loseInputBlur"></el-input>
+                  <el-input size="mini" v-model="scope.row.age" @blur="loseInputBlur"></el-input>
                 </el-col>
                 <!-- <el-col :span="10">
                   <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
@@ -78,21 +48,16 @@
             <span v-else>{{scope.row.age}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="生日"
-                         prop="birth"></el-table-column>
-        <el-table-column label="性别"
-                         prop="sex"></el-table-column>
-        <el-table-column label="地址"
-                         prop="addr"
-                         width="500px">
+        <el-table-column label="生日" prop="birth"></el-table-column>
+        <el-table-column label="性别" prop="sex"></el-table-column>
+        <el-table-column label="地址" prop="addr" width="500px">
 
           <!-- 行内编辑 -->
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-row>
                 <el-col :span="10">
-                  <el-input size="mini"
-                            v-model="scope.row.addr"></el-input>
+                  <el-input size="mini" v-model="scope.row.addr"></el-input>
                 </el-col>
                 <!-- <el-col :span=" 10">
                     <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
@@ -105,43 +70,24 @@
           </template>
 
         </el-table-column>
-        <el-table-column label="状态"
-                         prop="state">
+        <el-table-column label="状态" prop="state">
           <template slot-scope="scope">
             <!-- {{scope.row}} 打印一行记录的数据 -->
-            <el-switch v-model="value"
-                       active-color="#13ce66"
-                       inactive-color="#ff4949"
-                       @change="changeUserState(scope.row)">
+            <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"
+              @change="changeUserState(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作"
-                         width="300px">
+        <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button v-show="scope.row.edit"
-                       type="info"
-                       size="mini"
-                       @click="cancelEdit(scope.row)">取消
+            <el-button v-show="scope.row.edit" type="info" size="mini" @click="cancelEdit(scope.row)">取消
             </el-button>
-            <el-button v-show="scope.row.edit"
-                       type="success"
-                       size="mini"
-                       @click="confirmEdit(scope.row)">确认</el-button>
-            <el-button v-show='!scope.row.edit'
-                       size="mini"
-                       @click="editInline(scope.row)">编辑</el-button>
+            <el-button v-show="scope.row.edit" type="success" size="mini" @click="confirmEdit(scope.row)">确认</el-button>
+            <el-button v-show='!scope.row.edit' size="mini" @click="editInline(scope.row)">编辑</el-button>
             <!-- <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button> -->
-            <el-button size="mini"
-                       type="danger"
-                       @click="deleteUserById(scope.row)">删除</el-button>
-            <el-tooltip effect="dark"
-                        content="分配角色"
-                        placement="top"
-                        :enterable="false">
-              <el-button size="mini"
-                         type="warning"
-                         @click="setRole(scope.row)">设置</el-button>
+            <el-button size="mini" type="danger" @click="deleteUserById(scope.row)">删除</el-button>
+            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+              <el-button size="mini" type="warning" @click="setRole(scope.row)">设置</el-button>
             </el-tooltip>
 
           </template>
@@ -150,14 +96,9 @@
       </el-table>
 
       <!-- 分页功能 -->
-      <el-pagination background
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="queryInfo.page"
-                     :page-sizes="[5, 8, 10, 20]"
-                     :page-size="queryInfo.limit"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="total">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="queryInfo.page" :page-sizes="[5, 8, 10, 20]" :page-size="queryInfo.limit"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </el-card>
 
@@ -192,41 +133,22 @@
     </el-dialog> -->
 
     <!-- 添加用户对话框 -->
-    <el-dialog title="添加用户"
-               :visible.sync="addDialogVisible"
-               width="70%"
-               @closed="addDialogClose">
-      <el-input v-model="addForm"
-                placeholder="qingshuru "
-                style="width=200px;"></el-input>
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="70%" @closed="addDialogClose">
+      <el-input v-model="addForm" placeholder="qingshuru " style="width=200px;"></el-input>
       <!-- 主体部分 -->
-      <el-table :data="userList"
-                border
-                stripe
-                highlight-current-row
-                v-loading="loading"
-                element-loading-text="拼命加载中"
-                element-loading-spinner="el-icon-loading"
-                @cell-dblclick='cellDblclick'
-                :cell-class-name='getRowColumn'
-                :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-        <el-table-column type="selection"
-                         width="55"></el-table-column>
-        <el-table-column type="index"
-                         label="序号"
-                         width="60px"></el-table-column>
-        <el-table-column label="姓名"
-                         prop="name"></el-table-column>
-        <el-table-column label="年龄"
-                         prop="age">
+      <el-table :data="userList" border stripe highlight-current-row v-loading="loading" element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading" @cell-dblclick='cellDblclick' :cell-class-name='getRowColumn'
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="index" label="序号" width="60px"></el-table-column>
+        <el-table-column label="姓名" prop="name"></el-table-column>
+        <el-table-column label="年龄" prop="age">
           <!-- 行内编辑 -->
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-row>
                 <el-col :span="10">
-                  <el-input size="mini"
-                            v-model="scope.row.age"
-                            @blur="loseInputBlur"></el-input>
+                  <el-input size="mini" v-model="scope.row.age" @blur="loseInputBlur"></el-input>
                 </el-col>
                 <!-- <el-col :span="10">
                   <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
@@ -238,20 +160,15 @@
             <span v-else>{{scope.row.age}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="生日"
-                         prop="birth"></el-table-column>
-        <el-table-column label="性别"
-                         prop="sex"></el-table-column>
-        <el-table-column label="地址"
-                         prop="addr"
-                         width="500px">
+        <el-table-column label="生日" prop="birth"></el-table-column>
+        <el-table-column label="性别" prop="sex"></el-table-column>
+        <el-table-column label="地址" prop="addr" width="500px">
           <!-- 行内编辑 -->
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-row>
                 <el-col :span="10">
-                  <el-input size="mini"
-                            v-model="scope.row.addr"></el-input>
+                  <el-input size="mini" v-model="scope.row.addr"></el-input>
                 </el-col>
                 <!-- <el-col :span=" 10">
                     <el-button size="mini" type="warning" @click="cancelEdit(scope.row)">
@@ -263,43 +180,25 @@
             <span v-else>{{scope.row.addr}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态"
-                         prop="state">
+        <el-table-column label="状态" prop="state">
           <template slot-scope="scope">
             <!-- {{scope.row}} 打印一行记录的数据 -->
-            <el-switch v-model="value"
-                       active-color="#13ce66"
-                       inactive-color="#ff4949"
-                       @change="changeUserState(scope.row)">
+            <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"
+              @change="changeUserState(scope.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作"
-                         width="300px">
+        <el-table-column label="操作" width="300px">
           <template slot-scope="scope">
-            <el-button v-show="scope.row.edit"
-                       type="info"
-                       size="mini"
-                       @click="cancelEdit(scope.row)">取消
+            <el-button v-show="scope.row.edit" type="info" size="mini" @click="cancelEdit(scope.row)">取消
             </el-button>
-            <el-button v-show="scope.row.edit"
-                       type="success"
-                       size="mini"
-                       @click="confirmEdit(scope.row)">确认</el-button>
-            <el-button v-show='!scope.row.edit'
-                       size="mini"
-                       @click="editInline(scope.row)">编辑</el-button>
+
+            <el-button v-show="scope.row.edit" type="success" size="mini" @click="confirmEdit(scope.row)">确认</el-button>
+            <el-button v-show='!scope.row.edit' size="mini" @click="editInline(scope.row)">编辑</el-button>
             <!-- <el-button size="mini" @click="showEditDialog(scope.row)">编辑</el-button> -->
-            <el-button size="mini"
-                       type="danger"
-                       @click="deleteUserById(scope.row)">删除</el-button>
-            <el-tooltip effect="dark"
-                        content="分配角色"
-                        placement="top"
-                        :enterable="false">
-              <el-button size="mini"
-                         type="warning"
-                         @click="setRole(scope.row)">设置</el-button>
+            <el-button size="mini" type="danger" @click="deleteUserById(scope.row)">删除</el-button>
+            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+              <el-button size="mini" type="warning" @click="setRole(scope.row)">设置</el-button>
             </el-tooltip>
 
           </template>
@@ -307,76 +206,50 @@
         </el-table-column>
       </el-table>
       <!-- 分页功能 -->
-      <el-pagination background
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="queryInfo.page"
-                     :page-sizes="[5, 8, 10, 20]"
-                     :page-size="queryInfo.limit"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="total">
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="queryInfo.page" :page-sizes="[5, 8, 10, 20]" :page-size="queryInfo.limit"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
       <!-- 底部按钮部分 -->
-      <span slot="footer"
-            class="dialog-footer">
+      <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="addUser">确 定</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 编辑用户的对话框 -->
-    <el-dialog title="编辑用户"
-               :visible.sync="editDialogVisible"
-               width="30%">
-      <el-form :model="editForm"
-               :rules="editFormRules"
-               ref="editFormRef"
-               label-width="100px">
+    <el-dialog title="编辑用户" :visible.sync="editDialogVisible" width="30%">
+      <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="100px">
         <el-form-item label="姓名">
-          <el-input v-model="editForm.name"
-                    :disabled="true"></el-input>
+          <el-input v-model="editForm.name" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="出生年月">
-          <el-input v-model="editForm.birth"
-                    :disabled="true"></el-input>
+          <el-input v-model="editForm.birth" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="地址"
-                      prop="addr">
+        <el-form-item label="地址" prop="addr">
           <el-input v-model="editForm.addr"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer"
-            class="dialog-footer">
+      <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="editUserById">确 定</el-button>
+        <el-button type="primary" @click="editUserById">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 分配角色对话框 -->
-    <el-dialog title="分配角色"
-               :visible.sync="setRoleDialogVisible"
-               width="50%"
-               @close="setRoleDialogClosed">
+    <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="50%" @close="setRoleDialogClosed">
       <div>
         <p>当前的用户：{{userInfo.username}}</p>
         <p>当前的角色：{{userInfo.role_name}}</p>
         <p>分配新角色：
-          <el-select v-model="selectedRoleId"
-                     placeholder="请选择">
-            <el-option v-for="item in roleList"
-                       :key="item.id"
-                       :label="item.roleName"
-                       :value="item.id"></el-option>
+          <el-select v-model="selectedRoleId" placeholder="请选择">
+            <el-option v-for="item in roleList" :key="item.id" :label="item.roleName" :value="item.id"></el-option>
           </el-select>
         </p>
       </div>
-      <span slot="footer"
-            class="dialog-footer">
+      <span slot="footer" class="dialog-footer">
         <el-button @click="setRoleDialogVisible = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="saveRoleInfo">确 定</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -472,7 +345,9 @@ export default {
   created () {
     this.getUserList()
   },
-  components: { BookTypeOption },
+  components: {
+    BookTypeOption
+  },
 
   computed: {},
 

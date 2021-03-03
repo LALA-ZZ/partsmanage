@@ -3,7 +3,7 @@
     <input ref="excel-upload-input"
            class="excel-upload-input"
            type="file"
-           accept=".xlsx, .xls"
+           accept=".xlsx, .xls, .csv"
            @change="handleClick">
     <div class="drop"
          @drop="handleDrop"
@@ -19,7 +19,7 @@
       </el-button>
     </div>
     <div class="el-upload__tip"
-         slot="tip">只能上传xlsx/csv文件，且不超过1m。</div>
+         slot="tip">只能上传xlsx,xls/csv文件。</div>
   </div>
 </template>
 

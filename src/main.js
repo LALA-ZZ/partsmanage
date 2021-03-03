@@ -12,7 +12,8 @@ import  './mock/index'//引入mock
 import './icons/index'//引入icon
 // import home from './mock/home';
 
-
+import htmlToPdf from '@/vendor/htmlToPdf'
+Vue.use(htmlToPdf)
 Vue.prototype.$http = http
 Vue.config.productionTip = false
 Vue.use(ElementUI)

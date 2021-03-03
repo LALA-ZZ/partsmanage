@@ -12,14 +12,14 @@ export default {
           code: 200000,
           data: {
             menu: [
-                {
-                  path: '/home',
-                  name: 'home',
-                  label: '首页',
-                  icon: 'home',
-                  alwaysShow: true,
-                  url: 'Home/Home'//Home组件的地址
-                },
+                // {
+                //   path: '/home',
+                //   name: 'home',
+                //   label: '首页',
+                //   icon: 'home',
+                //   alwaysShow: true,
+                //   url: 'Home/Home'//Home组件的地址
+                // },
                 {
                   path: '/userma',
                   name: 'userma',
@@ -186,6 +186,21 @@ export default {
                       name: 'partsout',
                       label: '配件出库',
                       url: ' '
+                    },
+                    
+                  ]
+                },
+                {
+                  path: '/infomationhall',
+                  name: 'infomationhall',
+                  label: '信息大厅',
+                  icon: 'home',
+                  children: [
+                    {
+                      path: '/forecastinfo',
+                      name: 'forecastinfo',
+                      label: '预测信息',
+                      url: 'InfomationHall/ForecastInfo',
                     },
                     
                   ]
