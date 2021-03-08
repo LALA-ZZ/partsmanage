@@ -11,7 +11,6 @@
             <el-steps :space="600" :active="activeName - 0" finish-status="success" align-center>
               <el-step title="数据模板下载"></el-step>
               <el-step title="数据文件上传"></el-step>
-              <el-step title="信息预处理"></el-step>
               <el-step title="配件需求预测"></el-step>
               <el-step title="完成"></el-step>
             </el-steps>
@@ -115,61 +114,19 @@
           </el-tab-pane>
 
           <el-tab-pane label="系统数据预测 ">
-            <el-tabs :tab-position="'left'" style="margin-top: 20px;">
-              <el-tab-pane label="算法预测参数" name="0">选择参数
-                <el-form-item style="margin-top: 20px">
-                  <el-checkbox-group v-model="checkboxGroup" size="small">
-                    <el-checkbox label="配件月需求数量" border></el-checkbox>
-                    <el-checkbox label="配件月出库量" border></el-checkbox>
-                    <el-checkbox label="配件月故障数量" border></el-checkbox>
-                    <el-checkbox label="配件月修复入库数量" border></el-checkbox>
-                    <el-checkbox label="配件月故障出库数量" border></el-checkbox>
-                    <el-checkbox label="配件月入库量" border></el-checkbox>
-                    <el-checkbox label="配件月申请数量" border></el-checkbox>
-                    <el-checkbox label="月项目计划数量" border></el-checkbox>
-                    <el-checkbox label="月零星申请配件数量" border></el-checkbox>
-                    <el-checkbox label="月零星计划数量" border></el-checkbox>
-                    <el-checkbox label="月项目申请配件数量" border></el-checkbox>
-                    <el-checkbox label="配件月报废数量" border></el-checkbox>
-                    <el-checkbox label="主机月新增量" border></el-checkbox>
-                    <el-checkbox label="主机总数量" border></el-checkbox>
-                    <el-checkbox label="主机开工数量" border></el-checkbox>
-                  </el-checkbox-group>
-                </el-form-item>
-                <div style="text-align:center">
-                  <el-button type="success">开始预测</el-button>
-                </div>
-
-              </el-tab-pane>
-              <el-tab-pane label="预测结果" name="1">预测结果
-                <el-table :data="preOutcomeList" border stripe highlight-current-row v-loading="loading"
-                  element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-                  :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-                  <el-table-column type="index" label="序号" align="center" width="60px"></el-table-column>
-                  <el-table-column label="配件类型编号" prop="" align="center"></el-table-column>
-                  <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-                  <el-table-column label="预测数量" prop="" align="center"></el-table-column>
-                </el-table>
-                <div style="text-align:center">
-                  <el-button type="success">生成结果单</el-button>
-                </div>
-
-              </el-tab-pane>
-            </el-tabs>
+            <el-date-picker v-model="seachForm.dateInterval" type="daterange" align="left" unlink-panels
+              range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+            </el-date-picker>
+            <el-button type="primary" plain>开始预测</el-button>
+            <el-button type="success" plain @click="getPdf()">生成结果单</el-button>
+            <div class="row" id="pdfDom">
+              <p>haha </p>
+              <!-- 这里面的内容是我们要导出的部分 id为"pdfDom"，和上面"htmlToPdf.js"文件中的id必须一致.此部分将就是pdf显示的部分 -->
+            </div>
           </el-tab-pane>
         </el-tabs>
       </el-form>
     </el-card>
-    <!-- <el-tabs type="border-card">
-      <el-tab-pane label="上传文件预测">
-        <el-tabs :tab-position="'left'"
-                 style="height: 200px;">
-          <el-tab-pane label="文件上传">文件上传</el-tab-pane>
-          <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        </el-tabs>
-      </el-tab-pane>
-      <el-tab-pane label="系统数据预测 ">系统数据预测</el-tab-pane>
-    </el-tabs> -->
   </div>
 </template>
 
@@ -201,7 +158,40 @@ export default {
       bookType: 'xlsx', //非必填
       list: [],
 
-      htmlTitle: 'pdf'
+      htmlTitle: 'pdf',
+
+      seachForm: {
+        dateInterval: ''
+      },
+      labelPosition: 'left',
+      // 时间选择期属性对象
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
     };
   },
 
@@ -320,9 +310,9 @@ export default {
 .el-checkbox {
   margin: 0 10px 0 0 !important;
 }
-.el-button {
-  margin: 10px;
-}
+// .el-button {
+//   margin: 10px;
+// }
 .progress {
   /*flex 布局*/
   display: flex;
@@ -341,5 +331,11 @@ export default {
 
 .el-step__title {
   font-size: 13px;
+}
+.system-forecast {
+  /*flex 布局*/
+  display: flex;
+  /*实现垂直居中*/
+  align-items: center;
 }
 </style>
