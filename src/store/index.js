@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 
 import tab from "./modules/tab";
-import user from "./modules/user"
 
 import actions from './actions'
 import getters from './getters'
@@ -24,7 +23,6 @@ const store = new Vuex.Store({
     mutations,
     modules: {
         tab,
-        user
     }
 })
 //3.导出

@@ -8,7 +8,7 @@ import VueCookie from 'vue-cookies'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import http from './api/request'//引入网络请求api
-import  './mock/index'//引入mock
+
 import './icons/index'//引入icon
 // import home from './mock/home';
 
@@ -30,13 +30,13 @@ router.beforeEach((to, from, next) => {
   //      1.next()  放行    2.next('/login')，放行到某一路径
 
   // 如果用户访问的是登录页，直接放行
-  if(to.name === 'login') return next();
+  if(to.name === 'welcome') return next();
   // 从sessionStorage中获取保存的token值
-  const tokenStr = window.sessionStorage.getItem('token')
+  // const tokenStr = window.sessionStorage.getItem('token')
   //如果没有token，直接跳转到登录页面
-  if(!tokenStr){
-    return next({name: 'login'})
-  }
+  // if(!tokenStr){
+  //   return next({name: 'welcome'})
+  // }
   next()
 
   // store.commit('getToken')

@@ -1,7 +1,8 @@
+
 <!--  -->
 <template>
   <div>
-      配件出库
+    Welcome!
   </div>
 </template>
 
@@ -17,12 +18,10 @@ export default {
 
   computed: {},
 
-
   methods: {}
 }
 </script>
 
 
-<style>
-
+<style lang="scss" scoped>
 </style>

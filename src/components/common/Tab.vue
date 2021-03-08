@@ -1,7 +1,7 @@
 <template>
   <div class="tags-view-container">
     <div class="tags">
-      <el-tag :key="tag.name" size="small" hit v-for="tag in tags" :closable="tag.name !== 'home'"
+      <el-tag :key="tag.name" size="small" hit v-for="tag in tags" :closable="tag.name !== 'welcome'"
         :disable-transitions="false" @close="handleClose(tag)" @click="linkMain(tag)" style="margin-left: 5px;"
         :effect="$route.name ===tag.name ? 'dark' : 'plain'">
         <!--根据effect来判断标签的主题-->

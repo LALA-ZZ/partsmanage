@@ -7,8 +7,8 @@ export default {
         menu: [],//存储动态菜单
         tabsList: [
             {
-                path: '/',
-                name: 'home',
+                path: '/welcome',
+                name: 'welcome',
                 label: '首页',
                 icon: 'home'
             }

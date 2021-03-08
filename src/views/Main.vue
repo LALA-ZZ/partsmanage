@@ -9,6 +9,7 @@
       </el-header>
       <tab />
       <el-main>
+        <!-- 路由占位符 -->
         <router-view />
       </el-main>
     </el-container>
