@@ -19,7 +19,7 @@
       <div>
         <el-breadcrumb separator="/">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="current.path" v-if="current">{{current.label}}</el-breadcrumb-item>
+          <el-breadcrumb-item :to="currentMenu.path" v-if="currentMenu">{{currentMenu.label}}</el-breadcrumb-item>
 
         </el-breadcrumb>
       </div>
@@ -57,7 +57,7 @@ export default {
       //   state.tab.currentMenu
       // }
       //获取当前的目录
-      current: state => state.tab.currentMenu
+      currentMenu: state => state.tab.currentMenu
     })
   },
   methods: {

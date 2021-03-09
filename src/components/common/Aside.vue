@@ -146,7 +146,7 @@ export default {
   methods: {
     //点击左侧菜单，面包屑联动
     clickMenu (item) {
-      console.log(item.name)
+      console.log(item)
       this.$router.push({ name: item.name });//在选择菜单之前，先路由跳转到对应的组件
       this.$store.commit('selectMenu', item);
       //保存链接的激活状态

@@ -26,15 +26,26 @@ export default {
     }),
     handleClose (tag) {
       this.close(tag);
+      // 关闭标签后，页面展示前一个标签的内容
+      const tags = this.tags
+      const tabslength = tags.length
+      console.log(tags)
+      this.$router.push({ name: tags[tabslength - 1].name })
+      // 更新面包屑
+      this.$store.commit('selectMenu', tags[tabslength - 1]);
     },
     linkMain (tag) {
+
       this.$router.push({ name: tag.name });
       this.$store.commit('selectMenu', tag);
+
+
     }
   },
   computed: {
     ...mapState({
-      tags: state => state.tab.tabsList
+      tags: state => state.tab.tabsList,
+      currentMenu: state => state.tab.currentMenu
     }),
 
   }
