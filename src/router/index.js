@@ -35,6 +35,11 @@ const routes = [
                 name: 'welcome',
                 component: () => import('../views/Welcome.vue')
             },
+            {
+              path: '/usercard',
+                name: 'usercard',
+                component: () => import('../components/common/UserCard.vue')
+            },
             
                 {
                 path: '/forecastinfo',

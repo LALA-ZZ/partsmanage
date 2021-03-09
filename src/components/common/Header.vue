@@ -32,8 +32,8 @@
           <img :src="userimg"><i class="el-icon-caret-bottom el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown" class="el-dropdown-menu">
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item @click.native="loginOut">退出</el-dropdown-item>
+          <!-- <el-dropdown-item @click.native="userCard">个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="loginOut">退出</el-dropdown-item> -->
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -78,6 +78,9 @@ export default {
       // this.$store.commit('clearMenu')
       // location.reload()
 
+    },
+    userCard () {
+      this.$router.push({ name: 'usercard' })
     }
   }
 }

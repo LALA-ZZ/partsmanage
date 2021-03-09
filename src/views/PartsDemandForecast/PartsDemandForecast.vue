@@ -8,8 +8,9 @@
         <el-tabs>
           <el-tab-pane label="上传文件预测">
             <!-- 步骤条 -->
-            <el-steps :space="600" :active="activeName - 0" finish-status="success" align-center>
-              <el-step title="数据模板下载"></el-step>
+            <el-steps :space="600" :active="activeName - 0" finish-status="success" align-center
+              style="font-size: 13px; margin: 15px;">
+              <el-step title="下载数据模板"></el-step>
               <el-step title="数据文件上传"></el-step>
               <el-step title="配件需求预测"></el-step>
               <el-step title="完成"></el-step>
@@ -18,11 +19,11 @@
             <!-- 内部的 tab 标签 -->
             <el-tabs :tab-position="'left'" style="margin-top: 20px;" v-model="activeName"
               :before-leave="beforeTabLeave">
-              <el-tab-pane label="数据模板下载" name="0">
+              <el-tab-pane label="下载数据模板" name="0">
                 <el-alert title="先下载数据模板，再将填写好的数据文件上传！" center type="warning" show-icon>
                 </el-alert>
                 <!-- 下载模板区域 -->
-                <div style="text-align: center;">
+                <div style="text-align: center; margin: 20px;">
                   <book-type-option v-model="bookType">> </book-type-option>
                   <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
                     下载数据模板
@@ -133,7 +134,7 @@
 
 <script>
 import UploadExcel from '@/components/common/UploadExcel/index.vue';
-import BookTypeOption from '@/views/PartsDemandForecast/components/BookTypeOption.vue';
+import BookTypeOption from '@/components/common/BookTypeOption';
 // import Progress from './components/Progress.vue';
 export default {
   data () {
@@ -158,7 +159,7 @@ export default {
       bookType: 'xlsx', //非必填
       list: [],
 
-      htmlTitle: 'pdf',
+      htmlTitle: '预测报告单',
 
       seachForm: {
         dateInterval: ''

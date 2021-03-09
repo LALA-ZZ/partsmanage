@@ -63,7 +63,7 @@ export default {
             {
               path: '/forecastinfo',
               name: 'forecastinfo',
-              label: '预测信息',
+              label: '企业预测数据',
               // url: 'InfomationHall/ForecastInfo',
             },
 
