@@ -4,6 +4,7 @@ export default {
     state: {
         isCollapse: false,//是否将左边的菜单折叠
         currentMenu: null,//当前点击的菜单
+        bread:null,
         menu: [],//存储动态菜单
         // breadList:[],//存储面包屑
         tabsList: [
@@ -71,15 +72,19 @@ export default {
           router.addRoutes(currentMenu)//添加动态路由
         },
         //获取当前的页面
-        selectMenu(state, value) {
+        selectMenu(state,value ) {
+          
             if (value.name !== 'welcome'){
               // console.log(value)
                 //将点击的菜单传给当前的菜单（面包屑）
+                // state.bread = value1
+                // console.log(state.bread)
                 state.currentMenu = value;
                 //将点击的菜单添加给标签页(处理重复的标签）
                 const result = state.tabsList.findIndex(item => item.name === value.name)
                 result === -1 ? state.tabsList.push(value) : '';
             }else {
+                // state.bread = null
                 state.currentMenu = null;
             }
             // value.name === 'home' ? (state.currentMenu = null) : (state.currentMenu = value);

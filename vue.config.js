@@ -21,18 +21,6 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
-    // config.module.rules.delete("svg");
-    // config.module
-    //     .rule('svg-smart')
-    //     .test(/\.svg$/)
-    //     .include
-    //     .add('src/icons')
-    //     .end()
-    //     .use('svg-sprite-loader')
-    //     .loader('svg-sprite-loader')
-    //     .options({
-    //         symbolId: '[name]'
-    //     })
 
     //配置 svg-sprite-loader
     // 第一步：让其他svg loader不要对src/icons进行操作
@@ -53,69 +41,30 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
-}
-
-//     chainWebpack(config) {
-// // 配置 svg-sprite-loader
-//     config.module
-//       .rule('svg')
-//       .exclude.add(resolve('src/icons'))
-//       .end()
-//     config.module
-//       .rule('icons')
-//       .test(/\.svg$/)
-//       .include.add(resolve('src/icons'))
-//       .end()
-//       .use('svg-sprite-loader')
-//       .loader('svg-sprite-loader')
-//       .options({
-//         symbolId: 'icon-[name]'
-//       })
-//       .end()
-//   }
-  // chainWebpack(config) {
-  //   // 已有配置排除掉svg
-  //   config.module.rule("svg")
-  //       .exclude.add(resolve('src/icons'));
-  //   //配置svg
-  //   config.module.rule('icons')
-  //       .test(/\.svg$/)
-  //       .include.add(resolve('src/icons')).end()
-  //       .use('svg-sprite-loader')
-  //           .loader('svg-sprite-loader')
-  //           .options({symbolId: 'icon-[name]'})
-  // }
 
 
-  // configureWebpack: {
-  //   // provide the app's title in webpack's name field, so that
-  //   // it can be accessed in index.html to inject the correct title.
-  //   resolve: {
-  //     alias: {//路径别名配置
-  //       '@': resolve('src'),
-  //       'assets': resolve('@/assets'),
-  //       'common': resolve('@/common'),
-  //       'components': resolve('@/components'),
-  //       'network': resolve('@/network'),
-  //       'views': resolve('@/views'),
-  //     }
-  //   }
-  // },
- 
-  
-    // // 已有配置排除掉svg
-    // config.module.rule("svg")
-    //     .exclude.add(resolve('src/icons'));
-    // //配置svg
-    // config.module.rule('icons')
-    //     .test(/\.svg$/)
-    //     .include.add(resolve('src/icons')).end()
-    //     .use('svg-sprite-loader')
-    //         .loader('svg-sprite-loader')
-    //         .options({symbolId: 'icon-[name]'})
+      // 发布模式
+      config.when(process.env.NODE_ENV === 'production', config =>{
+        config.entry('app').clear().add('./src/main-prod.js')
+        config.set('externals',{
+          vue: 'Vue',
+          'vue-router': 'VueRouter',
+          vuex:'Vuex',
+          axios: 'axios',
+          echarts:'echarts',
+          // nprogress: 'NProgress',
+          'element-ui':'element-ui',
+          xlsx: 'xlsx',
+          jspdf:'jspdf',
+          html2canvas: 'html2canvas'
+          })
+      })
 
-  
-  
+      // 开发模式
+      config.when(process.env.NODE_ENV === 'development', config =>{
+        config.entry('app').clear().add('./src/main-dev.js')
+      })
+  }
 
 
 }

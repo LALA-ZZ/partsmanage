@@ -2,9 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 
-//路由懒加载
-// const Home =() => import('../views/Home/Home.vue')
-const Main =() => import('../views/Main.vue')
+//路由懒加载并打包分组
+const Main = () => import(/* webpackChunkName: "Main_welcome" */ '../views/Main.vue')
+const Welcome = () => import(/* webpackChunkName: "Main_welcome" */ '../views/Welcome.vue')
+const Forecast = () => import(/* webpackChunkName: "Forecast_forecastinfo_forecastlist" */ '../views/PartsDemandForecast/PartsDemandForecast.vue')
+const Forecastinfo = () => import(/* webpackChunkName: "Forecast_forecastinfo_forecastlist" */ '../views/InfomationHall/ForecastInfo.vue')
+const Forecastlist = () => import(/* webpackChunkName: "Forecast_forecastinfo_forecastlist" */ '../views/PartsDemandForecast/ForecastInfo.vue')
+const Optimization = () => import(/* webpackChunkName: "Optimization_optimizationlist" */ '../views/InventoryOptimization/InventoryOptimization.vue')
+const Optimizationlist= () => import(/* webpackChunkName: "Optimization_optimizationlist" */ '../views/InventoryOptimization/OptimizationInfo.vue')
 
 
 
@@ -33,7 +38,7 @@ const routes = [
             {
                 path: '/welcome',
                 name: 'welcome',
-                component: () => import('../views/Welcome.vue')
+                component: Welcome
             },
             {
               path: '/usercard',
@@ -44,29 +49,29 @@ const routes = [
                 {
                 path: '/forecastinfo',
                 name: 'forecastinfo',
-                component: () => import('../views/InfomationHall/ForecastInfo.vue')
+                component: Forecastinfo
               },
             {
               path: '/optimizationlist',
               name: 'optimizationlist',
-              component: () => import('../views/InventoryOptimization/OptimizationInfo.vue')
+              component: Optimizationlist
              },
             {
                 path: '/optimization',
                 name: 'optimization',
-                component: () => import('../views/InventoryOptimization/InventoryOptimization.vue')
+                component: Optimization
             },
 
 
             {
                 path: '/forecast',
                 name: 'forecast',
-                component: () => import('../views/PartsDemandForecast/PartsDemandForecast.vue')
+                component: Forecast
             },
             {
               path: '/forecastlist',
               name: 'forecastlist',
-              component: () => import('../views/PartsDemandForecast/ForecastInfo.vue')
+              component: Forecastlist
           },
         ]
     },
