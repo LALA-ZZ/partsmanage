@@ -3,59 +3,107 @@
   <div class="common-content">
     <el-card shadow="hover">
       <!-- 外围tabs -->
-      <el-form ref="paramsFormRef" :model="paramsForm">
+      <el-form ref="paramsFormRef"
+               :model="paramsForm">
         <el-tabs>
           <el-tab-pane label="上传文件优化">
             <!-- 内部的 tab 标签 -->
             <!-- 步骤条 -->
-            <el-steps :space="600" :active="activeName - 0" finish-status="success" align-center
-              style="font-size: 13px; margin: 15px;">
+            <el-steps :space="600"
+                      :active="activeName - 0"
+                      finish-status="success"
+                      align-center
+                      style="font-size: 13px; margin: 15px;">
               <el-step title="处理数据文件"></el-step>
               <el-step title="处理仓库距离数据"></el-step>
               <el-step title="库存优化"></el-step>
               <el-step title="完成"></el-step>
             </el-steps>
 
-            <el-tabs :tab-position="'left'" style="margin-top: 20px;" v-model="activeName"
-              :before-leave="beforeTabLeave">
-              <el-tab-pane label="处理优化数据" name="0">
-                <el-alert title="先下载数据模板，再将填写好的数据文件上传！" center type="warning" show-icon>
+            <el-tabs :tab-position="'left'"
+                     style="margin-top: 20px;"
+                     v-model="activeName"
+                     :before-leave="beforeTabLeave">
+              <el-tab-pane label="处理优化数据"
+                           name="0">
+                <el-alert title="先下载数据模板，再将填写好的数据文件上传！"
+                          center
+                          type="warning"
+                          show-icon>
                 </el-alert>
                 <!-- 下载模板区域 -->
                 <div style="text-align: center; margin: 20px;">
                   <book-type-option v-model="bookType"> </book-type-option>
-                  <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
+                  <el-button :loading="downloadLoading"
+                             type="success"
+                             icon="el-icon-document"
+                             @click="handleDownload">
                     下载数据模板
                   </el-button>
-                  <upload excelFile="updata" @uploadUrl="actionUrl">
-                  </upload>
-
+                  <!-- <upload excelFile="updata"
+                          @uploadUrl="actionUrl">
+                  </upload> -->
+                  <upload-excel ref="dataUploadExcel"
+                                :on-success="handleOpSuccess"
+                                :before-upload="beforeUpload" />
                 </div>
               </el-tab-pane>
               <!-- 上传文件 -->
-              <el-tab-pane label="处理仓库距离数据" name="1">
-                <el-alert title="先下载数据模板，再将填写好的数据文件上传！" center type="warning" show-icon></el-alert>
+              <el-tab-pane label="处理仓库距离数据"
+                           name="1">
+                <el-alert title="先下载数据模板，再将填写好的数据文件上传！"
+                          center
+                          type="warning"
+                          show-icon></el-alert>
                 <div style="text-align: center; margin: 20px;">
                   <book-type-option v-model="bookType"> </book-type-option>
-                  <el-button :loading="downloadLoading1" type="success" icon="el-icon-document"
-                    @click="distanceDownload">
+                  <el-button :loading="downloadLoading1"
+                             type="success"
+                             icon="el-icon-document"
+                             @click="distanceDownload">
                     下载距离模板
                   </el-button>
-                  <upload excelFile="updistance" @uploadUrl="actionUrl1"></upload>
+                  <!-- <upload excelFile="updistance"
+                          @uploadUrl="actionUrl1"></upload> -->
+                  <upload-excel ref="distanceUploadExcel"
+                                name="excelFile"
+                                :on-success="handleDistanSuccess"
+                                :before-upload="beforeUpload" />
                 </div>
               </el-tab-pane>
 
-              <el-tab-pane label="库存优化" name="2">
-                <el-button type="primary" plain>开始优化</el-button>
-                <el-button type="success" plain @click="getPdf()">生成结果单</el-button>
-                <div class="row" id="pdfDom">
-                  <el-table :data="optimizationOutcomList" border stripe highlight-current-row v-loading="loading"
-                    element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
-                    <el-table-column type="index" label="序号" align="center" width="60px"></el-table-column>
-                    <el-table-column label="仓库编号" prop="" align="center"></el-table-column>
-                    <el-table-column label="仓库名称" prop="" align="center"></el-table-column>
-                    <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-                    <el-table-column label="安全库存数量" prop="" align="center"></el-table-column>
+              <el-tab-pane label="库存优化"
+                           name="2">
+                <el-button type="primary"
+                           plain>开始优化</el-button>
+                <el-button type="success"
+                           plain
+                           @click="getPdf(pdfDom)">生成结果单</el-button>
+                <div class="row"
+                     id="pdfDom">
+                  <el-table :data="optimizationOutcomList"
+                            border
+                            stripe
+                            highlight-current-row
+                            v-loading="loading"
+                            element-loading-text="拼命加载中"
+                            element-loading-spinner="el-icon-loading">
+                    <el-table-column type="index"
+                                     label="序号"
+                                     align="center"
+                                     width="60px"></el-table-column>
+                    <el-table-column label="仓库编号"
+                                     prop=""
+                                     align="center"></el-table-column>
+                    <el-table-column label="仓库名称"
+                                     prop=""
+                                     align="center"></el-table-column>
+                    <el-table-column label="配件名称"
+                                     prop=""
+                                     align="center"></el-table-column>
+                    <el-table-column label="安全库存数量"
+                                     prop=""
+                                     align="center"></el-table-column>
                   </el-table>
                 </div>
               </el-tab-pane>
@@ -63,19 +111,45 @@
           </el-tab-pane>
 
           <el-tab-pane label="系统数据优化">
-            <el-date-picker v-model="seachForm.dateInterval" type="daterange" align="left" unlink-panels
-              range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+            <el-date-picker v-model="seachForm.dateInterval"
+                            type="daterange"
+                            align="left"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions">
             </el-date-picker>
-            <el-button type="primary" plain>开始预测</el-button>
-            <el-button type="success" plain @click="getPdf()">生成结果单</el-button>
-            <div class="row" id="pdfDom">
-              <el-table :data="optimizationOutcomList" border stripe highlight-current-row v-loading="loading"
-                element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
-                <el-table-column type="index" label="序号" align="center" width="60px"></el-table-column>
-                <el-table-column label="仓库编号" prop="" align="center"></el-table-column>
-                <el-table-column label="仓库名称" prop="" align="center"></el-table-column>
-                <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-                <el-table-column label="安全库存数量" prop="" align="center"></el-table-column>
+            <el-button type="primary"
+                       plain>开始预测</el-button>
+            <el-button type="success"
+                       plain
+                       @click="generateResult">生成结果单</el-button>
+            <div class="row"
+                 id="pdfDom2">
+              <el-table :data="optimizationOutcomList"
+                        border
+                        stripe
+                        highlight-current-row
+                        v-loading="loading"
+                        element-loading-text="拼命加载中"
+                        element-loading-spinner="el-icon-loading">
+                <el-table-column type="index"
+                                 label="序号"
+                                 align="center"
+                                 width="60px"></el-table-column>
+                <el-table-column label="仓库编号"
+                                 prop=""
+                                 align="center"></el-table-column>
+                <el-table-column label="仓库名称"
+                                 prop=""
+                                 align="center"></el-table-column>
+                <el-table-column label="配件名称"
+                                 prop=""
+                                 align="center"></el-table-column>
+                <el-table-column label="安全库存数量"
+                                 prop=""
+                                 align="center"></el-table-column>
               </el-table>
               <!-- 这里面的内容是我们要导出的部分 id为"pdfDom"，和上面"htmlToPdf.js"文件中的id必须一致.此部分将就是pdf显示的部分 -->
             </div>
@@ -99,7 +173,8 @@
 
 <script>
 import BookTypeOption from '@/components/common/BookTypeOption';
-import Upload from '@/components/common/Upload.vue';
+// import Upload from '@/components/common/Upload.vue';
+import UploadExcel from '@/components/common/UploadExcel/index.vue';
 export default {
   data () {
     return {
@@ -117,9 +192,16 @@ export default {
       // 上传的文件内容
       tableData: [],
       tableHeader: [],
+      dataFile: null,
+      // 距离文件数据和标题
+      distanceData: [],
+      distanceHeader: [],
+      distanceFile: null,
 
       paramsForm: {},
       htmlTitle: '优化报告单',
+      pdfDom: '#pdfDom',
+      pdfDom2: '#pdfDom2',
       optimizationOutcomList: [],
       seachForm: {
         dateInterval: ''
@@ -156,7 +238,7 @@ export default {
     };
   },
 
-  components: { BookTypeOption, Upload },
+  components: { BookTypeOption, UploadExcel },
 
   computed: {},
 
@@ -207,6 +289,68 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
 
+    // 监听优化数据上传
+    handleOpSuccess ({ results, header }) {
+      this.tableData = results
+      this.tableHeader = header
+      let form = new FormData();
+      form.append('file', this.dataFile)
+      console.log(form)
+      // fetchUpload(form).then(res => {
+      this.$axios.post('/api/ch05/index/analysisExcel2', form).then(res => {
+        console.log(res)
+        if (res.data !== 'success') {
+          this.$refs.dataUploadExcel.loading = false
+          this.$Message.error("文件上传失败!");
+        }
+        this.$refs.dataUploadExcel.loading = false
+        this.$message.success('文件上传成功！')
+
+      })
+    },
+    // 监听优化数据上传之前的动作
+    beforeUpload (file) {
+      this.file = file
+      console.log(file)
+      const extension = file.name.split(".")[1] === "xls";
+      const extension2 = file.name.split(".")[1] === "xlsx";
+      // const extension3 = file.name.split(".")[1] === "csv";
+      const isLt2M = file.size / 1024 / 1024 < 100;
+      if (!extension && !extension2) {
+        this.$message.error("上传文件只能是 xls、xlsx格式!");
+      }
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      if (isLt2M) {
+        return true
+      }
+
+      this.$message({
+        message: '请不要上传超过100M大小的文件。',
+        type: 'warning'
+      })
+      return false
+    },
+    // 监听距离文件上传成功的事件
+    handleDistanSuccess ({ results, header }) {
+      this.distanceData = results
+      this.distanceHeader = header
+      let form = new FormData();
+      form.append('file', this.distanceFile)
+      console.log(form)
+      // fetchUpload(form).then(res => {
+      this.$axios.post('/api/ch05/index/analysisExcel2', form).then(res => {
+        console.log(res)
+        if (res.data !== 'success') {
+          this.$refs.distanceUploadExcel.loading = false
+          this.$Message.error("文件上传失败!");
+        }
+        this.$refs.distanceUploadExcel.loading = false
+        this.$message.success('文件上传成功！')
+
+      })
+
+    },
+
 
 
     // 文件上传
@@ -225,6 +369,10 @@ export default {
       //   return false
       // }
     },
+
+    generateResult () {
+      this.$getPdf(this.pdfDom2)
+    }
   }
 
 }

@@ -4,12 +4,16 @@
     <el-card shadow="hover">
 
       <!-- 外围tabs -->
-      <el-form ref="paramsFormRef" :model="paramsForm">
+      <el-form ref="paramsFormRef"
+               :model="paramsForm">
         <el-tabs>
           <el-tab-pane label="上传文件预测">
             <!-- 步骤条 -->
-            <el-steps :space="600" :active="activeName - 0" finish-status="success" align-center
-              style="font-size: 13px; margin: 15px;">
+            <el-steps :space="600"
+                      :active="activeName - 0"
+                      finish-status="success"
+                      align-center
+                      style="font-size: 13px; margin: 15px;">
               <el-step title="下载数据模板"></el-step>
               <el-step title="数据文件上传"></el-step>
               <el-step title="配件需求预测"></el-step>
@@ -17,15 +21,24 @@
             </el-steps>
 
             <!-- 内部的 tab 标签 -->
-            <el-tabs :tab-position="'left'" style="margin-top: 20px;" v-model="activeName"
-              :before-leave="beforeTabLeave">
-              <el-tab-pane label="下载数据模板" name="0">
-                <el-alert title="先下载数据模板，再将填写好的数据文件上传！" center type="warning" show-icon>
+            <el-tabs :tab-position="'left'"
+                     style="margin-top: 20px;"
+                     v-model="activeName"
+                     :before-leave="beforeTabLeave">
+              <el-tab-pane label="下载数据模板"
+                           name="0">
+                <el-alert title="先下载数据模板，再将填写好的数据文件上传！"
+                          center
+                          type="warning"
+                          show-icon>
                 </el-alert>
                 <!-- 下载模板区域 -->
                 <div style="text-align: center; margin: 20px;">
                   <book-type-option v-model="bookType">> </book-type-option>
-                  <el-button :loading="downloadLoading" type="success" icon="el-icon-document" @click="handleDownload">
+                  <el-button :loading="downloadLoading"
+                             type="success"
+                             icon="el-icon-document"
+                             @click="handleDownload">
                     下载数据模板
                   </el-button>
                 </div>
@@ -37,12 +50,25 @@
                 <!-- <progress></progress> -->
               </el-tab-pane>
 
-              <el-tab-pane label="数据文件上传" name="1">
-                <el-alert title="先下载数据模板，再将填写好的数据文件上传！" center type="warning" show-icon></el-alert>
+              <el-tab-pane label="数据文件上传"
+                           name="1">
+                <el-alert title="先下载数据模板，再将填写好的数据文件上传！"
+                          center
+                          type="warning"
+                          show-icon></el-alert>
                 <!-- excel文件上传 -->
-                <upload-excel ref="uploadExcel" :limit="1" name="excelFile" :on-preview="handlePreview"
-                  :on-remove="handleRemove" :file-list="fileList" :on-error="uploadFalse" :on-success="handleSuccess"
-                  :before-upload="beforeUpload" />
+                <upload-excel ref="uploadExcel"
+                              :on-success="handleSuccess"
+                              :before-upload="beforeUpload" />
+                <!-- <upload-excel ref="uploadExcel"
+                              :limit="1"
+                              name="excelFile"
+                              :on-preview="handlePreview"
+                              :on-remove="handleRemove"
+                              :file-list="fileList"
+                              :on-error="uploadFalse"
+                              :on-success="handleSuccess"
+                              :before-upload="beforeUpload" /> -->
 
                 <!-- <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/"
                     name="excelFile" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList"
@@ -55,8 +81,14 @@
                 <!-- <div style="text-align:center">
                   <el-button type="success">下一步</el-button>
                 </div> -->
-                <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-                  <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
+                <el-table :data="tableData"
+                          border
+                          highlight-current-row
+                          style="width: 100%;margin-top:20px;">
+                  <el-table-column v-for="item of tableHeader"
+                                   :key="item"
+                                   :prop="item"
+                                   :label="item" />
                 </el-table>
               </el-tab-pane>
 
@@ -94,19 +126,18 @@
                 </div>
               </el-tab-pane> -->
 
-              <el-tab-pane label="配件需求预测" name="2">
+              <el-tab-pane label="配件需求预测"
+                           name="2">
 
-                <el-button type="primary" plain>开始预测</el-button>
-                <el-button type="success" plain @click="getPdf()">生成结果单</el-button>
-                <div class="row" id="pdfDom">
-                  <el-table :data="preOutcomeList" border stripe highlight-current-row v-loading="loading"
-                    element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-                    :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-                    <el-table-column type="index" label="序号" align="center" width="60px"></el-table-column>
-                    <el-table-column label="配件类型编号" prop="" align="center"></el-table-column>
-                    <el-table-column label="配件名称" prop="" align="center"></el-table-column>
-                    <el-table-column label="预测数量" prop="" align="center"></el-table-column>
-                  </el-table>
+                <el-button type="primary"
+                           plain
+                           @click="startForecast">开始预测</el-button>
+                <el-button type="success"
+                           plain
+                           @click="getPdf(pdfDom1)">生成结果单</el-button>
+                <div class="row"
+                     id="pdfDom">
+                  hah
                 </div>
 
               </el-tab-pane>
@@ -115,13 +146,23 @@
           </el-tab-pane>
 
           <el-tab-pane label="系统数据预测 ">
-            <el-date-picker v-model="seachForm.dateInterval" type="daterange" align="left" unlink-panels
-              range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+            <el-date-picker v-model="seachForm.dateInterval"
+                            type="daterange"
+                            align="left"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions">
             </el-date-picker>
-            <el-button type="primary" plain>开始预测</el-button>
-            <el-button type="success" plain @click="getPdf()">生成结果单</el-button>
-            <div class="row" id="pdfDom">
-              <p> </p>
+            <el-button type="primary"
+                       plain>开始预测</el-button>
+            <el-button type="success"
+                       plain
+                       @click="getPdf(pdfDom2)">生成结果单</el-button>
+            <div class="row"
+                 id="pdfDom2">
+              <p> hahha </p>
               <!-- 这里面的内容是我们要导出的部分 id为"pdfDom"，和上面"htmlToPdf.js"文件中的id必须一致.此部分将就是pdf显示的部分 -->
             </div>
           </el-tab-pane>
@@ -163,7 +204,8 @@ export default {
       list: [],
 
       htmlTitle: '预测报告单',
-
+      pdfDom1: '#pdfDom',
+      pdfDom2: '#pdfDom2',
       seachForm: {
         dateInterval: ''
       },
@@ -196,6 +238,8 @@ export default {
           }
         }]
       },
+      // 预测内容的显示信号
+      displaySignal: false,
     };
   },
 
@@ -258,7 +302,7 @@ export default {
         console.log(res)
         if (res.data !== 'success') {
           this.$refs.uploadExcel.loading = false
-          this.$Message.error("导入失败!");
+          this.$Message.error("文件上传失败!");
         }
         this.$refs.uploadExcel.loading = false
         this.$message.success('文件上传成功！')
@@ -324,6 +368,25 @@ export default {
     formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
+
+    // 监听开始预测按钮
+    startForecast () {
+      // 利用数据库中所有的数据进行预测
+      this.$axios.post('',).then(res => {
+        console.log(res)
+        if (res.data !== 'success') {
+          this.$Message.error("预测失败!");
+        }
+        this.$message.success('文件上传成功！')
+
+        // 获取相关的数据。。。。。。
+
+      })
+
+      // 在预测完毕后，启动预测内容的显示信号
+      this.displaySignal = true
+
+    }
 
 
 
