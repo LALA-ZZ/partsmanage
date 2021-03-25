@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from "./store";
 import VueCookie from 'vue-cookies'
+import axios from 'axios'
+Vue.prototype.$axios = axios
 // 导入对应额nprogress的js和css
 // import NProgress from 'nprogress'
 //第三方包

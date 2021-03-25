@@ -10,7 +10,7 @@
         </el-col>
         <el-col :span="10">
           <el-button type="primary" icon="el-icon-search" @click="getOptimizateList">快速搜索</el-button>
-          <el-button type="success" icon="el-icon-document" @click="showDiaglog">查看报告</el-button>
+          <!-- <el-button type="success" icon="el-icon-document" @click="showDiaglog">查看报告</el-button> -->
         </el-col>
       </el-row>
 

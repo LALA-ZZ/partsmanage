@@ -63,7 +63,7 @@ export default {
       loading: false,
       total: 0,
       dialogVisible: false,
-      pdfUrl: 'http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
+      pdfUrl: ''
     };
   },
 

@@ -35,10 +35,11 @@ export default {
       this.$store.commit('selectMenu', tags[tabslength - 1]);
     },
     linkMain (tag) {
-
+      // console.log(tag.name)
+      console.log(tag)
       this.$router.push({ name: tag.name });
       this.$store.commit('selectMenu', tag);
-
+      window.sessionStorage.setItem('activePath', tag.path)
 
     }
   },

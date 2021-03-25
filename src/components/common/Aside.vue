@@ -152,6 +152,7 @@ export default {
       //保存链接的激活状态
       window.sessionStorage.setItem('activePath', item.path)
       this.activePath = item.path
+      console.log(this.activePath)
 
     }
   }

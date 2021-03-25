@@ -167,15 +167,15 @@ export default {
       this.downloadLoading = true
       // 采用懒加载的方式
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['配件月需求数量', '配件月出库量', '配件月故障数量', '配件月修复入库数量', '配件月故障出库数量', '配件月入库量', '配件月申请数量', '月项目计划数量', '月零星申请配件数量', '月零星计划数量', '月项目申请配件数量', '配件月报废数量', '主机月新增量', '主机总数量', '主机开工数量']
-        const filterVal = ['parts_monthly_requiredAmount', 'parts_monthly_outputAmount', 'parts_monthly_breakdownAmount', 'parts_monthly_repairIntputAmount ', 'parts_monthly_breakdownOutputAmount', 'parts_monthly_intputAmount', 'parts_monthly_applicationAmount',
-          'monthly_projectsplansAmount', 'parts_monthly_sporadicApplicationAmount', 'monthly_sporadicPlansAmount', 'parts_monthly_projectApplicationAmount', 'parts_monthly_scrapAmount', 'host_monthly_incrementAmount', 'hostsAmount', 'host_workingAmount']
+        const tHeader = ['仓库编号', '库存周期', '交货周期', '配件编号', '关键配件', '配件成本', '配件故障率', '配件可靠性', '故障品返修周期', '产品配属数量',]
+        const filterVal = ['warehouseId', 'warehouse_replenishment_period', 'delivery_cycle', 'partsId', ' keyParts', 'partsCost ', 'parts_failure_rate', 'parts_quality_reliability', ' failureparts_repair_period',
+          'host_affiliated_partsNumber',]
         const list = this.list
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader, //表头 必填
           data, //具体数据 必填
-          filename: this.filename, //非必填
+          filename: '优化数据模板', //非必填
           autoWidth: this.autoWidth, //非必填
           bookType: this.bookType //非必填
         })
@@ -189,9 +189,8 @@ export default {
       this.downloadLoading1 = true
       // 采用懒加载的方式
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['配件月需求数量', '配件月出库量', '配件月故障数量', '配件月修复入库数量', '配件月故障出库数量', '配件月入库量', '配件月申请数量', '月项目计划数量', '月零星申请配件数量', '月零星计划数量', '月项目申请配件数量', '配件月报废数量', '主机月新增量', '主机总数量', '主机开工数量']
-        const filterVal = ['parts_monthly_requiredAmount', 'parts_monthly_outputAmount', 'parts_monthly_breakdownAmount', 'parts_monthly_repairIntputAmount ', 'parts_monthly_breakdownOutputAmount', 'parts_monthly_intputAmount', 'parts_monthly_applicationAmount',
-          'monthly_projectsplansAmount', 'parts_monthly_sporadicApplicationAmount', 'monthly_sporadicPlansAmount', 'parts_monthly_projectApplicationAmount', 'parts_monthly_scrapAmount', 'host_monthly_incrementAmount', 'hostsAmount', 'host_workingAmount']
+        const tHeader = ['起始仓库', '目标仓库', '距离']
+        const filterVal = ['start_warehouse', ' target_warehouse', 'distance']
         const list1 = this.list1
         const data = this.formatJson1(filterVal, list1)
         excel.export_json_to_excel({

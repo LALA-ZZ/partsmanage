@@ -1,5 +1,8 @@
+// import Vue from 'vue'
 import axios from 'axios'
 // import { config } from 'vue/types/umd'
+
+
 
 // 导入对应额nprogress的js和css
 import NProgress from 'nprogress'
@@ -10,7 +13,7 @@ import 'nprogress/nprogress.css'
 
 // 1.创建axios实例
 const instance = axios.create({
-    timeout: 3000
+  timeout: 3000
 })
 
 
@@ -34,6 +37,7 @@ instance.interceptors.response.use(response =>{
     let res = {};//根据状态码做判断
     res.status = response.status;
     res.data = response.data;
+    console.log(res)
     return res
 },err => {
     console.log(err)

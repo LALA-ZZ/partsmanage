@@ -19,7 +19,7 @@
       <div>
         <el-breadcrumb separator="/">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item v-if="bread">{{bread.label}}</el-breadcrumb-item>
+          <!-- <el-breadcrumb-item v-if="bread">{{bread.label}}</el-breadcrumb-item> -->
           <el-breadcrumb-item :to="currentMenu.path" v-if="currentMenu">{{currentMenu.label}}</el-breadcrumb-item>
 
         </el-breadcrumb>
@@ -27,17 +27,17 @@
     </div>
 
     <!-- 用户中心 -->
-    <div class="right-menu">
+    <!-- <div class="right-menu">
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
           <img :src="userimg"><i class="el-icon-caret-bottom el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown" class="el-dropdown-menu">
-          <!-- <el-dropdown-item @click.native="userCard">个人中心</el-dropdown-item>
-          <el-dropdown-item @click.native="loginOut">退出</el-dropdown-item> -->
+          <el-dropdown-item @click.native="userCard">个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="loginOut">退出</el-dropdown-item> 
         </el-dropdown-menu>
       </el-dropdown>
-    </div>
+    </div> -->
     <!--    <div class="el-scrollbar__bar is-horizontal"><div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div></div>-->
   </header>
 </template>

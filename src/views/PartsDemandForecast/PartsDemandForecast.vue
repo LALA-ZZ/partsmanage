@@ -40,7 +40,7 @@
               <el-tab-pane label="数据文件上传" name="1">
                 <el-alert title="先下载数据模板，再将填写好的数据文件上传！" center type="warning" show-icon></el-alert>
                 <!-- excel文件上传 -->
-                <upload-excel ref="upload" :action="uploadUrl" name="excelFile" :on-preview="handlePreview"
+                <upload-excel ref="uploadExcel" :limit="1" name="excelFile" :on-preview="handlePreview"
                   :on-remove="handleRemove" :file-list="fileList" :on-error="uploadFalse" :on-success="handleSuccess"
                   :before-upload="beforeUpload" />
 
@@ -121,7 +121,7 @@
             <el-button type="primary" plain>开始预测</el-button>
             <el-button type="success" plain @click="getPdf()">生成结果单</el-button>
             <div class="row" id="pdfDom">
-              <p>haha </p>
+              <p> </p>
               <!-- 这里面的内容是我们要导出的部分 id为"pdfDom"，和上面"htmlToPdf.js"文件中的id必须一致.此部分将就是pdf显示的部分 -->
             </div>
           </el-tab-pane>
@@ -136,6 +136,8 @@
 import UploadExcel from '@/components/common/UploadExcel/index.vue';
 import BookTypeOption from '@/components/common/BookTypeOption';
 // import Progress from './components/Progress.vue';
+// import { fetchUpload } from '../../api/forecast'
+
 export default {
   data () {
     return {
@@ -150,6 +152,7 @@ export default {
       preOutcomeList: [],
       loading: false,
 
+      file: null,
       // 下载部分
       downloadLoading: false,
       filename: 'excel', //非必填
@@ -209,18 +212,19 @@ export default {
 
 
     // uploadUrl() 是后台接口（接受上传的文件并做后端的逻辑处理）
-    uploadUrl () {
-      // return ("/fanxing/import/batchInsertShops");
-      return ("https://jsonplaceholder.typicode.com/posts/")
-    },
+    // uploadUrl () {
+    //   // return ("/fanxing/import/batchInsertShops");
+    //   return ("192.168.50.219:8080/ch05/index/analysisExcel")
+    // },
     beforeUpload (file) {
-
+      this.file = file
+      console.log(file)
       const extension = file.name.split(".")[1] === "xls";
       const extension2 = file.name.split(".")[1] === "xlsx";
-      const extension3 = file.name.split(".")[1] === "csv";
-      const isLt2M = file.size / 1024 / 1024 < 10;
-      if (!extension && !extension2 && !extension3) {
-        this.$message.error("上传文件只能是 xls、xlsx、csv格式!");
+      // const extension3 = file.name.split(".")[1] === "csv";
+      const isLt2M = file.size / 1024 / 1024 < 100;
+      if (!extension && !extension2) {
+        this.$message.error("上传文件只能是 xls、xlsx格式!");
       }
       // const isLt1M = file.size / 1024 / 1024 < 1
       if (isLt2M) {
@@ -228,17 +232,41 @@ export default {
       }
 
       this.$message({
-        message: '请不要上传超过10M大小的文件。',
+        message: '请不要上传超过100M大小的文件。',
         type: 'warning'
       })
       return false
     },
+    // checkExcel (header) {
+    //   for (let i in header) {
+    //     if (i == 0 && header[i] != '配件编号') {
+    //       return false;
+    //     }
+    //     if (i == 1 && header[i] != '配件月出库量') {
+    //       return false;
+    //     }
+    //   }
+    // },
     handleSuccess ({ results, header }) {
       this.tableData = results
       this.tableHeader = header
+      let form = new FormData();
+      form.append('file', this.file)
+      console.log(form)
+      // fetchUpload(form).then(res => {
+      this.$axios.post('/api/ch05/index/analysisExcel', form).then(res => {
+        console.log(res)
+        if (res.data !== 'success') {
+          this.$refs.uploadExcel.loading = false
+          this.$Message.error("导入失败!");
+        }
+        this.$refs.uploadExcel.loading = false
+        this.$message.success('文件上传成功！')
+
+      })
       //触发组件的action
-      this.$refs.upload.submit();
-      this.$message.success('文件上传成功！')
+      // this.$refs.upload.submit();
+
     },
     // handleSuccess (response, file, fileList) {
     //   console.log(response.status)
@@ -249,10 +277,10 @@ export default {
     //     alert("文件上传失败！");
     //   }
     // },
-    uploadFalse (response, file, fileList) {
-      console.log(response, file, fileList)
-      this.$message.error("文件上传失败！");
-    },
+    // uploadFalse (response, file, fileList) {
+    //   console.log(response, file, fileList)
+    //   this.$message.error("文件上传失败！");
+    // },
     beforeTabLeave (activeName, oldActiveName) {
       console.log('即将离开的是' + oldActiveName)
       console.log('即将进入的是' + activeName)
@@ -261,16 +289,16 @@ export default {
       //   return false
       // }
     },
-    handlePreview (file) {
-      if (file.response.status) {
-        alert("此文件导入成功");
-      } else {
-        alert("此文件导入失败");
-      }
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList);
-    },
+    // handlePreview (file) {
+    //   if (file.response.status) {
+    //     alert("此文件导入成功");
+    //   } else {
+    //     alert("此文件导入失败");
+    //   }
+    // },
+    // handleRemove (file, fileList) {
+    //   console.log(file, fileList);
+    // },
 
 
     // 下载部分
@@ -278,15 +306,15 @@ export default {
       this.downloadLoading = true
       // 采用懒加载的方式
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['配件月需求数量', '配件月出库量', '配件月故障数量', '配件月修复入库数量', '配件月故障出库数量', '配件月入库量', '配件月申请数量', '月项目计划数量', '月零星申请配件数量', '月零星计划数量', '月项目申请配件数量', '配件月报废数量', '主机月新增量', '主机总数量', '主机开工数量']
-        const filterVal = ['parts_monthly_requiredAmount', 'parts_monthly_outputAmount', 'parts_monthly_breakdownAmount', 'parts_monthly_repairIntputAmount ', 'parts_monthly_breakdownOutputAmount', 'parts_monthly_intputAmount', 'parts_monthly_applicationAmount',
+        const tHeader = ['配件编号', '时间', '配件月需求数量', '配件月出库量', '配件月故障数量', '配件月修复入库数量', '配件月故障出库数量', '配件月入库量', '配件月申请数量', '月项目计划数量', '月零星申请配件数量', '月零星计划数量', '月项目申请配件数量', '配件月报废数量', '主机月新增量', '主机总数量', '主机开工数量']
+        const filterVal = ['parts_id', 'time', 'parts_monthly_requiredAmount', 'parts_monthly_outputAmount', 'parts_monthly_breakdownAmount', 'parts_monthly_repairIntputAmount ', 'parts_monthly_breakdownOutputAmount', 'parts_monthly_intputAmount', 'parts_monthly_applicationAmount',
           'monthly_projectsplansAmount', 'parts_monthly_sporadicApplicationAmount', 'monthly_sporadicPlansAmount', 'parts_monthly_projectApplicationAmount', 'parts_monthly_scrapAmount', 'host_monthly_incrementAmount', 'hostsAmount', 'host_workingAmount']
         const list = this.list
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader, //表头 必填
           data, //具体数据 必填
-          filename: this.filename, //非必填
+          filename: '需求预测数据模板', //非必填
           autoWidth: this.autoWidth, //非必填
           bookType: this.bookType //非必填
         })

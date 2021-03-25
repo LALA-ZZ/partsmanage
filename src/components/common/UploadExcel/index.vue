@@ -1,14 +1,13 @@
 <template>
   <div>
-    <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls, .csv"
-      @change="handleClick">
+    <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
       将文件拖到此处，或
       <el-button :loading="loading" style="margin-left:16px;" size="small" type="primary" @click="handleUpload">
         选择文件
       </el-button>
     </div>
-    <div class="el-upload__tip" slot="tip">只能上传xlsx,xls/csv文件。</div>
+    <div class="el-upload__tip" slot="tip">只能上传xlsx,xls文件。</div>
   </div>
 </template>
 
