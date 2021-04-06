@@ -57,7 +57,7 @@
                           type="warning"
                           show-icon></el-alert>
                 <!-- excel文件上传 -->
-                <upload-excel ref="uploadExcel"
+                <upload-excel ref="uploaDemandExcel"
                               :on-success="handleSuccess"
                               :before-upload="beforeUpload" />
                 <!-- <upload-excel ref="uploadExcel"
@@ -131,15 +131,54 @@
 
                 <el-button type="primary"
                            plain
-                           @click="startForecast">开始预测</el-button>
+                           :loading="loadingbut"
+                           v-loading.fullscreen.lock="fullscreenLoading"
+                           @click="startForecast">{{loadingbuttext}}</el-button>
                 <el-button type="success"
                            plain
-                           @click="getPdf(pdfDom1)">生成结果单</el-button>
+                           v-if="displaySignal"
+                           @click="becomeExcel">生成Excel</el-button>
+                <el-button type="warning"
+                           plain
+                           v-if="displaySignal"
+                           @click="getPdf(pdfDom1)">生成PDF</el-button>
                 <div class="row"
-                     id="pdfDom">
-                  hah
+                     id="pdfDom1"
+                     v-if="displaySignal">
+                  <el-table :data="foreResultList"
+                            border
+                            stripe
+                            highlight-current-row
+                            v-loading="loading"
+                            element-loading-text="拼命加载中"
+                            element-loading-spinner="el-icon-loading">
+                    <el-table-column type="index"
+                                     label="序号"
+                                     align="center"
+                                     width="60px"></el-table-column>
+                    <el-table-column label="配件编号"
+                                     prop="1"
+                                     align="center"></el-table-column>
+                    <el-table-column label="配件名称"
+                                     prop="2"
+                                     align="center"></el-table-column>
+                    <el-table-column label="下个月需求量"
+                                     prop="4"
+                                     align="center"></el-table-column>
+                    <el-table-column label="下个月申请量"
+                                     prop="10"
+                                     align="center"></el-table-column>
+                    <el-table-column label="下个月出库量"
+                                     prop="5"
+                                     align="center"></el-table-column>
+                    <el-table-column label="下个月故障量"
+                                     prop="6"
+                                     align="center"></el-table-column>
+                  </el-table>
                 </div>
-
+                <!-- <div v-else>
+                  <p> 需求预测中，请稍后...... </p>
+                </div> -->
               </el-tab-pane>
             </el-tabs>
 
@@ -156,14 +195,42 @@
                             :picker-options="pickerOptions">
             </el-date-picker>
             <el-button type="primary"
-                       plain>开始预测</el-button>
-            <el-button type="success"
+                       plain>{{loadingbuttext}}</el-button>
+            <!-- <el-button type="success"
                        plain
-                       @click="getPdf(pdfDom2)">生成结果单</el-button>
+                       @click="getPdf(pdfDom2)">生成结果单</el-button> -->
             <div class="row"
-                 id="pdfDom2">
+                 id="pdfDom2"
+                 v-if="displaySignal">
+              <el-table :data="foreResultList"
+                        border
+                        stripe
+                        highlight-current-row
+                        v-loading="loading"
+                        element-loading-text="拼命加载中"
+                        element-loading-spinner="el-icon-loading">
+                <el-table-column type="index"
+                                 label="序号"
+                                 align="center"
+                                 width="60px"></el-table-column>
+                <el-table-column label="配件编号"
+                                 prop=""
+                                 align="center"></el-table-column>
+                <el-table-column label="仓库名称"
+                                 prop=""
+                                 align="center"></el-table-column>
+                <el-table-column label="配件名称"
+                                 prop=""
+                                 align="center"></el-table-column>
+                <el-table-column label="安全库存数量"
+                                 prop=""
+                                 align="center"></el-table-column>
+              </el-table>
               <p> hahha </p>
               <!-- 这里面的内容是我们要导出的部分 id为"pdfDom"，和上面"htmlToPdf.js"文件中的id必须一致.此部分将就是pdf显示的部分 -->
+            </div>
+            <div v-else>
+              <p> 需求预测中，请稍后...... </p>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -202,7 +269,11 @@ export default {
       // 导出的文本类型
       bookType: 'xlsx', //非必填
       list: [],
-
+      // 预测按钮文字显示
+      loadingbuttext: '开始预测',
+      // 预测中加载状态
+      loadingbut: false,
+      fullscreenLoading: false,
       htmlTitle: '预测报告单',
       pdfDom1: '#pdfDom',
       pdfDom2: '#pdfDom2',
@@ -240,6 +311,8 @@ export default {
       },
       // 预测内容的显示信号
       displaySignal: false,
+      foreResultList: []
+
     };
   },
 
@@ -291,21 +364,28 @@ export default {
     //     }
     //   }
     // },
+
+    // 文件上传
     handleSuccess ({ results, header }) {
+      this.$refs.uploaDemandExcel.loading = true
       this.tableData = results
       this.tableHeader = header
       let form = new FormData();
       form.append('file', this.file)
       console.log(form)
       // fetchUpload(form).then(res => {
-      this.$axios.post('/api/ch05/index/analysisExcel', form).then(res => {
+      this.$axios.post('/api/ch09/demand/submitExcel', form).then(res => {
         console.log(res)
         if (res.data !== 'success') {
-          this.$refs.uploadExcel.loading = false
-          this.$Message.error("文件上传失败!");
+          this.$refs.uploaDemandExcel.loading = false
+          this.$alert('文件上传失败！', {
+            confirmButtonText: '确定'
+          });
         }
-        this.$refs.uploadExcel.loading = false
-        this.$message.success('文件上传成功！')
+        this.$refs.uploaDemandExcel.loading = false
+        this.$alert('文件上传成功！', {
+          confirmButtonText: '确定'
+        });
 
       })
       //触发组件的action
@@ -350,9 +430,9 @@ export default {
       this.downloadLoading = true
       // 采用懒加载的方式
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['配件编号', '时间', '配件月需求数量', '配件月出库量', '配件月故障数量', '配件月修复入库数量', '配件月故障出库数量', '配件月入库量', '配件月申请数量', '月项目计划数量', '月零星申请配件数量', '月零星计划数量', '月项目申请配件数量', '配件月报废数量', '主机月新增量', '主机总数量', '主机开工数量']
-        const filterVal = ['parts_id', 'time', 'parts_monthly_requiredAmount', 'parts_monthly_outputAmount', 'parts_monthly_breakdownAmount', 'parts_monthly_repairIntputAmount ', 'parts_monthly_breakdownOutputAmount', 'parts_monthly_intputAmount', 'parts_monthly_applicationAmount',
-          'monthly_projectsplansAmount', 'parts_monthly_sporadicApplicationAmount', 'monthly_sporadicPlansAmount', 'parts_monthly_projectApplicationAmount', 'parts_monthly_scrapAmount', 'host_monthly_incrementAmount', 'hostsAmount', 'host_workingAmount']
+        const tHeader = ['id', '配件编号', '配件名称', '月份', '配件月需求数量', '配件月出库量', '配件月故障数量', '配件月修复入库数量', '配件月故障出库数量', '配件月入库量', '配件月报废数量', '配件月申请数量', '月零星申请配件数量', '月项目计划数量', '月零星计划数量', '月项目申请配件数量', '主机月新增量', '主机总数量', '主机开工数量']
+        const filterVal = ['id', 'parts_id', 'parts_name', 'month', 'parts_monthly_requiredNumber', 'parts_monthly_outputNumber', 'parts_monthly_breakdownNumber', 'parts_monthly_repairIntputNumber', 'parts_monthly_breakdownOutputNumber', 'parts_monthly_intputNumber', 'parts_monthly_scrapNumber', 'parts_monthly_applicationNumber', 'parts_monthly_sporadicApplicationNumber', 'parts_monthly_projectApplicationNumber', 'monthly_sporadicPlansNumber', 'monthly_projectsplansNumber', 'host_monthly_incrementNumber', 'hostsNumber', 'host_workingNumber'
+        ]
         const list = this.list
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
@@ -369,24 +449,67 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
 
-    // 监听开始预测按钮
+    // 监听文件上传的开始预测按钮
     startForecast () {
-      // 利用数据库中所有的数据进行预测
-      this.$axios.post('',).then(res => {
-        console.log(res)
-        if (res.data !== 'success') {
-          this.$Message.error("预测失败!");
-        }
-        this.$message.success('文件上传成功！')
+      // 开始预测按钮的状态转换
+      this.loadingbut = true;
+      this.loadingbuttext = '预测中...';
+      // this.fullscreenLoading = true;
 
-        // 获取相关的数据。。。。。。
+      this.$axios.post('/api/ch09/demand/begin',).then(res => {
+        console.log(res)
+        if (res.data.statue !== 'success') {
+          this.$message.error("返回没有数据，预测失败!");
+        }
+        // this.foreResultList = res.data
+        this.foreResultList = res.data.DemandList.table
+        console.log(this.foreResultList)
+        // 在预测完毕后，启动预测内容的显示信号
+        this.displaySignal = true
+
+
+        // // 开始预测按钮的状态转换
+        this.loadingbut = false;
+        this.loadingbuttext = '开始预测';
+
+        // this.fullscreenLoading = false;
 
       })
 
-      // 在预测完毕后，启动预测内容的显示信号
-      this.displaySignal = true
 
-    }
+    },
+
+
+    //优化后生成excel
+    becomeExcel () {
+      // 采用懒加载的方式
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['配件编号', '配件名称', '下个月需求量', '下个月申请量', '下个月出库量', '下个月故障量']
+        const filterVal = ['1', '2', '4', '10', '5', '6']
+        const list1 = this.foreResultList
+        const data = this.formatJson(filterVal, list1)
+        excel.export_json_to_excel({
+          header: tHeader, //表头 必填
+          data, //具体数据 必填
+          filename: '优化结果表', //非必填
+          autoWidth: this.autoWidth, //非必填
+          bookType: this.bookType //非必填
+        })
+      })
+    },
+    // // 监听预测结果按钮
+    // demandResult () {
+    //   this.$axios.post('/api/ch09/demandResult/queryDemandResult',).then(res => {
+    //     console.log(res)
+    //     if (res.data == ' ') {
+    //       this.$message.error("返回没有数据，预测失败!");
+    //     }
+    //     this.foreResultList = res.data
+
+    //     // 在预测完毕后，启动预测内容的显示信号
+    //     this.displaySignal = true
+    //   })
+    // }
 
 
 

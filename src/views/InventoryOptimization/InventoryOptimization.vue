@@ -46,6 +46,15 @@
                   <upload-excel ref="dataUploadExcel"
                                 :on-success="handleOpSuccess"
                                 :before-upload="beforeUpload" />
+                  <el-table :data="tableData"
+                            border
+                            highlight-current-row
+                            style="width: 100%;margin-top:20px;">
+                    <el-table-column v-for="item of tableHeader"
+                                     :key="item"
+                                     :prop="item"
+                                     :label="item" />
+                  </el-table>
                 </div>
               </el-tab-pane>
               <!-- 上传文件 -->
@@ -75,13 +84,21 @@
               <el-tab-pane label="库存优化"
                            name="2">
                 <el-button type="primary"
-                           plain>开始优化</el-button>
+                           plain
+                           :loading="loadingbut"
+                           @click="startOptimization">{{loadingbuttext}}</el-button>
                 <el-button type="success"
                            plain
-                           @click="getPdf(pdfDom)">生成结果单</el-button>
+                           v-if="displaySignal"
+                           @click="becomeExcel">生成Excel</el-button>
+                <el-button type="warning"
+                           plain
+                           v-if="displaySignal"
+                           @click="getPdf(pdfDom)">生成PDF</el-button>
                 <div class="row"
-                     id="pdfDom">
-                  <el-table :data="optimizationOutcomList"
+                     id="pdfDom"
+                     v-if="displaySignal">
+                  <el-table :data="optiResultList"
                             border
                             stripe
                             highlight-current-row
@@ -92,17 +109,20 @@
                                      label="序号"
                                      align="center"
                                      width="60px"></el-table-column>
+                    <el-table-column label="方案编号"
+                                     prop="0"
+                                     align="center"></el-table-column>
                     <el-table-column label="仓库编号"
-                                     prop=""
+                                     prop="1"
                                      align="center"></el-table-column>
-                    <el-table-column label="仓库名称"
-                                     prop=""
+                    <el-table-column label="安全库存值"
+                                     prop="2"
                                      align="center"></el-table-column>
-                    <el-table-column label="配件名称"
-                                     prop=""
+                    <el-table-column label="平均配送时间"
+                                     prop="3"
                                      align="center"></el-table-column>
-                    <el-table-column label="安全库存数量"
-                                     prop=""
+                    <el-table-column label="总成本"
+                                     prop="4"
                                      align="center"></el-table-column>
                   </el-table>
                 </div>
@@ -124,7 +144,7 @@
                        plain>开始预测</el-button>
             <el-button type="success"
                        plain
-                       @click="generateResult">生成结果单</el-button>
+                       @click="getPdf(pdfDom2)">生成结果单</el-button>
             <div class="row"
                  id="pdfDom2">
               <el-table :data="optimizationOutcomList"
@@ -192,12 +212,20 @@ export default {
       // 上传的文件内容
       tableData: [],
       tableHeader: [],
-      dataFile: null,
+      // dataFile: null,
+      file: null,
       // 距离文件数据和标题
       distanceData: [],
       distanceHeader: [],
       distanceFile: null,
 
+      // 预测按钮文字显示
+      loadingbuttext: '开始优化',
+      // 预测中加载状态
+      loadingbut: false,
+      // 优化结果列表
+      optiResultList: [],
+      displaySignal: false,
       paramsForm: {},
       htmlTitle: '优化报告单',
       pdfDom: '#pdfDom',
@@ -249,8 +277,8 @@ export default {
       this.downloadLoading = true
       // 采用懒加载的方式
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['仓库编号', '库存周期', '交货周期', '配件编号', '关键配件', '配件成本', '配件故障率', '配件可靠性', '故障品返修周期', '产品配属数量',]
-        const filterVal = ['warehouseId', 'warehouse_replenishment_period', 'delivery_cycle', 'partsId', ' keyParts', 'partsCost ', 'parts_failure_rate', 'parts_quality_reliability', ' failureparts_repair_period',
+        const tHeader = ['id', '配件编号', '仓库编号', '月份', '配件月故障数量', '配件月故障出库数量', '仓库补货周期', '采购交货周期', '调拨交货周期', '故障品返修周期', '关键配件', '配件成本', '配件故障率', '配件可靠性', '产品配属数量',]
+        const filterVal = ['id', 'inventory_optimization_keyfactor_id', 'stock_id', 'month', 'parts_monthly_breakdownAmount', 'parts_monthly_breakdownOutputAmount', 'warehouse_replenishment_period', 'purchase_lead_period', 'allocate_lead_period', ' failureparts_repair_period', ' keyParts', 'partsCost ', 'parts_failure_rate', 'parts_quality_reliability',
           'host_affiliated_partsNumber',]
         const list = this.list
         const data = this.formatJson(filterVal, list)
@@ -267,12 +295,14 @@ export default {
     formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
+
+
     distanceDownload () {
       this.downloadLoading1 = true
       // 采用懒加载的方式
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['起始仓库', '目标仓库', '距离']
-        const filterVal = ['start_warehouse', ' target_warehouse', 'distance']
+        const tHeader = ['起始仓库', '目标仓库', '距离', '运输时间']
+        const filterVal = ['start_warehouse', ' target_warehouse', 'distance', 'transpor_time']
         const list1 = this.list1
         const data = this.formatJson1(filterVal, list1)
         excel.export_json_to_excel({
@@ -289,22 +319,28 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
 
+
     // 监听优化数据上传
     handleOpSuccess ({ results, header }) {
+      this.$refs.dataUploadExcel.loading = true
       this.tableData = results
       this.tableHeader = header
       let form = new FormData();
-      form.append('file', this.dataFile)
+      form.append('file', this.file)
       console.log(form)
       // fetchUpload(form).then(res => {
-      this.$axios.post('/api/ch05/index/analysisExcel2', form).then(res => {
+      this.$axios.post('/api/ch09/inventory/submitExcel', form).then(res => {
         console.log(res)
         if (res.data !== 'success') {
           this.$refs.dataUploadExcel.loading = false
-          this.$Message.error("文件上传失败!");
+          this.$alert('文件上传失败！', {
+            confirmButtonText: '确定'
+          });
         }
         this.$refs.dataUploadExcel.loading = false
-        this.$message.success('文件上传成功！')
+        this.$alert('文件上传成功！', {
+          confirmButtonText: '确定'
+        });
 
       })
     },
@@ -335,17 +371,21 @@ export default {
       this.distanceData = results
       this.distanceHeader = header
       let form = new FormData();
-      form.append('file', this.distanceFile)
+      form.append('file', this.file)
       console.log(form)
       // fetchUpload(form).then(res => {
-      this.$axios.post('/api/ch05/index/analysisExcel2', form).then(res => {
+      this.$axios.post('/api/ch09/inventory/submitDistanceExcel', form).then(res => {
         console.log(res)
         if (res.data !== 'success') {
           this.$refs.distanceUploadExcel.loading = false
-          this.$Message.error("文件上传失败!");
+          this.$alert('文件上传失败！', {
+            confirmButtonText: '确定'
+          });
         }
         this.$refs.distanceUploadExcel.loading = false
-        this.$message.success('文件上传成功！')
+        this.$alert('文件上传成功！', {
+          confirmButtonText: '确定'
+        });
 
       })
 
@@ -353,13 +393,13 @@ export default {
 
 
 
-    // 文件上传
-    actionUrl () {
-      return ("https://jsonplaceholder.typicode.com/posts/")
-    },
-    actionUrl1 () {
-      return ("https://jsonplaceholder.typicode.com/posts/")
-    },
+    // // 文件上传
+    // actionUrl () {
+    //   return ("https://jsonplaceholder.typicode.com/posts/")
+    // },
+    // actionUrl1 () {
+    //   return ("https://jsonplaceholder.typicode.com/posts/")
+    // },
 
     beforeTabLeave (activeName, oldActiveName) {
       console.log('即将离开的是' + oldActiveName)
@@ -370,9 +410,56 @@ export default {
       // }
     },
 
-    generateResult () {
-      this.$getPdf(this.pdfDom2)
-    }
+    // generateResult () {
+    //   this.$getPdf(this.pdfDom2)
+    // }
+
+    // 监听开始优化按钮
+    startOptimization () {
+      // 开始优化按钮的状态转换
+      this.loadingbut = true;
+      this.loadingbuttext = '优化中...';
+
+      this.$axios.post('/api/ch09/inventory/begin',).then(res => {
+        console.log(res)
+        if (res.data.statue !== 'success') {
+          this.$message.error("返回没有数据，预测失败!");
+        }
+        // this.foreResultList = res.data
+        this.optiResultList = res.data.DemandList.table
+        console.log(this.optiResultList)
+        // 在预测完毕后，启动优化内容的显示信号
+        this.displaySignal = true
+        // 开始优化按钮的状态转换
+        this.loadingbut = false;
+        this.loadingbuttext = '开始优化';
+
+
+        // const { data: res } = await this.$http.get("menus");
+        // console.log(res.data);
+        // if (res.status != 200) return this.$message.error("操作失败！！！");
+        // this.menuList = res.data;
+      })
+
+    },
+
+    //优化后生成excel
+    becomeExcel () {
+      // 采用懒加载的方式
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['方案编号', '仓库编号', '安全库存值', '平均配送时间', '总成本']
+        const filterVal = ['0', '1', '2', '3', '4']
+        const list1 = this.optiResultList
+        const data = this.formatJson1(filterVal, list1)
+        excel.export_json_to_excel({
+          header: tHeader, //表头 必填
+          data, //具体数据 必填
+          filename: '优化结果表', //非必填
+          autoWidth: this.autoWidth, //非必填
+          bookType: this.bookType //非必填
+        })
+      })
+    },
   }
 
 }

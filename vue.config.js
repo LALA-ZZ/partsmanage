@@ -70,8 +70,8 @@ module.exports = {
   
   devServer: {
     open: true, //是否自动弹出浏览器页面
-    // host: "localhost",
-    // port: '8080',
+    host: "localhost",
+    port: '8080',
     proxy: {  //配置跨域
     '/api': {
       target: 'http://192.168.50.219:8080/',  //这里后台的地址模拟的;应该填写你们真实的后台接口
