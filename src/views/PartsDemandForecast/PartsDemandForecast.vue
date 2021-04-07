@@ -138,10 +138,10 @@
                            plain
                            v-if="displaySignal"
                            @click="becomeExcel">生成Excel</el-button>
-                <el-button type="warning"
+                <!-- <el-button type="warning"
                            plain
                            v-if="displaySignal"
-                           @click="getPdf(pdfDom1)">生成PDF</el-button>
+                           @click="getPdf(pdfDom1)">生成PDF</el-button> -->
                 <div class="row"
                      id="pdfDom1"
                      v-if="displaySignal">
