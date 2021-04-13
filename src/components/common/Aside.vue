@@ -1,7 +1,13 @@
 <template>
 
-  <el-menu class="el-menu-vertical-demo" background-color="#304156" text-color="#fff" active-text-color="#ffd04b"
-    :collapse="isCollapse" :unique-opened="true" :collapse-transition="false" :default-active="activePath">
+  <el-menu class="el-menu-vertical-demo"
+           background-color="#304156"
+           text-color="#fff"
+           active-text-color="#ffd04b"
+           :collapse="isCollapse"
+           :unique-opened="true"
+           :collapse-transition="false"
+           :default-active="activePath">
     <!-- <h3 v-show="!isCollapse">售后配件多级仓库协同管理系统</h3>
     <h3 v-show="isCollapse">配件</h3> -->
     <!-- <el-submenu :index="item.path" v-for="item in asideMenu" :key="item.path" @click="clickMenu(item)">
@@ -15,14 +21,19 @@
           <span>{{item.label}}</span>
         </template>
       </el-menu-item> -->
-    <el-submenu :index="item.path" v-for="item in hasChildren" :key="item.path" @click="clickMenu(item)">
+    <el-submenu :index="item.path"
+                v-for="item in hasChildren"
+                :key="item.path"
+                @click="clickMenu(item)">
       <template slot="title">
         <i :class="'el-icon-s-' + item.icon"></i>
         <span>{{item.label}}</span>
       </template>
 
-      <el-menu-item :index="subItem.path" v-for="subItem in item.children" :key="subItem.path"
-        @click="clickMenu(subItem)">
+      <el-menu-item :index="subItem.path"
+                    v-for="subItem in item.children"
+                    :key="subItem.path"
+                    @click="clickMenu(subItem)">
         <template slot="title">
           <i class="el-icon-menu"></i>
           <span>{{subItem.label}}</span>
@@ -64,11 +75,35 @@ export default {
               path: '/forecastinfo',
               name: 'forecastinfo',
               label: '企业预测数据',
-              // url: 'InfomationHall/ForecastInfo',
             },
 
           ]
         },
+        {
+          path: '/warehouse',
+          name: 'warehouse',
+          label: '仓库管理中心',
+          icon: 'data',
+          children: [
+            {
+              path: '/wareinfo',
+              name: 'wareinfo',
+              label: '仓库管理',
+            },
+            {
+              path: '/localeappl',
+              name: 'localeappl',
+              label: '现场需求申请',
+            },
+            {
+              path: '/waremanage',
+              name: 'waremanage',
+              label: '仓库1',
+            },
+
+          ]
+        },
+
         {
           path: '/partsDemandforecast',
           name: 'partsDemandforecast',

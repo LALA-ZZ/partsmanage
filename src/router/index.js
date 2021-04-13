@@ -11,8 +11,10 @@ const Forecastlist = () => import(/* webpackChunkName: "Forecast_forecastinfo_fo
 const Optimization = () => import(/* webpackChunkName: "Optimization_optimizationlist" */ '../views/InventoryOptimization/InventoryOptimization.vue')
 const Optimizationlist= () => import(/* webpackChunkName: "Optimization_optimizationlist" */ '../views/InventoryOptimization/OptimizationInfo.vue')
 
-
-
+// 仓库管理
+const Warehouseinfo =() =>import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/WarehouseInfo.vue' )
+const LocaleApply =() => import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/LocaleApply.vue')
+const Waremanage =() => import(/* webpackChunkName: "Warehouse" */ '../components/common/WareManage.vue')
 
 //解决vue中重复点击相同的路由报错问题
 const routerPush = Router.prototype.push
@@ -51,6 +53,21 @@ const routes = [
                 name: 'forecastinfo',
                 component: Forecastinfo
               },
+              {
+                path: '/wareinfo',
+                name: 'wareinfo',
+                component: Warehouseinfo
+               },
+               {
+                path: '/localeappl',
+                name: 'localeappl',
+                component: LocaleApply
+               },
+               {
+                path: '/waremanage',
+                name: 'waremanage',
+                component: Waremanage
+               },
             {
               path: '/optimizationlist',
               name: 'optimizationlist',
