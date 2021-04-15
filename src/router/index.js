@@ -15,6 +15,9 @@ const Optimizationlist= () => import(/* webpackChunkName: "Optimization_optimiza
 const Warehouseinfo =() =>import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/WarehouseInfo.vue' )
 const LocaleApply =() => import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/LocaleApply.vue')
 const Waremanage =() => import(/* webpackChunkName: "Warehouse" */ '../components/common/WareManage.vue')
+const ApplyList =()=> import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/ApplyList.vue')
+const DispatchingList =()=> import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/DispatchingList.vue')
+
 
 //解决vue中重复点击相同的路由报错问题
 const routerPush = Router.prototype.push
@@ -68,6 +71,17 @@ const routes = [
                 name: 'waremanage',
                 component: Waremanage
                },
+               {
+                path: '/applylist',
+                name: 'applylist',
+                component: ApplyList
+               },
+               {
+                path: '/dispatchlist',
+                name: 'dispatchlist',
+                component: DispatchingList
+               },
+               
             {
               path: '/optimizationlist',
               name: 'optimizationlist',

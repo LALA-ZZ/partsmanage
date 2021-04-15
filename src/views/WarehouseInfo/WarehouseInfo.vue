@@ -4,17 +4,19 @@
     <el-card shadow="hover">
 
       <!-- 搜索与添加部分 -->
-      <!-- <p>仓库分布图</p> -->
-      <el-input v-model="queryinfo.warename"
+      <el-input size="small"
+                v-model="queryinfo.warename"
                 placeholder="请搜索输入仓库名称"
                 clearable
                 @clear="getWareList"
                 style="width: 250px;">
       </el-input>
-      <el-button type="primary"
+      <el-button size="small"
+                 type="primary"
                  icon="el-icon-search"
                  @click="getWareList">搜索</el-button>
-      <el-button type="primary"
+      <el-button size="small"
+                 type="primary"
                  icon="el-icon-plus"
                  @click="addDialogVisible = true">新增</el-button>
       <!-- <el-row :gutter="1">
@@ -63,14 +65,14 @@
         <el-table-column label="上级仓库"
                          prop="warehead"></el-table-column>
         <el-table-column label="仓库等级"
-                         prop="warehouse_level">
+                         prop="warelevel">
           <template slot-scope="scope">
             <el-tag type="success"
-                    v-if="scope.row.warehouse_level === 0">一级</el-tag>
+                    v-if="scope.row.warelevel === '1'">中心库</el-tag>
             <el-tag type="info"
-                    v-else-if="scope.row.warehouse_level === 1">二级</el-tag>
+                    v-else-if="scope.row.warelevel === '2'">区域库</el-tag>
             <el-tag type="danger"
-                    v-else>三级</el-tag>
+                    v-else-if="scope.row.warelevel === '3'">网点库</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="描述"
@@ -78,7 +80,11 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini"
+                       type="success"
                        @click="enterWare(scope.row.wareid)">进入</el-button>
+            <el-button size="mini"
+                       type="danger"
+                       @click="deleteWareById(scope.row.wareid)">删除</el-button>
             <!-- <el-button size="mini" type="danger" @click="deleteWareById(scope.row.id)">删除</el-button> -->
           </template>
         </el-table-column>
@@ -269,9 +275,7 @@ export default {
     // 获取仓库数据
     getWareList () {
       // 加载组件的显示
-      this.loading = false
-      console.log(this.queryinfo)
-      console.log()
+      this.loading = true
       var data = Qs.stringify(this.queryinfo)
       this.$axios.post('/api/ch10/stock/selectByWarename', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
         // {
@@ -280,7 +284,7 @@ export default {
         //   'pageSize': this.queryinfo.pageSize
         // }
       ).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         if (res.data.status !== "success") {
           return this.$message.error('获取仓库列表失败！')
         }
@@ -314,7 +318,7 @@ export default {
           }
           console.log(res.data)
           this.addDialogVisible = false
-          this.$essage.success('添加仓库成功！')
+          this.$message.success('添加仓库成功！')
           this.getWareList()
 
         })
@@ -366,18 +370,23 @@ export default {
       this.$refs.editFormRef.resetFields()
     },
     // 根据id删除仓库信息
-    deleteWareById (id) {
-      this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+    deleteWareById (wareid) {
+      console.log(wareid)
+      var warehouseid = {
+        "wareid": wareid
+      }
+      var data = Qs.stringify(warehouseid)
+      console.log("haha" + data)
+      this.$confirm('此操作将永久删除该仓库, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$http.delete('warehouse/' + id).then(res => {
-          if (res.meta.status !== 200) {
-            return this.$message.error('删除失败！')
-          }
-
+        this.$axios.post('/api/ch10/stock/delWare', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+          console.log(res.data)
+          this.getWareList()
         })
+
       }).then(() => {
         this.$message({
           type: 'success',

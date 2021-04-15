@@ -4,6 +4,7 @@
     <!-- query region -->
     <el-tabs type="border-card">
       <el-tab-pane label="库存状态">
+
         <el-table :data="inventoryList"
                   border
                   stripe
@@ -63,31 +64,38 @@
                       v-else>库存过量</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作"
+          <!-- <el-table-column label="操作"
                            align="center">、
             <template slot-scope="scope">
               <el-button size="mini"
                          @click="showDetailsDialog(scope.row.id)">详情</el-button>
             </template>
-          </el-table-column>
+          </el-table-column> -->
 
         </el-table>
 
         <!-- pagination region -->
         <el-pagination @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
-                       :current-page="queryinfo.page"
+                       :current-page="queryinfo.currentpage"
                        :page-sizes="[5, 8, 10, 20]"
                        :page-size="queryinfo.pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
                        :total="inventoryTotal">
         </el-pagination>
+        <el-badge :value="200"
+                  :max="10"
+                  class="item"
+                  style="margin: 10px 20px 10px 20px;float:left">
+          <el-button size="small">库存预警</el-button>
+        </el-badge>
       </el-tab-pane>
       <el-tab-pane label="调拨申请">
         <el-alert title="点击申请按钮系统自动生成配件方案！"
-                  type="success"
+                  type="info"
                   center
-                  show-icon>
+                  show-icon
+                  style="margin-bottom:15px">
         </el-alert>
         <div style="">
           <el-button size='mini'
@@ -110,11 +118,11 @@
                      plain
                      type='success'
                      icon="el-icon-check"
-                     @click="confirmSave()">保存</el-button>
+                     @click="confirmSave()">申请</el-button>
         </div>
 
         <el-table :data="applyList"
-                  ref="applyListRef"
+                  ref="applyListListRef"
                   border
                   stripe
                   highlight-current-row
@@ -195,7 +203,103 @@
           </el-table-column>
 
         </el-table>
+        <div style="margin-top:15px">
+          <el-button size='mini'
+                     type='primary'
+                     icon="el-icon-tickets"
+                     @click="turnApplyList">申请列表</el-button>
+          <el-button size='mini'
+                     type='success'
+                     icon="el-icon-collection-tag"
+                     @click="turnDispatchingList">配送方案</el-button>
+        </div>
+
       </el-tab-pane>
+      <!-- <el-tab-pane label="申请列表">
+        <el-input size="small"
+                  v-model="queryParams.applyid"
+                  placeholder="请搜索输入申请单编号"
+                  clearable
+                  @clear="getallotApplyList"
+                  style="width: 250px;">
+        </el-input>
+        <el-button size="small"
+                   type="primary"
+                   icon="el-icon-search"
+                   @click="getallotApplyList">搜索</el-button>
+        <el-table :data="allotApplyList"
+                  border
+                  stripe
+                  highlight-current-row
+                  v-loading="allotApplyloading"
+                  element-loading-text="拼命加载中"
+                  element-loading-spinner="el-icon-loading"
+                  :row-class-name="tableRowClassName">
+          <div slot="empty"
+               class="emptyBg">
+            <img src="@/assets/box.jpg"
+                 alt="">
+            <p style="margin: 0px;">没有记录哦~</p>
+          </div>
+
+          <el-table-column type="expand"
+                           width="60px">
+            <template slot-scope="scope">
+              <div v-for="(item,index) in scope.row.partsList"
+                   :key="index">
+                <el-form label-width="110px">
+
+                  <el-form-item label="配件编号"
+                                style="width:25%">{{scope.row.partsid}}</el-form-item>
+                  <el-form-item label="配件名称"
+                                style="width:25%">{{scope.row.partsname}}</el-form-item>
+                  <el-form-item label="申请数量"
+                                style="width:25%">{{scope.row.partsamount}}</el-form-item>
+                </el-form>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column type="index"
+                           label="序号"
+                           align="center"
+                           width="60px"></el-table-column>
+          <el-table-column label="申请单编号"
+                           prop="applyId"
+                           align="center"></el-table-column>
+          <el-table-column label="申请时间"
+                           prop="applytime"
+                           align="center"></el-table-column>
+          <el-table-column label="申请仓库"
+                           prop="wareid"
+                           align="center"></el-table-column>
+          <el-table-column label="申请配件编号"
+                           prop="partsid"
+                           align="center"></el-table-column>
+          <el-table-column label="申请配件名称"
+                           prop="partsname"
+                           align="center"></el-table-column>
+          <el-table-column label="申请数量"
+                           prop="partsamount"
+                           align="center"></el-table-column>
+          <el-table-column label="操作"
+                           align="center">、
+            <template slot-scope="scope">
+              <el-button size="mini"
+                         @click="showpApplyDialog(scope.row.id)">详情</el-button>
+            </template>
+          </el-table-column>
+
+        </el-table>
+
+        <el-pagination @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="queryinfo.page"
+                       :page-sizes="[5, 8, 10, 20]"
+                       :page-size="queryinfo.pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="inventoryTotal">
+        </el-pagination>
+      </el-tab-pane> -->
       <el-tab-pane label="待处理订单">
         <el-table :data="orderList"
                   ref='orderListRef'
@@ -302,6 +406,45 @@
         </el-dialog>
 
       </el-tab-pane>
+
+      <el-tab-pane label="配送方案">
+        <el-table :data="dispatchingList"
+                  border
+                  stripe
+                  highlight-current-row
+                  v-loading="detialLoading"
+                  element-loading-text="拼命加载中"
+                  element-loading-spinner="el-icon-loading">
+          <div slot="empty"
+               class="emptyBg">
+            <img src="@/assets/box.jpg"
+                 alt="">
+            <p style="margin: 0px;">没有记录哦~</p>
+          </div>
+          <el-table-column type="index"
+                           label="序号"
+                           align="center"
+                           width="60px"></el-table-column>
+          <el-table-column label="配送仓库编号"
+                           prop=""
+                           align="center"></el-table-column>
+          <el-table-column label="配送仓库名称"
+                           prop=""
+                           align="center"></el-table-column>
+          <el-table-column label="接收仓库编号"
+                           prop=""
+                           align="center"></el-table-column>
+          <el-table-column label="配件编号"
+                           prop=""
+                           align="center"></el-table-column>
+          <el-table-column label="配件名称"
+                           prop=""
+                           align="center"></el-table-column>
+          <el-table-column label="配送数量"
+                           prop=""
+                           align="center"></el-table-column>
+        </el-table>
+      </el-tab-pane>
     </el-tabs>
 
     <!-- <el-card shadow="hover">
@@ -344,8 +487,8 @@
                  type='success'
                  icon="el-icon-check"
                  @click="confirmSave()">保存</el-button> -->
-      <el-table :data="applyList"
-                ref="applyListRef"
+      <el-table :data="allotApplyList"
+                ref="allotApplyList"
                 border
                 stripe
                 highlight-current-row
@@ -469,6 +612,8 @@ import Qs from 'qs'
 export default {
   data () {
     return {
+      // 记录当前仓库的编号
+      wareId: '',
       queryinfo: {
         wareId: '',
         currentpage: 1,
@@ -514,8 +659,9 @@ export default {
 
         ],
       },
-      // 配件申请表
+      //  配件申请表
       applyList: [],
+
       // 先前值
       preValue: {},
       // 被选中的记录数据-----对应“批量删除”传的参数值
@@ -523,6 +669,17 @@ export default {
       //批量删除id
       selectIds: [],
 
+      // 配件申请表
+      allotApplyList: [],
+      allotApplyloading: false,
+      // 查询参数
+      queryParams: {
+        wareid: '',
+        applyid: '',
+        currentpage: 1,
+        pageSize: 10
+      },
+      allotApplyListTotal: 100,
       // ------------------------------------------待处理订单---------------------------------------
       // 待处理订单列表数据
       orderList: [],
@@ -532,6 +689,11 @@ export default {
       detailList: [],
       // 列表加载
       detialLoading: false,
+
+
+      // ------------------------------------------配送方案---------------------------------------
+
+      dispatchingList: [],
     };
   },
 
@@ -539,10 +701,13 @@ export default {
 
   computed: {},
   created () {
+    this.wareId = this.$route.query.wareid
     // 获取参数(申请仓库id)
     this.queryinfo.wareId = this.$route.query.wareid
+    this.queryParams.wareid = this.$route.query.wareid
     console.log(this.queryinfo.wareId)
     this.getInventoryList()
+    this.getallotApplyList()
 
     // 获取参数(申请仓库id)
     // const applywareid = this.$route.query.id
@@ -564,7 +729,7 @@ export default {
           return this.$message.error('获取信息失败！')
         }
         this.inventoryList = res.data.inventoryList
-        this.total = res.data.total
+        this.inventoryTotal = res.data.total
       })
       this.loading = false
 
@@ -644,7 +809,24 @@ export default {
     },
     // 单击保存，保存表格数据
     confirmSave () {
+      console.log(this.applyList)
       console.log(JSON.stringify(this.applyList))
+      var partsList = JSON.stringify(this.applyList)
+      var data = {
+        "wareid": this.queryinfo.wareId,
+        "partsList": partsList
+      }
+      data = Qs.stringify(data)
+      this.$axios.post('/api/ch10/applyParts/creatApply', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+      ).then(res => {
+        console.log(res.data)
+        if (res.data !== 'success') {
+          return this.$message.error('申请失败！')
+        }
+        this.$message.success('申请成功！')
+      })
+      this.getallotApplyList()
+
     },
 
     // 监听编辑按钮
@@ -687,7 +869,40 @@ export default {
       console.log(index)
       this.applyList.splice(index, 1)////从index位置删除1个元素
     },
+    // 监听表格追加内容
+    // getPartsList (row, expandedRows) {
+    //   if (expandedRows.length !== 0) {
 
+    //   }
+    // },
+
+
+
+    // 监听获取申请单数据
+    getallotApplyList () {
+      this.allotApplyloading = true
+
+      var data = Qs.stringify(this.queryParams)
+      this.$axios.post('/api/ch10/applyParts/selectApply', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        console.log(res.data)
+
+        if (res.data.status !== 'success') {
+          return this.$message.error('获取数据失败！')
+        }
+        this.allotApplyList = res.data.applyList
+        this.allotApplyListTotal = res.data.total
+      })
+      this.allotApplyloading = false
+    },
+
+    // 点击跳转到申请列表
+    turnApplyList () {
+      console.log(this.wareId)
+      this.$router.push({ path: '/applylist', query: { wareid: this.wareId } })
+    },
+    turnDispatchingList () {
+      this.$router.push({ path: '/dispatchlist', query: { wareid: this.wareId } });
+    },
     // -----------------------------------------------待处理订单--------------------------------------
 
     //监听详情页对话框（根据待处理订单id打开详情对话框）

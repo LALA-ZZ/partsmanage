@@ -100,6 +100,16 @@ export default {
               name: 'waremanage',
               label: '仓库1',
             },
+            {
+              path: '/applylist',
+              name: 'applylist',
+              label: '申请列表',
+            },
+            {
+              path: '/dispatchlist',
+              name: 'dispatchlist',
+              label: '配送方案',
+            },
 
           ]
         },
