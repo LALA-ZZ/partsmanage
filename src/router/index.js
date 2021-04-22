@@ -17,7 +17,7 @@ const LocaleApply =() => import(/* webpackChunkName: "Warehouse" */ '../views/Wa
 const Waremanage =() => import(/* webpackChunkName: "Warehouse" */ '../components/common/WareManage.vue')
 const ApplyList =()=> import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/ApplyList.vue')
 const DispatchingList =()=> import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/DispatchingList.vue')
-
+const LocalApplylist=()=> import(/* webpackChunkName: "Warehouse" */ '../views/WarehouseInfo/LocalApplyList.vue')
 
 //解决vue中重复点击相同的路由报错问题
 const routerPush = Router.prototype.push
@@ -67,7 +67,7 @@ const routes = [
                 component: LocaleApply
                },
                {
-                path: '/waremanage',
+                path: '/waremanage/:wareid/:warelevel',
                 name: 'waremanage',
                 component: Waremanage
                },
@@ -80,6 +80,11 @@ const routes = [
                 path: '/dispatchlist',
                 name: 'dispatchlist',
                 component: DispatchingList
+               },
+               {
+                path: '/localApplylist',
+                name: 'localApplylist',
+                component: LocalApplylist
                },
                
             {

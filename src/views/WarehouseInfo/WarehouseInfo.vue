@@ -81,7 +81,8 @@
           <template slot-scope="scope">
             <el-button size="mini"
                        type="success"
-                       @click="enterWare(scope.row.wareid)">进入</el-button>
+                       v-if="message != 'noEnter'"
+                       @click="enterWare(scope.row)">进入</el-button>
             <el-button size="mini"
                        type="danger"
                        @click="deleteWareById(scope.row.wareid)">删除</el-button>
@@ -201,9 +202,12 @@
 
 <script>
 import Qs from 'qs'
+
 export default {
+  props: ["message"],
   data () {
     return {
+
       warehouseList: [],
       queryinfo: {
         warename: '',
@@ -261,6 +265,8 @@ export default {
           { required: true, message: '请输入仓库等级', trigger: 'change' },
         ]
       },
+
+
     };
   },
   created () {
@@ -404,17 +410,32 @@ export default {
 
 
     // 根据id进入不同的仓库界面
-    enterWare (wareid) {
-      console.log(wareid)
+    // enterWare (wareid) {
+    //   console.log(wareid)
+
+    //   //带参数跳转params传参数时，地址栏中看不到参数的内容，有点像ajax中的post传参，
+    //   //          query传参数时，地址栏中可以看到传过来的参数信息，
+    //   this.$router.push({ path: '/waremanage', query: { wareid: wareid } });
+    //   // this.$router.push({ name: 'warehouse', params: { setid: wareid } });
+    //   // 获取参数
+    //   // this.$route.params.id
+    //   // 获取参数
+    //   // this.$route.query.id
+    //   // ${ row.houseNo }
+    // },
+
+    enterWare (row) {
+      console.log(row)
 
       //带参数跳转params传参数时，地址栏中看不到参数的内容，有点像ajax中的post传参，
       //          query传参数时，地址栏中可以看到传过来的参数信息，
-      this.$router.push({ path: '/waremanage', query: { wareid: wareid } });
+      this.$router.push({ path: `/waremanage/${row.wareid}/${row.warelevel}` });
       // this.$router.push({ name: 'warehouse', params: { setid: wareid } });
       // 获取参数
       // this.$route.params.id
       // 获取参数
       // this.$route.query.id
+      // ${ row.houseNo }
     },
 
 

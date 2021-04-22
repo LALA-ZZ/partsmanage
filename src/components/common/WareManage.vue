@@ -3,13 +3,18 @@
   <div class="common-content">
     <!-- query region -->
     <el-tabs type="border-card">
-      <el-tab-pane label="库存状态">
+      <el-tab-pane label="仓库管理"
+                   v-if="wareLevel == 1">
+        <warehouse-info message="noEnter"></warehouse-info>
 
+      </el-tab-pane>
+      <el-tab-pane label="库存状态">
         <el-table :data="inventoryList"
                   border
                   stripe
                   highlight-current-row
                   v-loading="loading"
+                  style="margin-top:15px"
                   element-loading-text="拼命加载中"
                   element-loading-spinner="el-icon-loading"
                   :row-class-name="tableRowClassName">
@@ -37,11 +42,11 @@
                              width="100px"
                              align="center"></el-table-column>
             <el-table-column label="配送中数量"
-                             prop=""
+                             prop="dispatchNum"
                              width="100px"
                              align="center"></el-table-column>
             <el-table-column label="待收货数量"
-                             prop=""
+                             prop="waitInNum"
                              width="100px"
                              align="center"></el-table-column>
           </el-table-column>
@@ -90,14 +95,18 @@
           <el-button size="small">库存预警</el-button>
         </el-badge>
       </el-tab-pane>
-      <el-tab-pane label="调拨申请">
-        <el-alert title="点击申请按钮系统自动生成配件方案！"
-                  type="info"
-                  center
-                  show-icon
-                  style="margin-bottom:15px">
-        </el-alert>
-        <div style="">
+
+      <!-- v-if="wareLevel == 2 || wareLevel == 3" -->
+      <el-tab-pane :label="wareLevel == 1 ? '采购申请' : '调拨申请'">
+        <div style="margin-top:15px">
+          <el-alert title="点击申请按钮系统自动生成配件方案！"
+                    type="warning"
+                    center
+                    show-icon
+                    v-if="wareLevel == 2 || wareLevel == 3"
+                    style="margin-bottom:15px">
+          </el-alert>
+
           <el-button size='mini'
                      plain
                      type='primary'
@@ -119,6 +128,17 @@
                      type='success'
                      icon="el-icon-check"
                      @click="confirmSave()">申请</el-button>
+          <div style="margin-right:20px;float:right">
+            <el-button size='mini'
+                       type='primary'
+                       icon="el-icon-tickets"
+                       @click="turnApplyList">申请列表</el-button>
+            <!-- <el-button size='mini'
+                       type='success'
+                       icon="el-icon-collection-tag"
+                       v-if="wareLevel == 2 || wareLevel == 3"
+                       @click="turnDispatchingList">配送方案</el-button> -->
+          </div>
         </div>
 
         <el-table :data="applyList"
@@ -164,9 +184,15 @@
                            prop="partsname"
                            align="center">
             <template slot-scope="scope">
-              <el-input v-show='scope.row.edit'
+              <!-- <el-input v-show='scope.row.edit'
                         size="mini"
-                        v-model="scope.row.partsname"></el-input>
+                        v-model="scope.row.partsname"></el-input> -->
+              <el-autocomplete v-show='scope.row.edit'
+                               :fetch-suggestions="querySearchAsync"
+                               @select="handleSelect"
+                               size="mini"
+                               placeholder="请输入配件名称"
+                               v-model="scope.row.partsname"></el-autocomplete>
               <span v-show='!scope.row.edit'>{{scope.row.partsname}}</span>
             </template>
           </el-table-column>
@@ -203,18 +229,9 @@
           </el-table-column>
 
         </el-table>
-        <div style="margin-top:15px">
-          <el-button size='mini'
-                     type='primary'
-                     icon="el-icon-tickets"
-                     @click="turnApplyList">申请列表</el-button>
-          <el-button size='mini'
-                     type='success'
-                     icon="el-icon-collection-tag"
-                     @click="turnDispatchingList">配送方案</el-button>
-        </div>
 
       </el-tab-pane>
+
       <!-- <el-tab-pane label="申请列表">
         <el-input size="small"
                   v-model="queryParams.applyid"
@@ -300,13 +317,48 @@
                        :total="inventoryTotal">
         </el-pagination>
       </el-tab-pane> -->
-      <el-tab-pane label="待处理订单">
-        <el-table :data="orderList"
+      <el-tab-pane label="订单管理">
+        <div style="margin:15px 0px;float:left">
+          <el-button size='mini'
+                     type='primary'
+                     icon="el-icon-tickets"
+                     @click="turnOutList">调拨配送订单</el-button>
+          <el-button size='mini'
+                     type='warning'
+                     icon="el-icon-receiving"
+                     @click="getLocalOutList">现场出库订单</el-button>
+          <el-button size='mini'
+                     type='danger'
+                     icon="el-icon-collection-tag"
+                     v-show="wareLevel == 1"
+                     @click="turnStockOutList">缺货订单</el-button>
+          <el-button size='mini'
+                     type='success'
+                     icon="el-icon-collection-tag"
+                     v-if="wareLevel == 2 || wareLevel == 3"
+                     @click="turnInList">调拨入库订单</el-button>
+        </div>
+        <!-- <div style="margin:15px 0px;float:left">
+          <el-input size="small"
+                    v-model="queryDispatching.applyId"
+                    :placeholder="placeholderDisplay"
+                    clearable
+                    @clear="getOrderList"
+                    style="width: 250px;">
+          </el-input>
+          <el-button size="small"
+                     type="primary"
+                     icon="el-icon-search"
+                     @click="getOrderList">搜索</el-button>
+        </div> -->
+        <!-- v-if="orderType === 'out' || orderType === 'in' || orderType === 'stockout'" -->
+        <el-table v-show="orderType === 'out' || orderType === 'in' || orderType === 'stockout'"
+                  :data="orderList"
                   ref='orderListRef'
                   border
                   stripe
                   highlight-current-row
-                  v-loading="loading"
+                  v-loading="orderListLoading"
                   element-loading-text="拼命加载中"
                   element-loading-spinner="el-icon-loading"
                   :row-class-name="tableRowClassName">
@@ -316,28 +368,125 @@
                  alt="">
             <p style="margin: 0px;">没有记录哦~</p>
           </div>
-          <el-table-column label="序号"
-                           type="index"
+          <el-table-column type="index"
+                           label="序号"
                            align="center"
                            width="60px"></el-table-column>
-          <el-table-column label="待处理订单编号"
-                           prop=""
+          <el-table-column label="订单编号"
+                           prop="applyId"
                            align="center"></el-table-column>
-          <el-table-column label="触发类型"
-                           prop=""
+          <el-table-column label="配送仓库编号"
+                           prop="startWare"
                            align="center"></el-table-column>
-          <el-table-column label="发生时间"
-                           prop=""
+          <el-table-column label="配送仓库名称"
+                           prop="endWare"
                            align="center"></el-table-column>
-          <el-table-column label="订单状态"
-                           prop="status"
+          <el-table-column label="配件编号"
+                           prop="partId"
+                           align="center"></el-table-column>
+          <!-- <el-table-column label="配件名称"
+                           prop=""
+                           align="center"></el-table-column> -->
+          <el-table-column label="配送数量"
+                           prop="num"
+                           align="center"></el-table-column>
+          <el-table-column label="配送状态"
+                           v-if="orderType === 'out'"
+                           prop="dispatch"
                            align="center">
             <template slot-scope="scope">
               <el-tag size="mini"
-                      v-if="scope.row.status === 0">未审核</el-tag>
+                      type="danger"
+                      v-if="scope.row.dispatch === 0">未配送</el-tag>
               <el-tag type="success"
                       size="mini"
-                      v-else>审核通过</el-tag>
+                      v-else>已配送</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="入库状态"
+                           v-if="orderType === 'in'"
+                           prop="waitInStatus"
+                           align="center">
+            <template slot-scope="scope">
+              <el-tag size="mini"
+                      type="danger"
+                      v-if="scope.row.waitInStatus === 0">未入库</el-tag>
+              <el-tag type="success"
+                      size="mini"
+                      v-else>已入库</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作"
+                           v-if="wareLevel == 2 || wareLevel == 3"
+                           align="center"
+                           width="300px">
+            <template slot-scope="scope">
+              <el-button v-if="orderType == 'out'"
+                         size="mini"
+                         type="warning"
+                         :disabled="scope.row.dispatch === 1"
+                         @click="confirmDispatch(scope.row)">确认配送</el-button>
+
+              <!-- :class="disable?'click-disable':''" -->
+              <el-button v-if="orderType == 'in'"
+                         size="mini"
+                         type="success"
+                         :disabled="scope.row.waitInStatus === 1"
+                         @click="ConfirmAccept(scope.row)">确认收货</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-table v-if="orderType === 'localout'"
+                  :data="localList"
+                  ref='localListRef'
+                  border
+                  stripe
+                  highlight-current-row
+                  v-loading="localListLoading"
+                  element-loading-text="拼命加载中"
+                  element-loading-spinner="el-icon-loading"
+                  :row-class-name="tableRowClassName">
+          <div slot="empty"
+               class="emptyBg">
+            <img src="@/assets/box.jpg"
+                 alt="">
+            <p style="margin: 0px;">没有记录哦~</p>
+          </div>
+          <el-table-column type="index"
+                           label="序号"
+                           align="center"
+                           width="60px"></el-table-column>
+          <el-table-column label="出库订单编号"
+                           prop="applyId"
+                           align="center"></el-table-column>
+          <el-table-column label="申请人"
+                           prop="staffId"
+                           align="center"></el-table-column>
+          <!-- <el-table-column label="配送仓库名称"
+                           prop=""
+                           align="center"></el-table-column> -->
+          <!-- <el-table-column label="接收仓库编号"
+                           prop="wareId"
+                           align="center"></el-table-column> -->
+          <el-table-column label="配件编号"
+                           prop="partId"
+                           align="center"></el-table-column>
+          <!-- <el-table-column label="配件名称"
+                           prop=""
+                           align="center"></el-table-column> -->
+          <el-table-column label="出库数量"
+                           prop="partNum"
+                           align="center"></el-table-column>
+          <el-table-column label="出库状态"
+                           prop="outStatus"
+                           align="center">
+            <template slot-scope="scope">
+              <el-tag size="mini"
+                      type="danger"
+                      v-if="scope.row.outStatus === 0">未出库</el-tag>
+              <el-tag type="success"
+                      size="mini"
+                      v-else>已出库</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作"
@@ -346,24 +495,32 @@
             <template slot-scope="scope">
               <el-button size="mini"
                          type="success"
-                         @click="showDetailsDialog(scope.row.id)">详情</el-button>
-              <el-button size="mini"
-                         type="warning"
-                         @click="approvalSet(scope.row.id)">审核</el-button>
+                         :disabled="scope.row.outStatus === 1"
+                         @click="ConfirmLocalOut(scope.row)">确认出库</el-button>
             </template>
           </el-table-column>
         </el-table>
-
         <!-- 分页 -->
-        <!-- <el-pagination @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="seachForm.currentpage"
-                     :page-sizes="[5, 10, 15, 20]"
-                     :page-size="seachForm.pageSize"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="total"
-                     background>
-      </el-pagination> -->
+        <el-pagination v-if="orderType == 'out' || orderType == 'in' ||orderType == 'stockout'"
+                       @size-change="orderSizeChange"
+                       @current-change="orderCurrentChange"
+                       :current-page="queryDispatching.currentpage"
+                       :page-sizes="[5, 10, 15, 20]"
+                       :page-size="queryDispatching.pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="dispatchingtotal"
+                       background>
+        </el-pagination>
+        <el-pagination v-if="orderType == 'localout'"
+                       @size-change="localSizeChange"
+                       @current-change="localCurrentChange"
+                       :current-page="queryLocalOut.currentpage"
+                       :page-sizes="[5, 10, 15, 20]"
+                       :page-size="queryLocalOut.pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="localOutTotal"
+                       background>
+        </el-pagination>
 
         <!-- 详情对话框 -->
         <el-dialog title="待处理订单详情"
@@ -407,12 +564,13 @@
 
       </el-tab-pane>
 
-      <el-tab-pane label="配送方案">
-        <el-table :data="dispatchingList"
+      <el-tab-pane label="配送方案"
+                   @tab-click="getTransferPlanList">
+        <el-table :data="inList"
                   border
                   stripe
                   highlight-current-row
-                  v-loading="detialLoading"
+                  v-loading="transferPlanLoading"
                   element-loading-text="拼命加载中"
                   element-loading-spinner="el-icon-loading">
           <div slot="empty"
@@ -425,42 +583,30 @@
                            label="序号"
                            align="center"
                            width="60px"></el-table-column>
+          <el-table-column label="配送方案编号"
+                           prop="applyId"
+                           align="center"></el-table-column>
           <el-table-column label="配送仓库编号"
-                           prop=""
+                           prop="startWare"
                            align="center"></el-table-column>
-          <el-table-column label="配送仓库名称"
+          <!-- <el-table-column label="配送仓库名称"
                            prop=""
-                           align="center"></el-table-column>
+                           align="center"></el-table-column> -->
           <el-table-column label="接收仓库编号"
-                           prop=""
+                           prop="endWare"
                            align="center"></el-table-column>
           <el-table-column label="配件编号"
-                           prop=""
+                           prop="partId"
                            align="center"></el-table-column>
-          <el-table-column label="配件名称"
+          <!-- <el-table-column label="配件名称"
                            prop=""
-                           align="center"></el-table-column>
+                           align="center"></el-table-column> -->
           <el-table-column label="配送数量"
-                           prop=""
+                           prop="num"
                            align="center"></el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
-
-    <!-- <el-card shadow="hover">
-      <el-button size='small'
-                 type='info'
-                 icon="el-icon-house"
-                 @click="transferapply">库存状态</el-button>
-      <el-button size='small'
-                 type='primary'
-                 icon="el-icon-plus"
-                 @click="showApplyDetail">调拨申请</el-button>
-      <el-button size='small'
-                 type='success'
-                 icon="el-icon-tickets"
-                 @click="transferOrder">待处理订单</el-button>
-    </el-card> -->
 
     <!-- 调拨申请对话框 -->
     <el-dialog title="调拨申请"
@@ -609,11 +755,20 @@
 
 <script>
 import Qs from 'qs'
+import WarehouseInfo from '../../views/WarehouseInfo/WarehouseInfo';
 export default {
   data () {
     return {
+      //
+      dispatchStatus: '确认配送',
+      dispatchStatusType: 'warning',
       // 记录当前仓库的编号
       wareId: '',
+      // 记录当前仓库的等级
+      wareLevel: '',
+
+      // -------------------------------------------------------------------------------------
+
       queryinfo: {
         wareId: '',
         currentpage: 1,
@@ -680,9 +835,22 @@ export default {
         pageSize: 10
       },
       allotApplyListTotal: 100,
-      // ------------------------------------------待处理订单---------------------------------------
-      // 待处理订单列表数据
+
+      // purchaseApplyList: [],
+
+      // ------------------------------------------订单管理---------------------------------------
+      // 配送订单列表数据
       orderList: [],
+      orderType: 'out',
+      orderListLoading: false,
+      queryStockout: {
+        endWare: '',
+        currentpage: 1,
+        pageSize: 10,
+      },
+
+      // placeholderDisplay: '请搜索输入接受仓库编号',
+
       // 待处理订单详情对话框显示
       detailVisible: false,
       // 详情对话框中的数据
@@ -690,32 +858,61 @@ export default {
       // 列表加载
       detialLoading: false,
 
+      //查现场申请
+      queryLocalOut: {
+        wareId: '',
+        currentpage: 1,
+        pageSize: 10,
+      },
+      localListLoading: false,
+      localOutTotal: 0,
+      localList: [],
 
       // ------------------------------------------配送方案---------------------------------------
 
-      dispatchingList: [],
+      inList: [],
+      queryDispatching: {
+        applyId: '',
+        wareId: '',
+        currentpage: 1,
+        pageSize: 10
+
+      },
+      dispatchingtotal: 100,
+      transferPlanLoading: false,
+
+
     };
   },
 
-  components: {},
+  components: { WarehouseInfo },
 
   computed: {},
   created () {
-    this.wareId = this.$route.query.wareid
-    // 获取参数(申请仓库id)
-    this.queryinfo.wareId = this.$route.query.wareid
-    this.queryParams.wareid = this.$route.query.wareid
-    console.log(this.queryinfo.wareId)
+    // this.wareId = this.$route.query.wareid
+    // // 获取参数(申请仓库id)
+    // this.queryinfo.wareId = this.$route.query.wareid
+    // this.queryParams.wareid = this.$route.query.wareid
+    // console.log(this.queryinfo.wareId)
+
+    this.wareId = this.$route.params.wareid
+    this.wareLevel = this.$route.params.warelevel
+    this.queryinfo.wareId = this.$route.params.wareid
+    this.queryParams.wareid = this.$route.params.wareid
+    this.queryDispatching.wareId = this.$route.params.wareid
+    this.queryLocalOut.wareId = this.$route.params.wareid
     this.getInventoryList()
     this.getallotApplyList()
-
+    this.getTransferPlanList()
+    this.getOrderList()
+    this.getLocalOutList()
+    // this.getWareList()
     // 获取参数(申请仓库id)
     // const applywareid = this.$route.query.id
     // this.$router.push({ path: '/warehouse', query: { setid: applywareid } });
   },
 
   methods: {
-
     // -----------------------------------------------库存状态--------------------------------------
 
 
@@ -821,9 +1018,13 @@ export default {
       ).then(res => {
         console.log(res.data)
         if (res.data !== 'success') {
-          return this.$message.error('申请失败！')
+          return this.$alert('创建调拨申请失败！', {
+            confirmButtonText: '确定'
+          });
         }
-        this.$message.success('申请成功！')
+        this.$alert('创建调拨申请成功！', {
+          confirmButtonText: '确定'
+        });
       })
       this.getallotApplyList()
 
@@ -887,7 +1088,9 @@ export default {
         console.log(res.data)
 
         if (res.data.status !== 'success') {
-          return this.$message.error('获取数据失败！')
+          return this.$alert('获取数据失败', {
+            confirmButtonText: '确定'
+          });
         }
         this.allotApplyList = res.data.applyList
         this.allotApplyListTotal = res.data.total
@@ -903,7 +1106,174 @@ export default {
     turnDispatchingList () {
       this.$router.push({ path: '/dispatchlist', query: { wareid: this.wareId } });
     },
-    // -----------------------------------------------待处理订单--------------------------------------
+
+
+    // -----------------------------------------------订单管理--------------------------------------
+    getOrderList () {
+      let queryParams = Qs.stringify(this.queryDispatching)
+      if (this.orderType == 'out') {
+        this.orderListLoading = true
+        this.$axios.post('/api/ch10/transferPlan/selectPlanByOut', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+          if (res.data.status !== 'success') {
+            return this.$alert('获取数据失败', {
+              confirmButtonText: '确定'
+            });
+          }
+          this.orderList = res.data.outList
+          this.dispatchingtotal = res.data.total
+        })
+        this.orderListLoading = false
+      } else if (this.orderType == 'in') {
+        this.orderListLoading = true
+        this.$axios.post('/api/ch10/transferPlan/selectPlanByIn', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+          if (res.data.status !== 'success') {
+            return this.$alert('获取数据失败', {
+              confirmButtonText: '确定'
+            });
+          }
+          this.orderList = res.data.inList
+          this.dispatchingtotal = res.data.total
+          console.log(this.orderList)
+        })
+        this.orderListLoading = false
+      } else {
+        let queryParams = Qs.stringify(this.queryStockout)
+        this.orderListLoading = true
+        this.$axios.post('/api/ch10/transferPlan/selectStockout', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+          if (res.data.status !== 'success') {
+            return this.$alert('获取数据失败', {
+              confirmButtonText: '确定'
+            });
+          }
+          this.orderList = res.data.outList
+          this.dispatchingtotal = res.data.total
+        })
+        this.orderListLoading = false
+      }
+    },
+    //仓库里的现场申请出库订单
+    getLocalOutList () {
+      this.orderType = 'localout'
+      let queryParams = Qs.stringify(this.queryLocalOut)
+      this.localListLoading = true
+      this.$axios.post('/api/ch10/applyParts/findWareApplyResult', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        if (res.data.status !== 'success') {
+          return this.$alert('获取数据失败', {
+            confirmButtonText: '确定'
+          });
+        }
+        this.localList = res.data.offlineApplyList
+        this.localOutTotal = res.data.total
+      })
+      this.localListLoading = false
+    },
+    turnOutList () {
+      this.orderType = 'out'
+      this.getOrderList()
+    },
+    turnInList () {
+      this.orderType = 'in'
+      this.getOrderList()
+    },
+    //缺货
+    turnStockOutList () {
+      this.orderType = 'stockout'
+      this.getOrderList()
+    },
+    turnLocalApplyList () {
+      console.log(this.wareId)
+      this.$router.push({ path: '/localApplylist', query: { wareId: this.wareId } })
+    },
+    //确认调拨配送
+    confirmDispatch (row) {
+      let queryParams = Qs.stringify(row)
+      console.log(row.dispatch)
+      this.$axios.post('/api/ch10/transferPlan/agree', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        if (res.data.status !== 'success') {
+          return this.$alert('失败！', {
+            confirmButtonText: '确定'
+          });
+        }
+        console.log(row.dispatch)
+        this.$alert('已同意配送！', {
+          confirmButtonText: '确定'
+        });
+        this.disable = true
+        this.getInventoryList()
+        this.getOrderList()
+
+      })
+
+
+    },
+    //确认收货
+    ConfirmAccept (row) {
+
+      //配送仓库配送成功后，收货仓库才可以确认入库
+      if (row.dispatch === 1) {
+        let queryParams = Qs.stringify(row)
+        this.$axios.post('/api/ch10/transferPlan/confirm', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+          if (res.data.status !== 'success') {
+            return this.$alert('失败！', {
+              confirmButtonText: '确定'
+            });
+          }
+          this.$alert('已确认收货！', {
+            confirmButtonText: '确定'
+          });
+          this.disable = true
+          this.getInventoryList()
+          this.getOrderList()
+        })
+      } else {
+        this.$alert('配送仓库未确认配送！', {
+          confirmButtonText: '确定'
+        });
+      }
+    },
+    // 确认现场需求出库
+    ConfirmLocalOut (row) {
+      let queryParams = Qs.stringify(row)
+      this.$axios.post('/api/ch10/applyParts/agreeOut', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        if (res.data.status !== 'success') {
+          return this.$alert('出库失败！', {
+            confirmButtonText: '确定'
+          });
+        }
+        this.$alert('出库成功！', {
+          confirmButtonText: '确定'
+        });
+        this.disable = true
+        this.getLocalOutList()
+        this.getInventoryList()
+
+      })
+    },
+    orderSizeChange (newSize) {
+      console.log(newSize)
+      this.queryDispatching.pageSize = newSize //更新页码大小
+
+      this.getOrderList()
+
+    },
+    // 监听 当前页 变动时候触发的事件
+    orderCurrentChange (newPage) {
+      console.log(newPage)
+      this.queryDispatching.currentpage = newPage //更新当前页码
+
+      this.getOrderList()
+
+    },
+    localSizeChange (newSize) {
+      this.queryLocalOut.pageSize = newSize
+      this.getOutList()
+    },
+    localCurrentChange (newPage) {
+      this.queryLocalOut.currentpage = newPage
+      this.getOutList()
+    },
+
+
 
     //监听详情页对话框（根据待处理订单id打开详情对话框）
     showDetailsDialog (id) {
@@ -919,6 +1289,22 @@ export default {
     approvalSet (orderid) {
       console.log(orderid)
     },
+    // -----------------------------------------------配送方案--------------------------------------
+    // 获取配送列表数据
+    getTransferPlanList () {
+      this.transferPlanLoading = true
+      let queryParams = Qs.stringify(this.queryDispatching)
+      this.$axios.post('/api/ch10/transferPlan/selectPlanByIn', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        if (res.data.status !== 'success') {
+          return this.$message.error('获取数据失败！')
+        }
+        this.inList = res.data.inList
+        this.dispatchingtotal = res.data.total
+      })
+      this.transferPlanLoading = false
+    },
+
+
     // 表格行的样式显示
     tableRowClassName ({ row }) {
       if (row.approvalstatus === 0) {
@@ -928,6 +1314,54 @@ export default {
       }
       return '';
     },
+
+    // 远程搜索
+    //queryString 为在框中输入的值
+    //cb回调函数,将处理好的数据推回
+    querySearchAsync (queryString, callback) {
+      this.getSearchData(queryString)
+      var groupArr = this.groupArr
+      // console.log(queryString + callback)
+      setTimeout(() => {
+        callback(groupArr)
+      }, 2000)
+
+    },
+    getSearchData (queryString) {
+      this.groupList = []
+      this.groupArr = []
+      var data = {
+        "partname": queryString,
+      }
+      var requestParams = Qs.stringify(data)
+      //调用远程接口 将返回数据封装成 [{value:xxx,key2:value2},{value:xxx,key2:value2}]这样的形式，其中value关键字是必须的，检索框要根据该字段显示，其余的根据需求而定
+      this.$axios.post('/api/ch10/partType/selectPartName', requestParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        console.log(res.data)
+        if (res.data.status !== 'success') {
+          return this.$message.error('请求失败！')
+        }
+
+        this.groupList = res.data.partTypeList
+        for (let item of this.groupList) {
+          this.groupArr.push({
+            value: item.pname,
+            partsid: item.pid
+          })
+
+        }
+        console.log('jajajaj')
+        console.log(this.groupArr)
+      })
+    },
+
+    //@select="handleSelect"  是选中某一列触发的事件,在这里item为选中字段所在的对象
+    handleSelect (item) {
+      console.log(item)
+      console.log(this.applyList)
+      // 根据对象属性获取对象在数组中的下标
+      var index = (this.applyList || []).findIndex((profile) => profile.partsname === item.value);
+      this.$set(this.applyList[index], 'partsid', item.partsid)
+    },
   }
 }
 </script>
@@ -935,4 +1369,8 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/common";
+
+.click-disable {
+  pointer-events: none;
+}
 </style>
