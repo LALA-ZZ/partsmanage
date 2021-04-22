@@ -91,10 +91,10 @@
                            plain
                            v-if="displaySignal"
                            @click="becomeExcel">生成Excel</el-button>
-                <el-button type="warning"
+                <!-- <el-button type="warning"
                            plain
                            v-if="displaySignal"
-                           @click="getPdf(pdfDom)">生成PDF</el-button>
+                           @click="getPdf(pdfDom)">生成PDF</el-button> -->
                 <div class="row"
                      id="pdfDom"
                      v-if="displaySignal">
@@ -329,7 +329,7 @@ export default {
       form.append('file', this.file)
       console.log(form)
       // fetchUpload(form).then(res => {
-      this.$axios.post('/api/ch09/inventory/submitExcel', form).then(res => {
+      this.$axios.post('/api/ch10/inventory/submitExcel', form).then(res => {
         console.log(res)
         if (res.data !== 'success') {
           this.$refs.dataUploadExcel.loading = false
@@ -374,7 +374,7 @@ export default {
       form.append('file', this.file)
       console.log(form)
       // fetchUpload(form).then(res => {
-      this.$axios.post('/api/ch09/inventory/submitDistanceExcel', form).then(res => {
+      this.$axios.post('/api/ch10/inventory/submitDistanceExcel', form).then(res => {
         console.log(res)
         if (res.data !== 'success') {
           this.$refs.distanceUploadExcel.loading = false
@@ -420,7 +420,7 @@ export default {
       this.loadingbut = true;
       this.loadingbuttext = '优化中...';
 
-      this.$axios.post('/api/ch09/inventory/begin',).then(res => {
+      this.$axios.post('/api/ch10/inventory/begin',).then(res => {
         console.log(res)
         if (res.data.statue !== 'success') {
           this.$message.error("返回没有数据，预测失败!");

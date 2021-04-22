@@ -374,7 +374,7 @@ export default {
       form.append('file', this.file)
       console.log(form)
       // fetchUpload(form).then(res => {
-      this.$axios.post('/api/ch09/demand/submitExcel', form).then(res => {
+      this.$axios.post('/api/ch10/demand/submitExcel', form).then(res => {
         console.log(res)
         if (res.data !== 'success') {
           this.$refs.uploaDemandExcel.loading = false
@@ -456,7 +456,7 @@ export default {
       this.loadingbuttext = '预测中...';
       // this.fullscreenLoading = true;
 
-      this.$axios.post('/api/ch09/demand/begin',).then(res => {
+      this.$axios.post('/api/ch10/demand/begin',).then(res => {
         console.log(res)
         if (res.data.statue !== 'success') {
           this.$message.error("返回没有数据，预测失败!");
