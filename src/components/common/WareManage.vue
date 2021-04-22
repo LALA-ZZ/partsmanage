@@ -2,6 +2,7 @@
 <template>
   <div class="common-content">
     <!-- query region -->
+
     <el-tabs type="border-card">
       <el-tab-pane label="仓库管理"
                    v-if="wareLevel == 1">
@@ -607,7 +608,6 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-
     <!-- 调拨申请对话框 -->
     <el-dialog title="调拨申请"
                :visible.sync="detailVisible"
@@ -861,6 +861,7 @@ export default {
       //查现场申请
       queryLocalOut: {
         wareId: '',
+        applyId: '',
         currentpage: 1,
         pageSize: 10,
       },

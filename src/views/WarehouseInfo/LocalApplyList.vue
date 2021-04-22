@@ -28,9 +28,9 @@
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
         <!-- 展开行 -->
-        <el-table-column type="expand"
+        <!--<el-table-column type="expand"
                          width="60px">
-          <!-- <template slot-scope="scope">
+          <template slot-scope="scope">
               <div v-for="(item,index) in scope.row.partsList"
                    :key="index">
                 <el-form label-width="110px">
@@ -43,8 +43,8 @@
                                 style="width:25%">{{scope.row.partsamount}}</el-form-item>
                 </el-form>
               </div>
-            </template> -->
-        </el-table-column>
+            </template> 
+        </el-table-column>-->
         <el-table-column type="index"
                          label="序号"
                          align="center"
@@ -99,6 +99,7 @@ export default {
       staffId: '',
       // 查询参数
       queryParams: {
+        applyId: '',
         staffId: '',
         currentpage: 1,
         pageSize: 10
