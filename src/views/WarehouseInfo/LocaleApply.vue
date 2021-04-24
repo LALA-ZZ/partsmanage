@@ -343,6 +343,11 @@ export default {
 
     // 单击保存，保存表格数据
     confirmSave () {
+      if (this.applyList.length == 0) {
+        return this.$alert('申请数据不能为空，请重新填写！', {
+          confirmButtonText: '确定'
+        });
+      }
       console.log(this.localApplyForm.staffId)
       console.log(this.applyList)
       console.log(JSON.stringify(this.applyList))

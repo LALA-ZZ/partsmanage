@@ -155,7 +155,7 @@
       </el-table>
 
       <!-- pagination region -->
-      <el-pagination v-show="wareLevel == 1"
+      <el-pagination v-show="wareLevel === 1"
                      @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
                      :current-page="queryParams.currentpage"

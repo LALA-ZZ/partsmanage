@@ -327,7 +327,7 @@
           <el-button size='mini'
                      type='warning'
                      icon="el-icon-receiving"
-                     @click="getLocalOutList">现场出库单</el-button>
+                     @click="getLocalOutList">现场申请单</el-button>
           <el-button size='mini'
                      type='danger'
                      icon="el-icon-collection-tag"
@@ -385,7 +385,7 @@
           <el-table-column label="配送仓库编号"
                            prop="startWare"
                            align="center"></el-table-column>
-          <el-table-column label="配送仓库名称"
+          <el-table-column label="接收仓库名称"
                            prop="endWare"
                            align="center"></el-table-column>
           <el-table-column label="配件编号"
@@ -570,7 +570,7 @@
         </el-table>
 
         <!-- 分页 -->
-        <el-pagination v-if="orderType == 'out' || orderType == 'in' ||orderType == 'stockout'"
+        <el-pagination v-if="orderType == 'out' || orderType == 'in' || orderType == 'stockout'"
                        @size-change="orderSizeChange"
                        @current-change="orderCurrentChange"
                        :current-page="queryDispatching.currentpage"
@@ -590,7 +590,7 @@
                        :total="localOutTotal"
                        background>
         </el-pagination>
-        <el-pagination v-if="wareLevel === 1 && orderType === 'purchasein'"
+        <el-pagination v-if=" orderType === 'purchasein'"
                        @size-change="purchaseinSizeChange"
                        @current-change="purchaseinCurrentChange"
                        :current-page="queryPurchaseInList.currentpage"
@@ -992,9 +992,9 @@ export default {
     this.queryParams.wareid = this.$route.params.wareid
     this.queryDispatching.wareId = this.$route.params.wareid
     this.queryLocalOut.wareId = this.$route.params.wareid
-    this.getInventoryList()
-    // this.getallotApplyList()
-    // this.getTransferPlanList()
+    this.getInventoryList()//库存
+    this.getallotApplyList()//调拨申请单
+    this.getTransferPlanList()//配送方案
     this.getOrderList()
     // this.getLocalOutList()
     // this.getPurchaseList()
@@ -1098,6 +1098,11 @@ export default {
     },
     // 单击保存，保存表格数据
     confirmSave () {
+      if (this.applyList.length == 0) {
+        return this.$alert('申请数据不能为空，请重新填写！', {
+          confirmButtonText: '确定'
+        });
+      }
       if (this.wareLevel == 1) {
         console.log(this.applyList)
         var purchaseList = JSON.stringify(this.applyList)
@@ -1119,6 +1124,7 @@ export default {
           });
         })
         this.getallotApplyList()
+        this.getTransferPlanList()
       } else {
         console.log(this.applyList)
         // console.log(JSON.stringify(this.applyList))
@@ -1251,7 +1257,8 @@ export default {
         })
         this.orderListLoading = false
       } else {
-        let queryParams = Qs.stringify(this.queryStockout)
+        this.queryDispatching.wareId = ''
+        let queryParams = Qs.stringify(this.queryDispatching)
         this.orderListLoading = true
         this.$axios.post('/api/ch10/transferPlan/selectStockout', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
           if (res.data.status !== 'success') {
