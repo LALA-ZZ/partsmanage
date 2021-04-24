@@ -13,7 +13,8 @@
                  type="primary"
                  icon="el-icon-search"
                  @click="getallotApplyList">搜索</el-button>
-      <el-table :data="allotApplyList"
+      <el-table v-show="wareLevel == 2 || wareLevel == 3"
+                :data="allotApplyList"
                 border
                 stripe
                 highlight-current-row
@@ -28,9 +29,9 @@
           <p style="margin: 0px;">没有记录哦~</p>
         </div>
         <!-- 展开行 -->
-        <el-table-column type="expand"
+        <!--  <el-table-column type="expand"
                          width="60px">
-          <!-- <template slot-scope="scope">
+         <template slot-scope="scope">
               <div v-for="(item,index) in scope.row.partsList"
                    :key="index">
                 <el-form label-width="110px">
@@ -43,8 +44,8 @@
                                 style="width:25%">{{scope.row.partsamount}}</el-form-item>
                 </el-form>
               </div>
-            </template> -->
-        </el-table-column>
+            </template> 
+        </el-table-column>-->
         <el-table-column type="index"
                          label="序号"
                          align="center"
@@ -78,7 +79,8 @@
       </el-table>
 
       <!-- pagination region -->
-      <el-pagination @size-change="handleSizeChange"
+      <el-pagination v-show="wareLevel == 2 || wareLevel == 3"
+                     @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
                      :current-page="queryParams.currentpage"
                      :page-sizes="[5, 8, 10, 20]"
@@ -86,6 +88,83 @@
                      layout="total, sizes, prev, pager, next, jumper"
                      :total="allotApplyListTotal">
       </el-pagination>
+
+      <el-table v-show="wareLevel == 1"
+                :data="purchaseInList"
+                border
+                stripe
+                highlight-current-row
+                v-loading="purchaseInListloading"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                :row-class-name="tableRowClassName">
+        <div slot="empty"
+             class="emptyBg">
+          <img src="@/assets/box.jpg"
+               alt="">
+          <p style="margin: 0px;">没有记录哦~</p>
+        </div>
+        <!-- 展开行 -->
+        <!--  <el-table-column type="expand"
+                         width="60px">
+         <template slot-scope="scope">
+              <div v-for="(item,index) in scope.row.partsList"
+                   :key="index">
+                <el-form label-width="110px">
+
+                  <el-form-item label="配件编号"
+                                style="width:25%">{{scope.row.partsid}}</el-form-item>
+                  <el-form-item label="配件名称"
+                                style="width:25%">{{scope.row.partsname}}</el-form-item>
+                  <el-form-item label="申请数量"
+                                style="width:25%">{{scope.row.partsamount}}</el-form-item>
+                </el-form>
+              </div>
+            </template> 
+        </el-table-column>-->
+        <el-table-column type="index"
+                         label="序号"
+                         align="center"
+                         width="60px"></el-table-column>
+        <el-table-column label="申请单编号"
+                         prop="id"
+                         align="center"></el-table-column>
+        <el-table-column label="申请时间"
+                         prop="date"
+                         align="center"></el-table-column>
+        <el-table-column label="申请仓库"
+                         prop="wareId"
+                         align="center"></el-table-column>
+        <el-table-column label="申请配件编号"
+                         prop="partId"
+                         align="center"></el-table-column>
+        <el-table-column label="申请配件名称"
+                         prop="partName"
+                         align="center"></el-table-column>
+        <el-table-column label="申请数量"
+                         prop="partNum"
+                         align="center"></el-table-column>
+        <!-- <el-table-column label="操作"
+                           align="center">、
+            <template slot-scope="scope">
+              <el-button size="mini"
+                         @click="showpApplyDialog(scope.row.id)">详情</el-button>
+            </template>
+          </el-table-column> -->
+
+      </el-table>
+
+      <!-- pagination region -->
+      <el-pagination v-show="wareLevel == 1"
+                     @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="queryParams.currentpage"
+                     :page-sizes="[5, 8, 10, 20]"
+                     :page-size="queryParams.pageSize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="allotApplyListTotal">
+      </el-pagination>
+
     </el-card>
   </div>
 </template>
@@ -96,6 +175,8 @@ import Qs from 'qs'
 export default {
   data () {
     return {
+      wareId: '',
+      wareLevel: '',
       // 查询参数
       queryParams: {
         wareid: '',
@@ -103,10 +184,24 @@ export default {
         currentpage: 1,
         pageSize: 10
       },
+
+
       // 配件申请表
       allotApplyList: [],
       allotApplyloading: false,
-      allotApplyListTotal: 100,
+      allotApplyListTotal: 0,
+
+      queryPurchaseInList: {
+        wareId: '',
+        // applyid: '',
+        partId: '',
+        partName: '',
+        currentpage: 1,
+        pageSize: 10
+      },
+      PurchaseInListTotal: 0,
+      purchaseInList: [],
+      purchaseInListloading: false,
     };
   },
 
@@ -115,8 +210,11 @@ export default {
   computed: {},
   created () {
     this.queryParams.wareid = this.$route.query.wareid
+    this.wareLevel = this.$route.query.wareLevel
+    this.wareId = this.$route.query.wareid
     console.log(this.queryParams.wareid)
     this.getallotApplyList()
+    this.getPurchaseList()
   },
 
   methods: {
@@ -137,6 +235,24 @@ export default {
       this.allotApplyloading = false
     },
 
+    getPurchaseList () {
+      this.orderType = 'purchasein'
+      this.queryPurchaseInList.wareId = this.wareId
+      let queryParams = Qs.stringify(this.queryPurchaseInList)
+      this.purchaseInListloading = true
+
+      this.$axios.post('/api/ch10/part/selectPartPurchase', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+        if (res.data.status !== 'success') {
+          return this.$alert('获取数据失败', {
+            confirmButtonText: '确定'
+          });
+        }
+        this.purchaseInList = res.data.partInputList
+        this.PurchaseInListTotal = res.data.total
+      })
+      this.purchaseInListloading = false
+
+    },
     // 表格行的样式显示
     tableRowClassName ({ row }) {
       if (row.approvalstatus === 0) {
@@ -150,13 +266,18 @@ export default {
     handleSizeChange (newSize) {
       console.log(newSize)
       this.queryParams.pageSize = newSize //更新页码大小
+      this.getPurchaseList.pageSize = newSize //更新页码大小
       this.getallotApplyList()
+      this.getPurchaseList()
+
     },
     // 监听 当前页 变动时候触发的事件
     handleCurrentChange (newPage) {
       console.log(newPage)
       this.queryParams.currentpage = newPage //更新当前页码
+      this.getPurchaseList.currentpage = newPage
       this.getallotApplyList()
+      this.getPurchaseList()
     },
   }
 }
