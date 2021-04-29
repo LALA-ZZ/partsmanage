@@ -642,8 +642,7 @@
 
       </el-tab-pane>
 
-      <el-tab-pane label="配送方案"
-                   @tab-click="getTransferPlanList">
+      <el-tab-pane label="配送方案">
         <el-table :data="inList"
                   border
                   stripe
@@ -683,6 +682,15 @@
                            prop="num"
                            align="center"></el-table-column>
         </el-table>
+        <el-pagination @size-change="planSizeChange"
+                       @current-change="planCurrentChange"
+                       :current-page="queryDispatch.currentpage"
+                       :page-sizes="[5, 10, 15, 20]"
+                       :page-size="queryDispatch.pageSize"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="dispatchtotal"
+                       background>
+        </el-pagination>
       </el-tab-pane>
     </el-tabs>
     <!-- 调拨申请对话框 -->
@@ -969,7 +977,19 @@ export default {
         pageSize: 10
 
       },
-      dispatchingtotal: 100,
+      dispatchingtotal: 0,
+
+      queryDispatch: {
+        applyId: '',
+        wareId: '',
+        currentpage: 1,
+        pageSize: 10
+
+      },
+      dispatchtotal: 0,
+
+
+
       transferPlanLoading: false,
 
 
@@ -996,6 +1016,7 @@ export default {
     this.getallotApplyList()//调拨申请单
     this.getTransferPlanList()//配送方案
     this.getOrderList()
+
     // this.getLocalOutList()
     // this.getPurchaseList()
     // this.getWareList()
@@ -1147,6 +1168,7 @@ export default {
           });
         })
         this.getallotApplyList()
+        this.getTransferPlanList()
       }
     },
 
@@ -1425,6 +1447,7 @@ export default {
     },
     localSizeChange (newSize) {
       this.queryLocalOut.pageSize = newSize
+      this.getTransferPlanList()
       this.getOutList()
     },
     localCurrentChange (newPage) {
@@ -1459,15 +1482,31 @@ export default {
     // 获取配送列表数据
     getTransferPlanList () {
       this.transferPlanLoading = true
-      let queryParams = Qs.stringify(this.queryDispatching)
+      this.queryDispatch.wareId = this.wareId
+      let queryParams = Qs.stringify(this.queryDispatch)
       this.$axios.post('/api/ch10/transferPlan/selectPlanByIn', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
         if (res.data.status !== 'success') {
           return this.$message.error('获取数据失败！')
         }
         this.inList = res.data.inList
-        this.dispatchingtotal = res.data.total
+        this.dispatchtotal = res.data.total
       })
       this.transferPlanLoading = false
+    },
+    planSizeChange (newSize) {
+      console.log(newSize)
+      this.queryDispatch.pageSize = newSize //更新页码大小
+
+      this.getTransferPlanList()
+
+    },
+    // 监听 当前页 变动时候触发的事件
+    planCurrentChange (newPage) {
+      console.log(newPage)
+      this.queryDispatch.currentpage = newPage //更新当前页码
+
+      this.getTransferPlanList()
+
     },
 
 

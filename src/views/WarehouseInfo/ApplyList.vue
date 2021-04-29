@@ -89,7 +89,7 @@
                      :total="allotApplyListTotal">
       </el-pagination>
 
-      <el-table v-show="wareLevel == 1"
+      <el-table v-if="wareLevel == 1"
                 :data="purchaseInList"
                 border
                 stripe
@@ -155,14 +155,14 @@
       </el-table>
 
       <!-- pagination region -->
-      <el-pagination v-show="wareLevel === 1"
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="queryParams.currentpage"
+      <el-pagination v-if="wareLevel == 1"
+                     @size-change="purSizeChange"
+                     @current-change="purCurrentChange"
+                     :current-page="queryPurchaseInList.currentpage"
                      :page-sizes="[5, 8, 10, 20]"
-                     :page-size="queryParams.pageSize"
+                     :page-size="queryPurchaseInList.pageSize"
                      layout="total, sizes, prev, pager, next, jumper"
-                     :total="allotApplyListTotal">
+                     :total="PurchaseInListTotal">
       </el-pagination>
 
     </el-card>
@@ -218,7 +218,7 @@ export default {
   },
 
   methods: {
-    // 监听获取申请单数据
+    // 监听获取调拨申请单数据
     getallotApplyList () {
       this.allotApplyloading = true
 
@@ -234,14 +234,14 @@ export default {
       })
       this.allotApplyloading = false
     },
-
+    // 监听获取采购申请单数据
     getPurchaseList () {
       this.orderType = 'purchasein'
       this.queryPurchaseInList.wareId = this.wareId
       let queryParams = Qs.stringify(this.queryPurchaseInList)
       this.purchaseInListloading = true
 
-      this.$axios.post('/api/ch10/part/selectPartPurchase', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
+      this.$axios.post('/api/ch10/part/selectPartPurchase2', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
         if (res.data.status !== 'success') {
           return this.$alert('获取数据失败', {
             confirmButtonText: '确定'
@@ -266,17 +266,26 @@ export default {
     handleSizeChange (newSize) {
       console.log(newSize)
       this.queryParams.pageSize = newSize //更新页码大小
-      this.getPurchaseList.pageSize = newSize //更新页码大小
       this.getallotApplyList()
-      this.getPurchaseList()
 
     },
     // 监听 当前页 变动时候触发的事件
     handleCurrentChange (newPage) {
       console.log(newPage)
       this.queryParams.currentpage = newPage //更新当前页码
-      this.getPurchaseList.currentpage = newPage
       this.getallotApplyList()
+    },
+    // 监听  页码大小 改变的事件,将新的页码大小更新到data中
+    purSizeChange (newSize) {
+      console.log(newSize)
+      this.queryPurchaseInList.pageSize = newSize //更新页码大小
+      this.getPurchaseList()
+
+    },
+    // 监听 当前页 变动时候触发的事件
+    purCurrentChange (newPage) {
+      console.log(newPage)
+      this.queryPurchaseInList.currentpage = newPage
       this.getPurchaseList()
     },
   }
