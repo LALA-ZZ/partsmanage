@@ -126,9 +126,10 @@
           </el-button>
           <el-button size='mini'
                      plain
+                     :loading="loadingbut"
                      type='success'
                      icon="el-icon-check"
-                     @click="confirmSave()">申请</el-button>
+                     @click="confirmSave()">{{loadingbuttext}}</el-button>
           <div style="margin-right:20px;float:right">
             <el-button size='mini'
                        type='primary'
@@ -580,7 +581,7 @@
                        :total="dispatchingtotal"
                        background>
         </el-pagination>
-        <el-pagination v-if="orderType == 'localout'"
+        <el-pagination v-if="orderType === 'localout'"
                        @size-change="localSizeChange"
                        @current-change="localCurrentChange"
                        :current-page="queryLocalOut.currentpage"
@@ -590,7 +591,7 @@
                        :total="localOutTotal"
                        background>
         </el-pagination>
-        <el-pagination v-if=" orderType === 'purchasein'"
+        <el-pagination v-if="orderType === 'purchasein'"
                        @size-change="purchaseinSizeChange"
                        @current-change="purchaseinCurrentChange"
                        :current-page="queryPurchaseInList.currentpage"
@@ -920,7 +921,10 @@ export default {
         pageSize: 10
       },
       allotApplyListTotal: 100,
-
+      // 申请按钮文字显示
+      loadingbuttext: '申请',
+      // 申请按钮转态
+      loadingbut: false,
       // purchaseApplyList: [],
 
       // ------------------------------------------订单管理---------------------------------------
@@ -951,7 +955,7 @@ export default {
         pageSize: 10,
       },
       localListLoading: false,
-      localOutTotal: 0,
+      localOutTotal: 100,
       localList: [],
       //查采购入库
       queryPurchaseInList: {
@@ -1011,7 +1015,7 @@ export default {
     this.queryinfo.wareId = this.$route.params.wareid
     this.queryParams.wareid = this.$route.params.wareid
     this.queryDispatching.wareId = this.$route.params.wareid
-    this.queryLocalOut.wareId = this.$route.params.wareid
+    // this.queryLocalOut.wareId = this.$route.params.wareid
     this.getInventoryList()//库存
     this.getallotApplyList()//调拨申请单
     this.getTransferPlanList()//配送方案
@@ -1117,14 +1121,18 @@ export default {
         this.$refs.applyListRef.clearSelection();
       }
     },
-    // 单击保存，保存表格数据
+    // 单击申请，保存表格数据
     confirmSave () {
+
       if (this.applyList.length == 0) {
         return this.$alert('申请数据不能为空，请重新填写！', {
           confirmButtonText: '确定'
         });
       }
+
       if (this.wareLevel == 1) {
+        this.loadingbut = true;
+        this.loadingbuttext = '申请中...';
         console.log(this.applyList)
         var purchaseList = JSON.stringify(this.applyList)
         var requestParams = {
@@ -1143,10 +1151,16 @@ export default {
           this.$alert('创建采购申请成功！', {
             confirmButtonText: '确定'
           });
+          // // 开始预测按钮的状态转换
+          this.loadingbut = false;
+          this.loadingbuttext = '申请';
+          this.getTransferPlanList()//更新配送方案
         })
-        this.getallotApplyList()
-        this.getTransferPlanList()
+        // this.getallotApplyList()
+        // this.getTransferPlanList()//更新配送方案
       } else {
+        this.loadingbut = true;
+        this.loadingbuttext = '申请中...';
         console.log(this.applyList)
         // console.log(JSON.stringify(this.applyList))
         var partsList = JSON.stringify(this.applyList)
@@ -1166,9 +1180,13 @@ export default {
           this.$alert('创建调拨申请成功！', {
             confirmButtonText: '确定'
           });
+          // // 开始预测按钮的状态转换
+          this.loadingbut = false;
+          this.loadingbuttext = '申请';
+          this.getTransferPlanList()
         })
-        this.getallotApplyList()
-        this.getTransferPlanList()
+        // this.getallotApplyList()
+        // this.getTransferPlanList()
       }
     },
 
@@ -1297,6 +1315,7 @@ export default {
     //仓库里的现场申请出库订单
     getLocalOutList () {
       this.orderType = 'localout'
+      this.queryLocalOut.wareId = this.wareId
       let queryParams = Qs.stringify(this.queryLocalOut)
       this.localListLoading = true
       this.$axios.post('/api/ch10/applyParts/findWareApplyResult', queryParams, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(res => {
@@ -1441,18 +1460,19 @@ export default {
     orderCurrentChange (newPage) {
       console.log(newPage)
       this.queryDispatching.currentpage = newPage //更新当前页码
-
       this.getOrderList()
 
     },
     localSizeChange (newSize) {
       this.queryLocalOut.pageSize = newSize
-      this.getTransferPlanList()
-      this.getOutList()
+      // this.getTransferPlanList()
+      // this.getOutList()
+      this.getLocalOutList()
     },
     localCurrentChange (newPage) {
       this.queryLocalOut.currentpage = newPage
-      this.getOutList()
+      // this.getOutList()
+      this.getLocalOutList()
     },
     purchaseinSizeChange (newSize) {
       this.queryPurchaseInList.pageSize = newSize

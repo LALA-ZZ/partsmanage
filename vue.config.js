@@ -67,14 +67,16 @@ module.exports = {
         config.entry('app').clear().add('./src/main-dev.js')
       })
   },
-  
+  //跨域问题
   devServer: {
     open: true, //是否自动弹出浏览器页面
     host: "localhost",
     port: '8080',
     proxy: {  //配置跨域
     '/api': {
-      target: 'http://192.168.50.219:8080/',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+      // target: 'http://192.168.50.219:8080/',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+      // target: 'http://59.70.68.224:8080/',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+      target: 'http://10.11.2.147:8080/', 
       changOrigin: true,  //允许跨域
       pathRewrite: {
         /* 重写路径，当我们在浏览器中看到请求的地址为：http://localhost:8080/api/core/getData/userInfo 时
@@ -86,6 +88,9 @@ module.exports = {
   }
 },
 
+// dev:{
+//   assertsSun
+// }
 
 }
 
